@@ -17,12 +17,13 @@ import {
 } from "@/components/ui/popover";
 import { CommandList } from "cmdk";
 import { useSession } from "next-auth/react";
+import { User } from "next-auth";
 
 export default function MemberDropdown() {
   const [open, setOpen] = React.useState(false);
   const [value, setValue] = React.useState("");
   const session = useSession();
-  const members = [session.data?.user];
+  const members: User[] = [session.data?.user!];
 
   return (
     <Popover open={open} onOpenChange={setOpen}>

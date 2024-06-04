@@ -61,6 +61,18 @@ export interface Project {
      * @type {string}
      * @memberof Project
      */
+    'cover_image'?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof Project
+     */
+    'logo'?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof Project
+     */
     'id': string;
     /**
      * 
