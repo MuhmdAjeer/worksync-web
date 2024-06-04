@@ -50,5 +50,17 @@ export interface CreateProjectDto {
      * @memberof CreateProjectDto
      */
     'lead_id': string;
+    /**
+     * 
+     * @type {string}
+     * @memberof CreateProjectDto
+     */
+    'cover_image'?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof CreateProjectDto
+     */
+    'logo'?: string;
 }
 

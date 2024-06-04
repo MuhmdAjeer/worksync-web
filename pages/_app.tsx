@@ -39,6 +39,11 @@ export default function App({
                   enableSystem
                   disableTransitionOnChange
                 >
+                  <style jsx global>{`
+                    html {
+                      font-family: ${inter.style.fontFamily};
+                    }
+                  `}</style>
                   <Component {...pageProps} />
                 </ThemeProvider>
               </ReactQueryProvider>
