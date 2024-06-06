@@ -11,7 +11,7 @@ const OnboardingLayout = ({
 }>) => {
   const session = useSession();
   return (
-    <div className="p-20 h-screen">
+    <div className="p-20 min-h-screen ">
       <div className="flex items-center w-full justify-between">
         <Typography className="text-slate-800" variant="h1">
           Worksync+
@@ -22,7 +22,7 @@ const OnboardingLayout = ({
       </div>
       <Card className="mx-20 mt-8 h-full border border-black border-opacity-20 rounded-lg shadow-2xl">
         {/* {children} */}
-        <div className="flex h-full">
+        <div className="flex">
           <div className="w-1/5 ">
             <Sidebar />
           </div>

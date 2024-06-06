@@ -6,7 +6,7 @@ import WorkspaceWrapper from "@/lib/wrappers/workspace-wrapper";
 import { observer } from "mobx-react";
 
 interface IProps {
-  header?: string;
+  header?: ReactNode;
   children: ReactNode;
 }
 
@@ -15,7 +15,7 @@ const inter = Inter({
   variable: "--font-inter",
 });
 
-export const AppLayout: FC<IProps> = observer(({ children }) => {
+export const AppLayout: FC<IProps> = observer(({ header, children }) => {
   return (
     <WorkspaceWrapper>
       <div className="relative flex h-screen w-full overflow-hidden">
@@ -27,7 +27,7 @@ export const AppLayout: FC<IProps> = observer(({ children }) => {
               <div className="block bg-custom-sidebar-background-100  py-4 pl-5 md:hidden">
                 {/* <SidebarHamburgerToggle /> */}
               </div>
-              {/* <div className="w-full">{header}</div> */}
+              <div className="w-full">{header}</div>
             </div>
             {/* {mobileHeader && mobileHeader} */}
           </div>

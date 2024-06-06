@@ -5,11 +5,9 @@ import OnboardingLayout from "@/components/layouts/OnboardingLayout";
 
 const Page: NextPageWithLayout = () => {
   return (
-    <>
-      <div className="w-1/2">
-        <OnboardingForm />
-      </div>
-    </>
+    <div className="w-1/2">
+      <OnboardingForm />
+    </div>
   );
 };
 Page.getLayout = (page) => {
