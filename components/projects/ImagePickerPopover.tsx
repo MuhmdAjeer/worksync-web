@@ -1,9 +1,9 @@
 import React, { FC } from "react";
 import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
-import { PROJECT_UNSPLASH_COVERS } from "./create-project-modal";
 import { ScrollArea } from "../ui/scroll-area";
 import Image from "next/image";
 import { cn } from "@/lib/utils";
+import { PROJECT_UNSPLASH_COVERS } from "@/lib/constants";
 
 interface IProps {
   onChange: (img: string) => void;

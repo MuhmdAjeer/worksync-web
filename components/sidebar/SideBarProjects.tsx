@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import Typography from "../ui/Typography";
-import { observer, } from "mobx-react";
+import { observer } from "mobx-react";
 import { useProject } from "@/hooks/project";
 import ProjectSidebarItem from "./ProjectSidebarItem";
 import { ChevronDown, ChevronRight } from "lucide-react";
@@ -28,10 +28,9 @@ const SideBarProjects = observer(() => {
 
       {!isCollapsed && (
         <motion.div initial={{ x: 20 }} animate={{ x: 0 }}>
-          {workspaceProjects &&
-            workspaceProjects.map((x) => (
-              <ProjectSidebarItem project={x} key={x.id} />
-            ))}
+          {workspaceProjects.map((x) => (
+            <ProjectSidebarItem project={x} key={x.id} />
+          ))}
         </motion.div>
       )}
     </div>
