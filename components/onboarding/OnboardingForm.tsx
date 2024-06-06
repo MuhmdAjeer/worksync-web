@@ -80,6 +80,7 @@ const OnboardingForm = observer(() => {
     }
     const data: OnboardDto = {
       ...form.getValues(),
+      name: form.getValues("name").trim(),
       members: fields,
       use: selectedOption,
       profile_picture: profile_picture_url,

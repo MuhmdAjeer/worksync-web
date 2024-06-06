@@ -43,6 +43,9 @@ export class WorkspaceRootStore implements IWorkspaceRoot {
 
   onboardUser = async (data: OnboardDto) =>
     await this.workspaceService.onboardUser(data).then((response) => {
+      runInAction(() => {
+        set(this.workspaces, [response.id], response);
+      });
       return response;
     });
 
