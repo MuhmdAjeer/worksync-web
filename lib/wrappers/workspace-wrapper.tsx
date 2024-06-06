@@ -47,9 +47,6 @@ const WorkspaceWrapper = observer((props: PropsWithChildren) => {
   if (allWorkspaces === undefined) {
     return <h1>loading</h1>;
   }
-  if (!currentWorkspace) {
-    return <h1>notohinf</h1>;
-  }
 
   if (x.isLoading) {
     return <h1>loading</h1>;

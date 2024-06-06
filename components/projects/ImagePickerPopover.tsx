@@ -7,7 +7,7 @@ import { cn } from "@/lib/utils";
 
 interface IProps {
   onChange: (img: string) => void;
-  selectedImage: string;
+  selectedImage?: string;
 }
 
 const ImagePickerPopover: FC<IProps> = ({ selectedImage, onChange }) => {

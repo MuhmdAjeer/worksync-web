@@ -10,6 +10,12 @@ import { Inter } from "next/font/google";
 import { cn } from "@/lib/utils";
 import { StoreProvider } from "@/lib/store-context";
 import AppProvider from "@/lib/app-provider";
+import {
+  Tooltip as ShadTooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -28,29 +34,31 @@ export default function App({
         inter.variable
       )}
     >
-      <SessionProvider session={session}>
-        <StoreProvider {...pageProps}>
-          <AppProvider>
-            {getLayout(
-              <ReactQueryProvider>
-                <ThemeProvider
-                  attribute="class"
-                  defaultTheme="light"
-                  enableSystem
-                  disableTransitionOnChange
-                >
-                  <style jsx global>{`
-                    html {
-                      font-family: ${inter.style.fontFamily};
-                    }
-                  `}</style>
-                  <Component {...pageProps} />
-                </ThemeProvider>
-              </ReactQueryProvider>
-            )}
-          </AppProvider>
-        </StoreProvider>
-      </SessionProvider>
+      <TooltipProvider>
+        <SessionProvider session={session}>
+          <StoreProvider {...pageProps}>
+            <AppProvider>
+              {getLayout(
+                <ReactQueryProvider>
+                  <ThemeProvider
+                    attribute="class"
+                    defaultTheme="light"
+                    enableSystem
+                    disableTransitionOnChange
+                  >
+                    <style jsx global>{`
+                      html {
+                        font-family: ${inter.style.fontFamily};
+                      }
+                    `}</style>
+                    <Component {...pageProps} />
+                  </ThemeProvider>
+                </ReactQueryProvider>
+              )}
+            </AppProvider>
+          </StoreProvider>
+        </SessionProvider>
+      </TooltipProvider>
     </main>
   );
 }

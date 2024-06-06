@@ -58,6 +58,12 @@ export interface User {
     'profile_picture'?: string;
     /**
      * 
+     * @type {object}
+     * @memberof User
+     */
+    'projects': object;
+    /**
+     * 
      * @type {string}
      * @memberof User
      */
