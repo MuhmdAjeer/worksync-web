@@ -10,6 +10,7 @@
     "openapi:generate": "openapi-generator-cli generate"
   },
   "dependencies": {
+    "@headlessui/react": "^2.0.4",
     "@hookform/error-message": "^2.0.1",
     "@hookform/resolvers": "^3.3.4",
     "@next/font": "^14.2.3",
