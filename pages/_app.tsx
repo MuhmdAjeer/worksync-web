@@ -34,31 +34,32 @@ export default function App({
         inter.variable
       )}
     >
-      <TooltipProvider>
-        <SessionProvider session={session}>
-          <StoreProvider {...pageProps}>
-            <AppProvider>
-              {getLayout(
-                <ReactQueryProvider>
-                  <ThemeProvider
-                    attribute="class"
-                    defaultTheme="light"
-                    enableSystem
-                    disableTransitionOnChange
-                  >
+      <ThemeProvider
+        attribute="class"
+        defaultTheme="light"
+        enableSystem
+        disableTransitionOnChange
+        {...pageProps}
+      >
+        <TooltipProvider>
+          <SessionProvider session={session}>
+            <StoreProvider {...pageProps}>
+              <AppProvider>
+                {getLayout(
+                  <ReactQueryProvider>
                     <style jsx global>{`
                       html {
                         font-family: ${inter.style.fontFamily};
                       }
                     `}</style>
                     <Component {...pageProps} />
-                  </ThemeProvider>
-                </ReactQueryProvider>
-              )}
-            </AppProvider>
-          </StoreProvider>
-        </SessionProvider>
-      </TooltipProvider>
+                  </ReactQueryProvider>
+                )}
+              </AppProvider>
+            </StoreProvider>
+          </SessionProvider>
+        </TooltipProvider>
+      </ThemeProvider>
     </main>
   );
 }

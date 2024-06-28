@@ -13,14 +13,14 @@ const OnboardingLayout = ({
   return (
     <div className="p-20 min-h-screen ">
       <div className="flex items-center w-full justify-between">
-        <Typography className="text-slate-800" variant="h1">
+        <Typography className="text-primary" variant="h1">
           Worksync+
         </Typography>
         <Typography variant="h4" affects="small">
           {session.data?.user.email}
         </Typography>
       </div>
-      <Card className="mx-20 mt-8 h-full border border-black border-opacity-20 rounded-lg shadow-2xl">
+      <Card className="mx-20 mt-8 h-full border border-primary/ rounded-lg shadow-2xl">
         {/* {children} */}
         <div className="flex">
           <div className="w-1/5 ">

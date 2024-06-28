@@ -11,14 +11,15 @@ import {
 } from "mobx";
 import { RootStore } from "./root.store";
 import set from "lodash/set";
+import { WorkspaceDto } from "@/generated/dto/workspace-dto";
 export interface IWorkspaceRoot {
-  currentWorkspace: Workspace | null;
-  workspaces: Record<string, Workspace>;
-  onboardUser: (data: OnboardDto) => Promise<Workspace>;
-  fetchMyWorkspaces: () => Promise<Workspace[]>;
+  currentWorkspace: WorkspaceDto | null;
+  workspaces: Record<string, WorkspaceDto>;
+  onboardUser: (data: OnboardDto) => Promise<WorkspaceDto>;
+  fetchMyWorkspaces: () => Promise<WorkspaceDto[]>;
 }
 export class WorkspaceRootStore implements IWorkspaceRoot {
-  workspaces: Record<string, Workspace> = {};
+  workspaces: Record<string, WorkspaceDto> = {};
   workspaceService: WorkspaceService;
   router;
   constructor(_rootStore: RootStore) {

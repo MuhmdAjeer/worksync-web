@@ -184,8 +184,8 @@ const OnboardingForm = observer(() => {
                 >
                   <div
                     className={cn(
-                      "border border-slate-300 rounded-lg w-max p-2 hover:bg-slate-100 cursor-pointer",
-                      selectedOption == opt && "border-black"
+                      "border border-primary/10 rounded-lg w-max p-2 hover:bg-primary/20 hover:text-primary-950 cursor-pointer",
+                      selectedOption == opt && "border-primary"
                     )}
                   >
                     <Typography variant="h4" affects="small">

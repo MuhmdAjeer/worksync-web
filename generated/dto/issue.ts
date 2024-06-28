@@ -13,90 +13,108 @@
  */
 
 
+// May contain unused imports in some cases
+// @ts-ignore
+import { Project } from './project';
+// May contain unused imports in some cases
+// @ts-ignore
+import { User } from './user';
 
 /**
  * 
  * @export
- * @interface User
+ * @interface Issue
  */
-export interface User {
+export interface Issue {
     /**
      * 
      * @type {string}
-     * @memberof User
+     * @memberof Issue
      */
-    'username'?: string;
+    'title': string;
     /**
      * 
      * @type {string}
-     * @memberof User
+     * @memberof Issue
      */
-    'email': string;
+    'description': string;
+    /**
+     * 
+     * @type {Project}
+     * @memberof Issue
+     */
+    'Project': Project;
+    /**
+     * 
+     * @type {User}
+     * @memberof Issue
+     */
+    'issued_by': User;
     /**
      * 
      * @type {string}
-     * @memberof User
+     * @memberof Issue
      */
-    'google_id'?: string;
+    'priority'?: PriorityEnum;
     /**
      * 
      * @type {string}
-     * @memberof User
+     * @memberof Issue
      */
-    'password': string;
+    'start_date': string;
     /**
      * 
      * @type {string}
-     * @memberof User
+     * @memberof Issue
      */
-    'verified_at'?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof User
-     */
-    'profile_picture'?: string;
+    'end_date': string;
     /**
      * 
      * @type {object}
-     * @memberof User
+     * @memberof Issue
      */
-    'projects': object;
-    /**
-     * 
-     * @type {object}
-     * @memberof User
-     */
-    'workspaces': object;
+    'assignees': object;
     /**
      * 
      * @type {string}
-     * @memberof User
+     * @memberof Issue
      */
     'id': string;
     /**
      * 
      * @type {object}
-     * @memberof User
+     * @memberof Issue
      */
     'created_at': object;
     /**
      * 
      * @type {object}
-     * @memberof User
+     * @memberof Issue
      */
     'updated_at': object;
     /**
      * 
      * @type {string}
-     * @memberof User
+     * @memberof Issue
      */
     'deleted_at': string | null;
     /**
      * 
      * @type {number}
-     * @memberof User
+     * @memberof Issue
      */
     'version': number;
 }
+
+/**
+    * @export
+    * @enum {string}
+    */
+export enum PriorityEnum {
+    Urgent = 'Urgent',
+    High = 'High',
+    Medium = 'Medium',
+    Low = 'Low'
+}
+
 

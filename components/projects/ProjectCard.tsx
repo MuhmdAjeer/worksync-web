@@ -5,11 +5,11 @@ import ProjectLogo from "./ProjectLogo";
 import Typography from "../ui/Typography";
 import Tooltip from "../common/Tooltip";
 import UserAvatar from "../user/Avatar";
-import { Project } from "@/generated/dto/project";
 import { PROJECT_UNSPLASH_COVERS } from "@/lib/constants";
+import { ProjectDto } from "@/generated/dto/project-dto";
 
 interface IProps {
-  project: Project;
+  project: ProjectDto;
 }
 
 const ProjectCard: FC<IProps> = ({ project }) => {

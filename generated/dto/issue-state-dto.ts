@@ -17,68 +17,62 @@
 /**
  * 
  * @export
- * @interface Workspace
+ * @interface IssueStateDto
  */
-export interface Workspace {
+export interface IssueStateDto {
     /**
      * 
      * @type {string}
-     * @memberof Workspace
+     * @memberof IssueStateDto
+     */
+    'id': string;
+    /**
+     * 
+     * @type {string}
+     * @memberof IssueStateDto
+     */
+    'created_at'?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof IssueStateDto
+     */
+    'updated_at'?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof IssueStateDto
+     */
+    'deleted_at'?: string | null;
+    /**
+     * 
+     * @type {number}
+     * @memberof IssueStateDto
+     */
+    'version': number;
+    /**
+     * 
+     * @type {string}
+     * @memberof IssueStateDto
      */
     'name': string;
     /**
      * 
      * @type {string}
-     * @memberof Workspace
+     * @memberof IssueStateDto
      */
-    'use': string;
-    /**
-     * 
-     * @type {object}
-     * @memberof Workspace
-     */
-    'projects': object;
-    /**
-     * 
-     * @type {object}
-     * @memberof Workspace
-     */
-    'members': object;
+    'color'?: string;
     /**
      * 
      * @type {string}
-     * @memberof Workspace
+     * @memberof IssueStateDto
      */
-    'owner_id': string;
+    'group': string;
     /**
      * 
      * @type {string}
-     * @memberof Workspace
+     * @memberof IssueStateDto
      */
-    'id': string;
-    /**
-     * 
-     * @type {object}
-     * @memberof Workspace
-     */
-    'created_at': object;
-    /**
-     * 
-     * @type {object}
-     * @memberof Workspace
-     */
-    'updated_at': object;
-    /**
-     * 
-     * @type {string}
-     * @memberof Workspace
-     */
-    'deleted_at': string | null;
-    /**
-     * 
-     * @type {number}
-     * @memberof Workspace
-     */
-    'version': number;
+    'description'?: string;
 }
 

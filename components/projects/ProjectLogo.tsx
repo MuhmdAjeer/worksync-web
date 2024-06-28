@@ -8,7 +8,7 @@ interface IProps {
 
 const ProjectLogo: React.FC<IProps> = ({ className, value }) => {
   return (
-    <span className={cn("text-base", className)}>
+    <span className={cn("text-base text-center", className)}>
       {value
         ?.split("-")
         .map((emoji) => String.fromCodePoint(parseInt(emoji, 10)))}

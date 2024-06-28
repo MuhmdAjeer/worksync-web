@@ -19,7 +19,11 @@ import { CommandList } from "cmdk";
 import { useSession } from "next-auth/react";
 import { User } from "next-auth";
 
-export default function MemberDropdown() {
+interface IProps {
+  label?: string;
+}
+
+const MemberDropdown: React.FC<IProps> = ({ label = "Lead" }) => {
   const [open, setOpen] = React.useState(false);
   const [value, setValue] = React.useState("");
   const session = useSession();
@@ -29,6 +33,7 @@ export default function MemberDropdown() {
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
         <Button
+          size="sm"
           variant="outline"
           role="combobox"
           aria-expanded={open}
@@ -36,14 +41,14 @@ export default function MemberDropdown() {
         >
           {value
             ? members.find((member) => member?.name === value)?.name
-            : "Lead"}
+            : label}
           <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
         </Button>
       </PopoverTrigger>
       <PopoverContent className="w-[200px] p-0">
         <Command>
           <CommandInput placeholder="Search member" />
-          <CommandEmpty>No framework found.</CommandEmpty>
+          <CommandEmpty>No member found.</CommandEmpty>
           <CommandGroup>
             <CommandList>
               {members.map(
@@ -73,4 +78,6 @@ export default function MemberDropdown() {
       </PopoverContent>
     </Popover>
   );
-}
+};
+
+export default MemberDropdown;

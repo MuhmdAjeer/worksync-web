@@ -17,68 +17,56 @@
 /**
  * 
  * @export
- * @interface Workspace
+ * @interface WorkspaceDto
  */
-export interface Workspace {
+export interface WorkspaceDto {
     /**
      * 
      * @type {string}
-     * @memberof Workspace
+     * @memberof WorkspaceDto
+     */
+    'id': string;
+    /**
+     * 
+     * @type {string}
+     * @memberof WorkspaceDto
+     */
+    'created_at'?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof WorkspaceDto
+     */
+    'updated_at'?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof WorkspaceDto
+     */
+    'deleted_at'?: string | null;
+    /**
+     * 
+     * @type {number}
+     * @memberof WorkspaceDto
+     */
+    'version': number;
+    /**
+     * 
+     * @type {string}
+     * @memberof WorkspaceDto
      */
     'name': string;
     /**
      * 
      * @type {string}
-     * @memberof Workspace
+     * @memberof WorkspaceDto
      */
     'use': string;
     /**
      * 
-     * @type {object}
-     * @memberof Workspace
-     */
-    'projects': object;
-    /**
-     * 
-     * @type {object}
-     * @memberof Workspace
-     */
-    'members': object;
-    /**
-     * 
      * @type {string}
-     * @memberof Workspace
+     * @memberof WorkspaceDto
      */
     'owner_id': string;
-    /**
-     * 
-     * @type {string}
-     * @memberof Workspace
-     */
-    'id': string;
-    /**
-     * 
-     * @type {object}
-     * @memberof Workspace
-     */
-    'created_at': object;
-    /**
-     * 
-     * @type {object}
-     * @memberof Workspace
-     */
-    'updated_at': object;
-    /**
-     * 
-     * @type {string}
-     * @memberof Workspace
-     */
-    'deleted_at': string | null;
-    /**
-     * 
-     * @type {number}
-     * @memberof Workspace
-     */
-    'version': number;
 }
 

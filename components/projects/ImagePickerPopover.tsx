@@ -13,7 +13,7 @@ interface IProps {
 const ImagePickerPopover: FC<IProps> = ({ selectedImage, onChange }) => {
   return (
     <Popover modal>
-      <PopoverTrigger className="cursor-pointer  shadow-sm bg-white text-xs rounded p-1 px-2">
+      <PopoverTrigger className="cursor-pointer  shadow-sm bg-secondary text-xs rounded p-1 px-2">
         Change cover
       </PopoverTrigger>
       <PopoverContent className="w-[36rem]">

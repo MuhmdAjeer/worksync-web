@@ -25,7 +25,7 @@ const WorkspaceSidebarDropdown = observer(() => {
   return (
     <div className="flex justify-between gap-2 p-4 items-center">
       <DropdownMenu>
-        <DropdownMenuTrigger className="flex p-1 rounded w-full hover:bg-slate-200 gap-2 items-center">
+        <DropdownMenuTrigger className="flex p-1 rounded w-full hover:bg-secondary gap-2 items-center">
           <div className="bg-custom-primary-dark h-6 w-6 rounded flex items-center justify-center">
             <span className="text-secondary text-xs ">
               {currentWorkspace?.name.charAt(0).toUpperCase()}

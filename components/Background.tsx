@@ -20,7 +20,6 @@ const styles: { [key: string]: React.CSSProperties } = {
     pointerEvents: "none",
   },
   backgroundMainBefore: {
-    background: "radial-gradient(circle, rgba(2, 0, 36, 0) 0, #fafafa 100%)",
     position: "absolute",
     content: '""',
     zIndex: 2,

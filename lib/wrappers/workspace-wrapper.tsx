@@ -21,16 +21,6 @@ const WorkspaceWrapper = observer((props: PropsWithChildren) => {
     revalidateOnFocus: false,
   });
 
-  // useSWR(
-  //   workspaceSlug && currentWorkspace
-  //     ? `WORKSPACE_PROJECTS_${currentWorkspace.id}`
-  //     : null,
-  //   () => fetchProjects(currentWorkspace?.id!),
-  //   {
-  //     revalidateIfStale: false,
-  //     revalidateOnFocus: false,
-  //   }
-  // );
   useSWR(
     currentWorkspace && workspaceSlug
       ? `WORKSPACE_PROJECTS_${workspaceSlug.toString()}`

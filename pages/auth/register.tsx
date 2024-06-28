@@ -40,7 +40,7 @@ const Register: NextPageWithLayout = () => {
   };
 
   return (
-    <div className="relative z-10 mt-[calc(30vh)] h-fit w-full max-w-md overflow-hidden border-y border-gray-200 sm:rounded-2xl sm:border sm:shadow-xl">
+    <div className="relative z-10 mt-[calc(30vh)] h-fit w-full max-w-md overflow-hidden border-y border-secondary sm:rounded-2xl sm:border sm:shadow-xl">
       <Card>
         <CardHeader>
           <Typography variant="h4">Sign Up to Continue</Typography>
@@ -104,9 +104,9 @@ const Register: NextPageWithLayout = () => {
           <Button className="w-full ">
             <GitHubLogoIcon />
           </Button>
-          <Typography color="gray" variant="h4" affects="muted">
+          <Typography variant="h4" affects="muted">
             Already have an account?{" "}
-            <Link className="text-info" href="/auth/login">
+            <Link className="text-primary" href="/auth/login">
               Login
             </Link>
           </Typography>

@@ -1,5 +1,4 @@
 import { CreateProjectDto } from "@/generated/dto/create-project-dto";
-import { Project } from "@/generated/dto/project";
 import { ProjectService } from "@/services/project.service";
 import {
   action,
@@ -11,6 +10,9 @@ import {
 } from "mobx";
 import set from "lodash/set";
 import { RootStore } from "./root.store";
+import { computedFn } from "mobx-utils";
+import { ProjectDto as Project } from "@/generated/dto/project-dto";
+import { IssueStateDto } from "@/generated/dto/issue-state-dto";
 export interface IProjectStore {
   loader: boolean;
   projectMap: {
@@ -20,6 +22,8 @@ export interface IProjectStore {
   createProject: (data: CreateProjectDto) => Promise<Project>;
   fetchProjects: (id: string) => Promise<Project[]>;
   workspaceProjects: Project[];
+  currentProject: Project | null;
+  getProjectById: (id: string) => Project;
 }
 
 export class ProjectStore implements IProjectStore {
@@ -27,8 +31,9 @@ export class ProjectStore implements IProjectStore {
     [projectId: string]: Project;
   } = {};
   loader: boolean = false;
-  projectService;
   rootStore: RootStore;
+  projectService;
+  router;
 
   constructor(_rootStore: RootStore) {
     makeObservable(this, {
@@ -38,10 +43,11 @@ export class ProjectStore implements IProjectStore {
       fetchProjects: action,
       projects: computed,
       workspaceProjects: computed,
+      currentProject: computed,
     });
     this.projectService = new ProjectService();
     this.rootStore = _rootStore;
-    autorun(() => console.log("43242", this.workspaceProjects));
+    this.router = _rootStore.routerStore;
   }
 
   createProject = async (data: CreateProjectDto) => {
@@ -57,9 +63,11 @@ export class ProjectStore implements IProjectStore {
     }
   };
 
-  fetchProjects = async (id: string) => {
+  fetchProjects = async (workspaceId: string) => {
     try {
-      const response = await this.projectService.fetchProjects(id);
+      const response = await this.projectService.fetchWorkspaceProjects(
+        workspaceId
+      );
       runInAction(() => {
         response.forEach((project) => {
           set(this.projectMap, [project.id], project);
@@ -68,7 +76,6 @@ export class ProjectStore implements IProjectStore {
       return response;
     } catch (error) {
       console.log("Failed to fetch projects from store");
-
       throw error;
     }
   };
@@ -83,7 +90,18 @@ export class ProjectStore implements IProjectStore {
     return projects;
   }
 
-  
+  get currentProject() {
+    const projectId = this.router.projectId;
+    if (!projectId) return null;
+    const project = this.projectMap[projectId] || null;
+    return project || null;
+  }
+
+  getProjectById = computedFn((id: string) => {
+    const project = this.projectMap[id];
+    return project;
+  });
+
   get projects() {
     return Object.values(this.projectMap ?? {});
   }

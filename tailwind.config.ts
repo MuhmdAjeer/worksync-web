@@ -28,6 +28,9 @@ const config = {
             light: "#386ae5",
             dark: "#4581ff",
           },
+          dark: {
+            DEFAULT: "hsl(var(--text))",
+          },
         },
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
