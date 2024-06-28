@@ -10,6 +10,7 @@ import { ParsedUrlQuery } from "querystring";
 
 export interface IRouterStore {
   workspaceSlug: string | undefined;
+  projectId: string | undefined;
   query: ParsedUrlQuery;
   setQuery: (query: ParsedUrlQuery) => void;
 }
@@ -21,6 +22,7 @@ export class RouterStore implements IRouterStore {
       query: observable,
       setQuery: action.bound,
       workspaceSlug: computed,
+      projectId: computed,
     });
   }
   setQuery = (query: ParsedUrlQuery) => {
@@ -31,5 +33,9 @@ export class RouterStore implements IRouterStore {
 
   get workspaceSlug() {
     return this.query?.workspaceSlug?.toString();
+  }
+
+  get projectId() {
+    return this.query?.projectId?.toString();
   }
 }

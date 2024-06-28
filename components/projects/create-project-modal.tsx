@@ -63,7 +63,6 @@ const CreateProjectModal = observer((props: TProps) => {
       logo: getRandomEmoji(),
     },
   });
-  watch("logo");
   const submit: SubmitHandler<CreateProjectDto> = async (data) => {
     try {
       await createProject(data);
@@ -93,12 +92,7 @@ const CreateProjectModal = observer((props: TProps) => {
               />
             )}
             <div className="absolute right-2 top-2 p-2">
-              <button
-                data-posthog="PROJECT_MODAL_CLOSE"
-                type="button"
-                onClick={onClose}
-                tabIndex={8}
-              >
+              <button type="button" onClick={onClose} tabIndex={8}>
                 <X className="h-5 w-5 text-white" />
               </button>
             </div>
@@ -109,7 +103,7 @@ const CreateProjectModal = observer((props: TProps) => {
                 render={({ field, fieldState }) => (
                   <Popover>
                     <PopoverTrigger>
-                      <span className="grid h-11 w-11 place-items-center rounded-md bg-slate-300">
+                      <span className="grid h-11 w-11 place-items-center rounded-md bg-secondary">
                         <ProjectLogo value={field.value} className="text-xl" />
                       </span>
                     </PopoverTrigger>
@@ -175,6 +169,7 @@ const CreateProjectModal = observer((props: TProps) => {
             onClick={() => {
               void handleSubmit(submit)();
             }}
+            size="sm"
           >
             Create project
           </Button>

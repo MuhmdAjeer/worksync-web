@@ -17,68 +17,68 @@
 /**
  * 
  * @export
- * @interface Workspace
+ * @interface UserDto
  */
-export interface Workspace {
+export interface UserDto {
     /**
      * 
      * @type {string}
-     * @memberof Workspace
-     */
-    'name': string;
-    /**
-     * 
-     * @type {string}
-     * @memberof Workspace
-     */
-    'use': string;
-    /**
-     * 
-     * @type {object}
-     * @memberof Workspace
-     */
-    'projects': object;
-    /**
-     * 
-     * @type {object}
-     * @memberof Workspace
-     */
-    'members': object;
-    /**
-     * 
-     * @type {string}
-     * @memberof Workspace
-     */
-    'owner_id': string;
-    /**
-     * 
-     * @type {string}
-     * @memberof Workspace
+     * @memberof UserDto
      */
     'id': string;
     /**
      * 
-     * @type {object}
-     * @memberof Workspace
+     * @type {string}
+     * @memberof UserDto
      */
-    'created_at': object;
-    /**
-     * 
-     * @type {object}
-     * @memberof Workspace
-     */
-    'updated_at': object;
+    'created_at'?: string;
     /**
      * 
      * @type {string}
-     * @memberof Workspace
+     * @memberof UserDto
      */
-    'deleted_at': string | null;
+    'updated_at'?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof UserDto
+     */
+    'deleted_at'?: string | null;
     /**
      * 
      * @type {number}
-     * @memberof Workspace
+     * @memberof UserDto
      */
     'version': number;
+    /**
+     * 
+     * @type {string}
+     * @memberof UserDto
+     */
+    'username'?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof UserDto
+     */
+    'email': string;
+    /**
+     * 
+     * @type {string}
+     * @memberof UserDto
+     */
+    'google_id'?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof UserDto
+     */
+    'verified_at'?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof UserDto
+     */
+    'profile_picture'?: string;
 }
 

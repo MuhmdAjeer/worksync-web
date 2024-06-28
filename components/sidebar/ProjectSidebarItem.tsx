@@ -90,8 +90,8 @@ const ProjectSidebarItem = observer(({ project }: IProps) => {
                 <div
                   className={`group flex items-center gap-2.5 rounded-md px-2 py-1.5 text-xs font-medium outline-none ${
                     router.asPath.includes(menu.href)
-                      ? "bg-slate-950 text-custom-primary-100"
-                      : "text-slate-700 hover:bg-slate-100 focus:bg-slate-100"
+                      ? ""
+                      : " hover:bg-secondary focus:bg-primary/5"
                   }`}
                 >
                   <menu.Icon className="h-4 w-4 stroke-[1.5]" />

@@ -35,7 +35,7 @@ const Login: NextPageWithLayout = () => {
   const router = useRouter();
 
   return (
-    <div className="relative z-10 mt-[calc(30vh)] h-fit w-full max-w-md overflow-hidden border-y border-gray-200 sm:rounded-2xl sm:border sm:shadow-xl">
+    <div className="relative z-10 mt-[calc(30vh)] h-fit w-full max-w-md overflow-hidden border-y border-secondary sm:rounded-2xl sm:border sm:shadow-xl">
       <Card>
         <form
           onSubmit={async (e) => {
@@ -98,11 +98,11 @@ const Login: NextPageWithLayout = () => {
             <Button type="submit" className="w-full">
               Submit
             </Button>{" "}
-            <div
+            {/* <div
               className="flex h-8 items-end space-x-1"
               aria-live="polite"
               aria-atomic="true"
-            ></div>
+            ></div> */}
             <Separator className="my-2" />
             <Button
               onClick={async (e) => {
@@ -113,9 +113,9 @@ const Login: NextPageWithLayout = () => {
             >
               <GitHubLogoIcon />
             </Button>
-            <Typography color="gray" variant="h4" affects="muted">
+            <Typography className="text-primary/70" variant="h4" affects="muted">
               New to Worksync?{" "}
-              <Link className="text-info" href="/auth/register">
+              <Link className="text-primary" href="/auth/register">
                 Create an account
               </Link>
             </Typography>

@@ -1,4 +1,5 @@
 import ProjectHeader from "@/components/headers/ProjectHeader";
+import CreateIssueModal from "@/components/issues/create-issue-modal";
 import ProjectCard from "@/components/projects/ProjectCard";
 import CreateProjectModal from "@/components/projects/create-project-modal";
 

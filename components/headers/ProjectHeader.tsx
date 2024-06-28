@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import Typography from "../ui/Typography";
 import { Button } from "../ui/button";
 import CreateProjectModal from "../projects/create-project-modal";
+import { ThemeModelToggle } from "../common/ThemeModeToggle";
 
 const ProjectHeader = () => {
   const [openModal, setOpenModal] = useState(false);
@@ -10,12 +11,10 @@ const ProjectHeader = () => {
     <>
       <div className="h-14 p-4 flex items-center justify-between">
         <div className="flex gap-2 items-center">
-          <BriefcaseIcon className="text-slate-500 h-5 w-5" />
-          <Typography variant="h6" className="text-slate-800">
-            Projects
-          </Typography>
+          <BriefcaseIcon className="h-5 w-5" />
+          <Typography variant="h6">Projects</Typography>
         </div>
-        <div>
+        <div className="flex items-center gap-4" >
           <Button
             onClick={() => {
               setOpenModal(true);
@@ -24,6 +23,7 @@ const ProjectHeader = () => {
           >
             Create Project
           </Button>
+          <ThemeModelToggle />
         </div>
       </div>
       <CreateProjectModal

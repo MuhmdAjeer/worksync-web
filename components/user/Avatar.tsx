@@ -1,10 +1,9 @@
-import { User } from "@/generated/dto/user";
-import Image from "next/image";
 import React, { FC } from "react";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
+import { UserDto } from "@/generated/dto/user-dto";
 
 interface IProps {
-  user: User;
+  user: UserDto;
 }
 const UserAvatar: FC<IProps> = ({ user }) => {
   return (
