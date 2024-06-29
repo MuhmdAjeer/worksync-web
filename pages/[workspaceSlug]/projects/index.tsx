@@ -6,16 +6,20 @@ import CreateProjectModal from "@/components/projects/create-project-modal";
 import { Button } from "@/components/ui/button";
 
 import { useProject } from "@/hooks/project";
-import { AppLayout } from "@/layouts/app/AppLayout";
+import { useProjects } from "@/hooks/projects";
+import { useAppRouter } from "@/hooks/router";
+import { useWorkspace } from "@/hooks/workspaces";
+import { AppLayout } from "@/components/layouts/app/AppLayout";
 import { NextPageWithLayout } from "@/pages/_app";
 import { observer } from "mobx-react";
 import React, { ReactElement, useState } from "react";
 
 const ProjectsPage: NextPageWithLayout = observer(() => {
   const [openCreateModal, setOpenCreateModal] = useState(false);
-  const { workspaceProjects } = useProject();
+  const { workspaceSlug } = useAppRouter();
+  const { data: workspaceProjects } = useProjects(workspaceSlug!);
 
-  if (!workspaceProjects.length) {
+  if (!workspaceProjects?.length) {
     return (
       <div className="space-y-7 md:p-7 p-3 bg-custom-background-90 h-full w-full flex flex-col overflow-y-auto">
         <div className="text-center items-center h-full">

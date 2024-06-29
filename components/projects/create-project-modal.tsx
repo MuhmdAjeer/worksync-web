@@ -6,17 +6,13 @@ import { Controller, SubmitHandler, useForm } from "react-hook-form";
 import { CreateProjectDto } from "@/generated/dto/create-project-dto";
 import { ZodType, z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useWorkspace } from "@/hooks/workspace";
 import { Input } from "../ui/input";
 import { Textarea } from "../ui/textarea";
 import { Button } from "../ui/button";
 import MemberDropdown from "../MemberDropdown";
-import { ProjectService } from "@/services/project.service";
 import { toast } from "sonner";
 import { useSession } from "next-auth/react";
-import { ErrorMessage } from "@hookform/error-message";
 import { observer } from "mobx-react";
-import { useProject } from "@/hooks/project";
 import { X } from "lucide-react";
 import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
 import EmojiPicker from "emoji-picker-react";
@@ -25,6 +21,10 @@ import ProjectLogo from "./ProjectLogo";
 import { convertHexEmojiToDecimal, getRandomEmoji } from "@/lib/utils";
 import Image from "next/image";
 import { PROJECT_UNSPLASH_COVERS } from "@/lib/constants";
+import { useCreateProject } from "@/hooks/projects";
+// import { useWorkspace } from "@/hooks/workspaces";
+import { useAppRouter } from "@/hooks/router";
+import { useWorkspaceStore } from "@/hooks/store/workspace";
 
 type TProps = {
   open?: boolean;
@@ -42,9 +42,10 @@ const createProjectSchema: ZodType<CreateProjectDto> = z.object({
 
 const CreateProjectModal = observer((props: TProps) => {
   const { open, onClose } = props;
+  const { currentWorkspace } = useWorkspaceStore();
   const session = useSession();
-  const { currentWorkspace } = useWorkspace();
-  const { createProject } = useProject();
+  const { mutate: createProject } = useCreateProject();
+
   const {
     control,
     reset,
@@ -63,9 +64,10 @@ const CreateProjectModal = observer((props: TProps) => {
       logo: getRandomEmoji(),
     },
   });
+
   const submit: SubmitHandler<CreateProjectDto> = async (data) => {
     try {
-      await createProject(data);
+      createProject(data);
       onClose();
       toast.success("Project created successfully");
     } catch (error) {

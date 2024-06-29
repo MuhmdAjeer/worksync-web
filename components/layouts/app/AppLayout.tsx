@@ -25,7 +25,7 @@ export const AppLayout: FC<IProps> = observer(({ header, children }) => {
 
           <main className="relative flex h-full w-full flex-col overflow-hidden ">
             <div className="z-[15]">
-              <div className="z-10 flex w-full items-center border-b border-red-50">
+              <div className="z-10 flex w-full items-center border-b">
                 <div className="block bg-custom-sidebar-background-100  py-4 pl-5 md:hidden">
                   {/* <SidebarHamburgerToggle /> */}
                 </div>
