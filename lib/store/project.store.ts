@@ -24,6 +24,8 @@ export interface IProjectStore {
   workspaceProjects: Project[];
   currentProject: Project | null;
   getProjectById: (id: string) => Project;
+  // stateMap:Record<string,IssueStateDto>
+  // projectIssueStates: IssueStateDto[];
 }
 
 export class ProjectStore implements IProjectStore {
@@ -31,8 +33,8 @@ export class ProjectStore implements IProjectStore {
     [projectId: string]: Project;
   } = {};
   loader: boolean = false;
-  rootStore: RootStore;
   projectService;
+  rootStore: RootStore;
   router;
 
   constructor(_rootStore: RootStore) {

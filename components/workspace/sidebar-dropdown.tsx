@@ -12,16 +12,19 @@ import { Button } from "../ui/button";
 import { signOut, useSession } from "next-auth/react";
 import Typography from "../ui/Typography";
 import { LogOut, PlusIcon, PlusSquare, Settings, User } from "lucide-react";
-import { useWorkspace } from "@/hooks/workspace";
 import Link from "next/link";
 import { observer } from "mobx-react";
+import { useWorkspace, useWorkspaces } from "@/hooks/workspaces";
+import { useAppRouter } from "@/hooks/router";
 
 const WorkspaceSidebarDropdown = observer(() => {
   const handleLogout = () => {
     signOut();
   };
   const session = useSession();
-  const { workspaces, currentWorkspace } = useWorkspace();
+  const { data: workspaces } = useWorkspaces();
+  const { workspaceSlug } = useAppRouter();
+  const { data: currentWorkspace } = useWorkspace(workspaceSlug!);
   return (
     <div className="flex justify-between gap-2 p-4 items-center">
       <DropdownMenu>

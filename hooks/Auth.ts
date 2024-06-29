@@ -7,7 +7,6 @@ import {
   UseMutationResult,
   useMutation,
 } from "@tanstack/react-query";
-import { getSession } from "next-auth/react";
 import { toast } from "sonner";
 
 export const useLogin = (): UseMutationResult<

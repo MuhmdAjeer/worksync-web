@@ -14,7 +14,7 @@ import { OnboardDto } from "@/generated/dto/onboard-dto";
 import { UseOnboardUser } from "@/hooks/Onboard";
 import ApiClient from "@/lib/apiClient";
 import { TypeEnum } from "@/generated/dto/file-upload-request-dto";
-import { useWorkspace } from "@/hooks/workspace";
+import { useWorkspace } from "@/hooks/store/workspace";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import { observer } from "mobx-react";

@@ -2,7 +2,7 @@ import { ThemeProvider } from "@/providers/ThemeProvider";
 import "@/styles/globals.css";
 import { NextPage } from "next";
 import type { AppProps } from "next/app";
-import { ReactElement, ReactNode } from "react";
+import React, { ReactElement, ReactNode } from "react";
 import { SessionProvider } from "next-auth/react";
 import ReactQueryProvider from "@/providers/ReactQuery";
 
@@ -34,32 +34,34 @@ export default function App({
         inter.variable
       )}
     >
-      <ThemeProvider
-        attribute="class"
-        defaultTheme="light"
-        enableSystem
-        disableTransitionOnChange
-        {...pageProps}
-      >
-        <TooltipProvider>
-          <SessionProvider session={session}>
-            <StoreProvider {...pageProps}>
-              <AppProvider>
-                {getLayout(
-                  <ReactQueryProvider>
-                    <style jsx global>{`
-                      html {
-                        font-family: ${inter.style.fontFamily};
-                      }
-                    `}</style>
-                    <Component {...pageProps} />
-                  </ReactQueryProvider>
-                )}
-              </AppProvider>
-            </StoreProvider>
-          </SessionProvider>
-        </TooltipProvider>
-      </ThemeProvider>
+      <ReactQueryProvider>
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="light"
+          enableSystem
+          disableTransitionOnChange
+          {...pageProps}
+        >
+          <TooltipProvider>
+            <SessionProvider session={session}>
+              <StoreProvider {...pageProps}>
+                <AppProvider>
+                  {getLayout(
+                    <React.Fragment>
+                      <style jsx global>{`
+                        html {
+                          font-family: ${inter.style.fontFamily};
+                        }
+                      `}</style>
+                      <Component {...pageProps} />
+                    </React.Fragment>
+                  )}
+                </AppProvider>
+              </StoreProvider>
+            </SessionProvider>
+          </TooltipProvider>
+        </ThemeProvider>
+      </ReactQueryProvider>
     </main>
   );
 }

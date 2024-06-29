@@ -5,10 +5,13 @@ import { useProject } from "@/hooks/project";
 import ProjectSidebarItem from "./ProjectSidebarItem";
 import { ChevronDown, ChevronRight } from "lucide-react";
 import { motion } from "framer-motion";
+import { useProjects } from "@/hooks/projects";
+import { useAppRouter } from "@/hooks/router";
 
 const SideBarProjects = observer(() => {
   const [isCollapsed, setCollapsed] = useState(false);
-  const { workspaceProjects } = useProject();
+  const { workspaceSlug } = useAppRouter();
+  const { data: workspaceProjects } = useProjects(workspaceSlug!);
 
   return (
     <div className="w-full cursor-pointer space-y-2 p-4">
@@ -28,7 +31,7 @@ const SideBarProjects = observer(() => {
 
       {!isCollapsed && (
         <motion.div initial={{ x: 20 }} animate={{ x: 0 }}>
-          {workspaceProjects.map((x) => (
+          {workspaceProjects?.map((x) => (
             <ProjectSidebarItem project={x} key={x.id} />
           ))}
         </motion.div>

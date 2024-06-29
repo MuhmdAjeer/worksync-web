@@ -14,4 +14,8 @@ export class WorkspaceService extends APIService {
   public async fetchMyWorkspaces(): Promise<WorkspaceDto[]> {
     return this.get("/workspace/me").then((response) => response.data);
   }
+
+  public async fetchWorkspace(slug: string): Promise<WorkspaceDto> {
+    return this.get(`/workspace/${slug}`).then((res) => res.data);
+  }
 }

@@ -1,7 +1,7 @@
 import ProjectHeader from "@/components/headers/ProjectHeader";
 import CreateIssueModal from "@/components/issues/create-issue-modal";
 import { Button } from "@/components/ui/button";
-import { AppLayout } from "@/layouts/app/AppLayout";
+import { AppLayout } from "@/components/layouts/app/AppLayout";
 import React, { ReactElement, useState } from "react";
 
 const Page = () => {
