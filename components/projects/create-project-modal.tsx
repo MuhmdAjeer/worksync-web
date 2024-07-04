@@ -25,6 +25,8 @@ import { useCreateProject } from "@/hooks/projects";
 // import { useWorkspace } from "@/hooks/workspaces";
 import { useAppRouter } from "@/hooks/router";
 import { useWorkspaceStore } from "@/hooks/store/workspace";
+import { useWorkspace } from "@/hooks/workspaces";
+import { useRouter } from "next/router";
 
 type TProps = {
   open?: boolean;
@@ -34,7 +36,6 @@ const createProjectSchema: ZodType<CreateProjectDto> = z.object({
   name: z.string(),
   description: z.string(),
   custom_id: z.string(),
-  workspace_id: z.string(),
   lead_id: z.string(),
   cover_image: z.string().optional(),
   logo: z.string().optional(),
@@ -42,8 +43,10 @@ const createProjectSchema: ZodType<CreateProjectDto> = z.object({
 
 const CreateProjectModal = observer((props: TProps) => {
   const { open, onClose } = props;
-  const { currentWorkspace } = useWorkspaceStore();
-  const session = useSession();
+  const router = useRouter();
+  const { data: currentWorkspace } = useWorkspace(
+    router.query.workspaceSlug?.toString()!
+  );
   const { mutate: createProject } = useCreateProject();
 
   const {
@@ -51,12 +54,12 @@ const CreateProjectModal = observer((props: TProps) => {
     reset,
     handleSubmit,
     watch,
+    setValue,
     formState: { errors },
   } = useForm<CreateProjectDto>({
     resolver: zodResolver(createProjectSchema),
     defaultValues: {
-      workspace_id: currentWorkspace?.id,
-      lead_id: session.data?.user.id,
+      lead_id: "432432",
       cover_image:
         PROJECT_UNSPLASH_COVERS[
           Math.floor(Math.random() * PROJECT_UNSPLASH_COVERS.length)
@@ -66,18 +69,23 @@ const CreateProjectModal = observer((props: TProps) => {
   });
 
   const submit: SubmitHandler<CreateProjectDto> = async (data) => {
-    try {
-      createProject(data);
-      onClose();
-      toast.success("Project created successfully");
-    } catch (error) {
-      toast.error("Failed to create project!");
-    }
+    if (!currentWorkspace) return;
+
+    createProject(
+      { project: data, slug: currentWorkspace.name },
+      {
+        onSuccess: () => {
+          onClose();
+          toast.success("Project created successfully");
+        },
+      }
+    );
   };
 
   useEffect(() => {
     reset();
   }, [reset, open]);
+
   return (
     <Dialog onOpenChange={() => onClose()} modal={true} open={open}>
       <DialogContent className="min-w-[40%]">
@@ -164,6 +172,7 @@ const CreateProjectModal = observer((props: TProps) => {
               />
             )}
           />
+          {JSON.stringify(errors)}
         </form>
         <DialogFooter>
           <MemberDropdown />

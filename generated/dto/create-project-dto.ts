@@ -43,12 +43,6 @@ export interface CreateProjectDto {
      * @type {string}
      * @memberof CreateProjectDto
      */
-    'workspace_id': string;
-    /**
-     * 
-     * @type {string}
-     * @memberof CreateProjectDto
-     */
     'lead_id': string;
     /**
      * 

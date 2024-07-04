@@ -23,6 +23,9 @@ import { toast } from "sonner";
 import { NextPageWithLayout } from "../_app";
 import AuthLayout from "@/components/layouts/AuthLayout";
 import { signIn } from "next-auth/react";
+import { UserService } from "@/services/user.service";
+
+const userService = new UserService();
 
 const Login: NextPageWithLayout = () => {
   const form = useForm<CreateUserDto>({
@@ -44,12 +47,18 @@ const Login: NextPageWithLayout = () => {
               redirect: false,
               email: form.getValues("email"),
               password: form.getValues("password"),
-            }).then((response) => {
+            }).then(async (response) => {
               if (response?.ok) {
-                router.push("/onboarding");
+                const user = await userService.getCurrentUser();
+                if (!user.onboarding?.is_onboarded) {
+                  router.push("/onboarding");
+                } else {
+                  router.push("/");
+                }
                 return;
+              } else {
+                toast.error("Invalid credentials");
               }
-              toast.error("Invalid credentials");
             });
           }}
         >
@@ -113,7 +122,11 @@ const Login: NextPageWithLayout = () => {
             >
               <GitHubLogoIcon />
             </Button>
-            <Typography className="text-primary/70" variant="h4" affects="muted">
+            <Typography
+              className="text-primary/70"
+              variant="h4"
+              affects="muted"
+            >
               New to Worksync?{" "}
               <Link className="text-primary" href="/auth/register">
                 Create an account

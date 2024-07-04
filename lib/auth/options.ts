@@ -32,6 +32,8 @@ export const authOptions: NextAuthOptions = {
             password: credentials?.password!,
           });
 
+          console.log({ data });
+
           if (!data.access_token) {
             return null;
           }
@@ -41,7 +43,7 @@ export const authOptions: NextAuthOptions = {
             email: credentials?.email,
             id: data.id,
             image: "fds",
-            name: data.name,
+            username: data.username,
             access_token: data.access_token,
           };
         } catch (error) {
@@ -63,7 +65,7 @@ export const authOptions: NextAuthOptions = {
         user: {
           ...session.user,
           id: token.id,
-          name: token.name,
+          username: token.username,
         },
       };
     },
@@ -71,6 +73,7 @@ export const authOptions: NextAuthOptions = {
       if (user) {
         token.id = user.id;
         token.access_token = user.access_token || "";
+        token.username = user.username;
       }
 
       return token;

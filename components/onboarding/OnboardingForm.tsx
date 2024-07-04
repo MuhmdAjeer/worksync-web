@@ -2,7 +2,7 @@
 import { onboardingSchema } from "@/lib/schema/Workspace";
 import { OnboardingWorkspace } from "@/lib/types/Workspace";
 import { zodResolver } from "@hookform/resolvers/zod";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Controller, SubmitHandler, useForm } from "react-hook-form";
 import { Input } from "../ui/input";
 import { Button } from "../ui/button";
@@ -14,246 +14,144 @@ import { OnboardDto } from "@/generated/dto/onboard-dto";
 import { UseOnboardUser } from "@/hooks/Onboard";
 import ApiClient from "@/lib/apiClient";
 import { TypeEnum } from "@/generated/dto/file-upload-request-dto";
-import { useWorkspace } from "@/hooks/store/workspace";
+import { useWorkspaceStore } from "@/hooks/store/workspace";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import { observer } from "mobx-react";
+import { useInvitations } from "@/hooks/invitations";
+import { OnboardMeta } from "@/generated/dto/onboard-meta";
+import { useUpdateUser, useUser } from "@/hooks/user";
+import ProfileSetup from "./ProfileSetup";
+import CreateOrJoinWorkspace from "./CreateOrJoinWorkspace";
+import InviteMembers from "./InviteMembers";
+import { useWorkspaces } from "@/hooks/workspaces";
+import { AnimatePresence, motion } from "framer-motion";
 
-const WORKSYNC_USE_OPTIONS = [
-  "Project Managing",
-  "Bug Tracking",
-  "Test Feedback",
-  "Task Scheduling",
-  "Time Tracking",
-  "Team Collaboration",
-  "Document Sharing",
-  "Code Review",
-  "Feature Requests",
-  "Customer Support",
-  "Meeting Coordination",
-  "Resource Allocation",
-  "Performance Evaluation",
-  "Workflow Automation",
-  "Data Analysis",
-  "Quality Assurance",
-  "Progress Monitoring",
-  "Training and Onboarding",
-  "Product Development",
-];
+export enum EOnboardingSteps {
+  PROFILE_SETUP = "PROFILE_SETUP",
+  WORKSPACE_CREATE_OR_JOIN = "WORKSPACE_CREATE_OR_JOIN",
+  INVITE_MEMBERS = "INVITE_MEMBERS",
+}
+
+const transitionVariants = {
+  initial: { opacity: 0, x: -100 },
+  animate: { opacity: 1, x: 0 },
+  exit: { opacity: 0, x: 100 },
+};
 
 const OnboardingForm = observer(() => {
-  const form = useForm<OnboardDto>({
-    resolver: zodResolver(onboardingSchema),
-  });
-  const [step, setStep] = useState(1);
-  const [selectedOption, setSelectedOption] = useState<string | null>(null);
+  const [step, setStep] = useState<EOnboardingSteps | null>(null);
+  const { data: user } = useUser();
+  const { mutateAsync: updateProfile } = useUpdateUser();
+  const { data: workspaceInvitations } = useInvitations();
+  const { data: workspaces } = useWorkspaces();
+
   const router = useRouter();
-  const [avatar, setAvatar] = useState<globalThis.File>();
-  const { onboardUser } = useWorkspace();
-  const [fields, setFields] = useState([
-    { email: "", role: "" },
-    { email: "", role: "" },
-    { email: "", role: "" },
-  ]);
-  const removeField = (index: number) => {
-    setFields((prev) => prev.filter((x, i) => i !== index));
-  };
-  const handleInviteFormChange = (index: number, field: Field) => {
-    console.log(field);
-    const x = [...fields];
-    x[index] = field;
-    setFields(x);
+
+  const changeStep = async (steps: OnboardMeta) => {
+    const data = {
+      ...user?.onboarding,
+      ...steps,
+    };
+    await updateProfile({ onboarding: data });
   };
 
-  const handleOnboarding = async () => {
-    if (!selectedOption) return;
-    let profile_picture_url = "NO IMAGE";
-    if (avatar) {
-      profile_picture_url = await ApiClient.uploadFile(
-        {
-          file_name: avatar?.name,
-          mimeType: avatar?.type,
-          type: TypeEnum.UserImage,
-        },
-        avatar
-      );
-    }
-    const data: OnboardDto = {
-      ...form.getValues(),
-      name: form.getValues("name").trim(),
-      members: fields,
-      use: selectedOption,
-      profile_picture: profile_picture_url,
-    };
-    await onboardUser(data)
-      .then((res) => {
-        toast.success("Onboarding success!");
-        router.push(`/${res.name}`);
-      })
-      .catch((err) => {
-        console.log(err);
-        toast.error("Onboarding Failed! try again");
-      });
+  const finishOnboarding = () => {
+    if (!workspaces || !user) return;
+    const lastWorkspace = workspaces[0];
+    updateProfile({
+      onboarding: {
+        profile_complete: true,
+        workspace_create: true,
+        workspace_invite: true,
+        workspace_join: true,
+        is_onboarded: true,
+      },
+    }).then((res) => {
+      toast.success("Onboarding completed!");
+      router.push(`${lastWorkspace.name}`);
+    });
   };
+
+  useEffect(() => {
+    if (!user) return;
+
+    const handleStepChange = async () => {
+      if (!user) return;
+
+      const onboardingStep = user.onboarding;
+
+      if (!onboardingStep) return;
+
+      if (!onboardingStep.profile_complete)
+        setStep(EOnboardingSteps.PROFILE_SETUP);
+
+      if (
+        onboardingStep.profile_complete &&
+        !(onboardingStep.workspace_join || onboardingStep.workspace_create)
+      ) {
+        setStep(EOnboardingSteps.WORKSPACE_CREATE_OR_JOIN);
+      }
+
+      if (
+        onboardingStep.profile_complete &&
+        (onboardingStep.workspace_join || onboardingStep.workspace_create) &&
+        !onboardingStep.workspace_invite
+      )
+        setStep(EOnboardingSteps.INVITE_MEMBERS);
+    };
+
+    handleStepChange();
+  }, [user?.onboarding]);
 
   return (
     <div className="flex gap-4 flex-col">
-      {step === 1 && (
-        <>
-          <Typography className="mb-4" variant="h3">
-            What will your workspace be?
-          </Typography>
-          <div>
-            <Controller
-              control={form.control}
-              name="name"
-              render={({ field, fieldState }) => (
-                <Input
-                  {...field}
-                  label="Name"
-                  message={fieldState.error?.message}
-                  placeholder="Enter your workspace name"
-                />
-              )}
-            />
-          </div>
-          <div>
-            <Controller
-              control={form.control}
-              name="slug"
-              render={({ field, fieldState }) => (
-                <Input
-                  {...field}
-                  label="Slug"
-                  message={fieldState.error?.message}
-                  placeholder={`app.worksync.com/your_slug_here`}
-                />
-              )}
-            />
-          </div>
-          <div>
-            <Button
-              onClick={(e) => {
-                e.preventDefault();
-                setStep(2);
-              }}
-              // disabled={!values.name || !values.slug}
-            >
-              Go Live
-            </Button>
-          </div>
-        </>
-      )}
-      {step === 2 && (
-        <>
-          <Typography className="mb-4" variant="h3">
-            What should we call you?
-          </Typography>
-          <div className="flex flex-row gap-4 items-center   ">
-            <FileInput
-              file={avatar}
-              setFile={setAvatar}
-              placeHolder="Profile Image"
-            />
-            <div>
-              <Controller
-                control={form.control}
-                name="user_name"
-                render={({ field, fieldState }) => (
-                  <Input
-                    {...field}
-                    message={fieldState.error?.message}
-                    placeholder="Enter your full name"
-                  />
-                )}
-              />
-            </div>
-          </div>
-
-          <Typography variant="h3" className="mb-4">
-            How will you use Worksync+ ?
-          </Typography>
-          <div className="flex gap-4 w-full flex-wrap">
-            {WORKSYNC_USE_OPTIONS.map((opt) => (
-              <>
-                <div
-                  onClick={() => {
-                    setSelectedOption(opt);
-                  }}
-                  className="relative"
-                >
-                  <div
-                    className={cn(
-                      "border border-primary/10 rounded-lg w-max p-2 hover:bg-primary/20 hover:text-primary-950 cursor-pointer",
-                      selectedOption == opt && "border-primary"
-                    )}
-                  >
-                    <Typography variant="h4" affects="small">
-                      {opt}
-                    </Typography>
-                  </div>
-                  {/* {selectedOption === opt && (
-                    <div className="absolute bg-slate-50 border rounded-full top-0 right-0 transform translate-x-1/2 -translate-y-1/2">
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        className="h-6 w-6 text-green-500"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        stroke="currentColor"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth="2"
-                          d="M5 13l4 4L19 7"
-                        />
-                      </svg>
-                    </div>
-                  )} */}
-                </div>
-              </>
-            ))}
-          </div>
-          <div className="flex gap-2">
-            <Button onClick={() => setStep((prev) => prev - 1)}>Back</Button>
-            <Button onClick={() => setStep(3)}>Continue</Button>
-          </div>
-        </>
-      )}
-      {step === 3 && (
-        <>
-          {fields.map((field, index) => (
-            <InviteMemberInput
-              field={field}
-              index={index}
-              onChange={handleInviteFormChange}
-              key={index}
-              remove={removeField}
-            />
-          ))}
-          <Button
-            onClick={(e) => {
-              e.preventDefault();
-              setFields((prev) => [...prev, { email: "", role: "" }]);
-            }}
-            variant="link"
+      <AnimatePresence mode="wait">
+        {step === EOnboardingSteps.WORKSPACE_CREATE_OR_JOIN && (
+          <motion.div
+            key={EOnboardingSteps.WORKSPACE_CREATE_OR_JOIN}
+            variants={transitionVariants}
+            initial="initial"
+            animate="animate"
+            exit="exit"
+            transition={{ duration: 0.5 }}
           >
-            + Add another
-          </Button>
-          <div className="flex gap-2">
-            <Button onClick={() => setStep((prev) => prev - 1)}>Back</Button>
-            <Button
-              onClick={(e) => {
-                e.preventDefault();
-                handleOnboarding();
-              }}
-              disabled={fields.some((x) => !x.email || !x.role)}
-            >
-              Invite Members
-            </Button>
-          </div>
-        </>
-      )}
+            <CreateOrJoinWorkspace
+              changeStep={changeStep}
+              invitations={workspaceInvitations}
+            />
+          </motion.div>
+        )}
+
+        {step === EOnboardingSteps.PROFILE_SETUP && (
+          <motion.div
+            key={EOnboardingSteps.PROFILE_SETUP}
+            variants={transitionVariants}
+            initial="initial"
+            animate="animate"
+            exit="exit"
+            transition={{ duration: 0.5 }}
+          >
+            <ProfileSetup changeStep={changeStep} />
+          </motion.div>
+        )}
+
+        {step === EOnboardingSteps.INVITE_MEMBERS && (
+          <motion.div
+            key={EOnboardingSteps.INVITE_MEMBERS}
+            variants={transitionVariants}
+            initial="initial"
+            animate="animate"
+            exit="exit"
+            transition={{ duration: 0.5 }}
+          >
+            <InviteMembers
+              workspace={workspaces?.[0]}
+              finishOnboarding={finishOnboarding}
+            />
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 });

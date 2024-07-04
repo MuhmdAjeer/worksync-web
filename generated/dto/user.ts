@@ -13,6 +13,9 @@
  */
 
 
+// May contain unused imports in some cases
+// @ts-ignore
+import { UserOnboarding } from './user-onboarding';
 
 /**
  * 
@@ -68,6 +71,12 @@ export interface User {
      * @memberof User
      */
     'workspaces': object;
+    /**
+     * 
+     * @type {UserOnboarding}
+     * @memberof User
+     */
+    'onboarding': UserOnboarding;
     /**
      * 
      * @type {string}

@@ -15,9 +15,6 @@
 
 // May contain unused imports in some cases
 // @ts-ignore
-import { IssueDto } from './issue-dto';
-// May contain unused imports in some cases
-// @ts-ignore
 import { IssueStateDto } from './issue-state-dto';
 // May contain unused imports in some cases
 // @ts-ignore
@@ -86,12 +83,6 @@ export interface ProjectDto {
      * @memberof ProjectDto
      */
     'workspace': WorkspaceDto;
-    /**
-     * 
-     * @type {Array<IssueDto>}
-     * @memberof ProjectDto
-     */
-    'issues': Array<IssueDto>;
     /**
      * 
      * @type {Array<IssueStateDto>}

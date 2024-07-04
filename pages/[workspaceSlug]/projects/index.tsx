@@ -5,7 +5,6 @@ import CreateProjectModal from "@/components/projects/create-project-modal";
 
 import { Button } from "@/components/ui/button";
 
-import { useProject } from "@/hooks/project";
 import { useProjects } from "@/hooks/projects";
 import { useAppRouter } from "@/hooks/router";
 import { useWorkspace } from "@/hooks/workspaces";
