@@ -10,16 +10,17 @@ export class ProjectService extends APIService {
     super();
   }
 
-  public async createProject(data: CreateProjectDto): Promise<ProjectDto> {
-    return this.post(`/project`, data).then((response) => response.data);
+  public async createProject(
+    workspaceSlug: string,
+    data: CreateProjectDto
+  ): Promise<ProjectDto> {
+    return this.post(`${workspaceSlug}/project`, data).then(
+      (response) => response.data
+    );
   }
 
-  public async fetchWorkspaceProjects(
-    slug: string
-  ): Promise<ProjectDto[]> {
-    return this.get(`workspace/${slug}/projects`).then(
-      (res) => res.data
-    );
+  public async fetchWorkspaceProjects(slug: string): Promise<ProjectDto[]> {
+    return this.get(`workspace/${slug}/projects`).then((res) => res.data);
   }
 
   public async fetchStates(projectId: string): Promise<IssueStateDto[]> {

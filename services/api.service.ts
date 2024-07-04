@@ -2,7 +2,8 @@ import axios, { AxiosInstance } from "axios";
 // store
 import { rootStore } from "@/lib/store-context";
 import { toast } from "sonner";
-import { getSession } from "next-auth/react";
+import { getSession, signOut } from "next-auth/react";
+import { is4xxError } from "@/lib/utils";
 
 export abstract class APIService {
   protected baseURL: string;
@@ -28,8 +29,11 @@ export abstract class APIService {
     });
     this.axiosInstance.interceptors.response.use(
       (response) => response,
-      (error) => {
-        toast.error("ApI ERROR");
+      async (error) => {
+        if (is4xxError(error, 401)) {
+          signOut();
+        }
+        throw error;
       }
     );
   }

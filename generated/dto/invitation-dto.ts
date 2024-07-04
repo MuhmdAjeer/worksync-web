@@ -15,79 +15,67 @@
 
 // May contain unused imports in some cases
 // @ts-ignore
-import { OnboardMeta } from './onboard-meta';
+import { WorkspaceDto } from './workspace-dto';
 
 /**
  * 
  * @export
- * @interface UserDto
+ * @interface InvitationDto
  */
-export interface UserDto {
+export interface InvitationDto {
     /**
      * 
      * @type {string}
-     * @memberof UserDto
+     * @memberof InvitationDto
      */
     'id': string;
     /**
      * 
      * @type {string}
-     * @memberof UserDto
+     * @memberof InvitationDto
      */
     'created_at'?: string;
     /**
      * 
      * @type {string}
-     * @memberof UserDto
+     * @memberof InvitationDto
      */
     'updated_at'?: string;
     /**
      * 
      * @type {string}
-     * @memberof UserDto
+     * @memberof InvitationDto
      */
     'deleted_at'?: string | null;
     /**
      * 
      * @type {number}
-     * @memberof UserDto
+     * @memberof InvitationDto
      */
     'version': number;
     /**
      * 
      * @type {string}
-     * @memberof UserDto
-     */
-    'username'?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof UserDto
+     * @memberof InvitationDto
      */
     'email': string;
     /**
      * 
-     * @type {string}
-     * @memberof UserDto
+     * @type {WorkspaceDto}
+     * @memberof InvitationDto
      */
-    'google_id'?: string;
+    'workspace': WorkspaceDto;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof InvitationDto
+     */
+    'is_accepted': boolean;
     /**
      * 
      * @type {string}
-     * @memberof UserDto
+     * @memberof InvitationDto
      */
-    'verified_at'?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof UserDto
-     */
-    'profile_picture'?: string;
-    /**
-     * 
-     * @type {OnboardMeta}
-     * @memberof UserDto
-     */
-    'onboarding'?: OnboardMeta;
+    'role': string;
 }
 

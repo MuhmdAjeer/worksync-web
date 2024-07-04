@@ -16,7 +16,7 @@ const WorkspaceWrapper = observer((props: PropsWithChildren) => {
   //   revalidateOnFocus: false,
   // });
 
-  useWorkspaces();
+  // useWorkspaces();
 
   // // useWorkspace(workspaceSlug?.toString()!);
 

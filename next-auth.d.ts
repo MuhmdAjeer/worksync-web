@@ -12,7 +12,7 @@ declare module "next-auth" {
 
   interface User {
     id?: string;
-    name?: string | null;
+    username?: string | null;
     email?: string | null;
     access_token: string | null;
   }

@@ -30,9 +30,6 @@ export class ApiClient {
       timeout: 200000,
     });
     this.http.interceptors.request.use(async (config: any) => {
-      // const token = await this.authProvider.getToken()
-      // This is required by the interceptor api
-
       const session = await getSession();
       config.headers = {
         ...config.headers,
