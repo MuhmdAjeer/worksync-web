@@ -12,11 +12,13 @@ enum ECurrentView {
 interface IProps {
   invitations?: InvitationDto[];
   changeStep: (data: OnboardMeta) => void;
+  finishOnboarding: () => Promise<void>;
 }
 
 const CreateOrJoinWorkspace: React.FC<IProps> = ({
   invitations,
   changeStep,
+  finishOnboarding,
 }) => {
   const [currentView, setCurrentView] = useState<ECurrentView | null>(null);
 
@@ -32,6 +34,9 @@ const CreateOrJoinWorkspace: React.FC<IProps> = ({
     <JoinWorkspaces
       toggleView={() => setCurrentView(ECurrentView.CREATE_WORKSPACE)}
       invitations={invitations}
+      nextStep={() => {
+        finishOnboarding();
+      }}
     />
   ) : (
     <CreateWorkspace

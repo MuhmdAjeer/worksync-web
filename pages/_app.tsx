@@ -28,41 +28,39 @@ export default function App({
 }: AppPropsWithLayout) {
   const getLayout = Component.getLayout ?? ((page) => page);
   return (
-    <main
-      className={cn(
-        "min-h-screen bg-background font-sans antialiased",
-        inter.variable
-      )}
-    >
-      <ReactQueryProvider>
-        <ThemeProvider
-          attribute="class"
-          defaultTheme="light"
-          enableSystem
-          disableTransitionOnChange
-          {...pageProps}
-        >
-          <TooltipProvider>
-            <SessionProvider session={session}>
-              <StoreProvider {...pageProps}>
-                <AppProvider>
-                  {getLayout(
-                    <React.Fragment>
-                      <style jsx global>{`
-                        html {
-                          font-family: ${inter.style.fontFamily};
-                        }
-                      `}</style>
-                      <Component {...pageProps} />
-                    </React.Fragment>
-                  )}
-                </AppProvider>
-              </StoreProvider>
-            </SessionProvider>
-          </TooltipProvider>
-        </ThemeProvider>
-      </ReactQueryProvider>
-    </main>
+    <>
+      <style jsx global>{`
+        html {
+          font-family: ${inter.style.fontFamily};
+        }
+      `}</style>
+      <main
+        className={cn(
+          "min-h-screen bg-background font-sans antialiased",
+          inter.variable
+        )}
+      >
+        <ReactQueryProvider>
+          <ThemeProvider
+            attribute="class"
+            defaultTheme="light"
+            enableSystem
+            disableTransitionOnChange
+            {...pageProps}
+          >
+            <TooltipProvider>
+              <SessionProvider session={session}>
+                <StoreProvider {...pageProps}>
+                  <AppProvider>
+                    {getLayout(<Component {...pageProps} />)}
+                  </AppProvider>
+                </StoreProvider>
+              </SessionProvider>
+            </TooltipProvider>
+          </ThemeProvider>
+        </ReactQueryProvider>
+      </main>
+    </>
   );
 }
 

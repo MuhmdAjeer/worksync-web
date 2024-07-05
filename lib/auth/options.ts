@@ -1,8 +1,8 @@
+import { AuthService } from "@/services/auth.service";
 import { NextAuthOptions, User } from "next-auth";
 import Credentials from "next-auth/providers/credentials";
 import GithubProvider from "next-auth/providers/github";
 import { z } from "zod";
-import ApiClient from "../apiClient";
 
 export const authOptions: NextAuthOptions = {
   pages: {
@@ -27,7 +27,8 @@ export const authOptions: NextAuthOptions = {
       },
       async authorize(credentials) {
         try {
-          const data = await ApiClient.login({
+          const authService = new AuthService();
+          const data = await authService.login({
             email: credentials?.email!,
             password: credentials?.password!,
           });

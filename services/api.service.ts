@@ -1,7 +1,4 @@
 import axios, { AxiosInstance } from "axios";
-// store
-import { rootStore } from "@/lib/store-context";
-import { toast } from "sonner";
 import { getSession, signOut } from "next-auth/react";
 import { is4xxError } from "@/lib/utils";
 
@@ -31,7 +28,9 @@ export abstract class APIService {
       (response) => response,
       async (error) => {
         if (is4xxError(error, 401)) {
-          signOut();
+          signOut().then(() => {
+            window.location.href = "/auth/login";
+          });
         }
         throw error;
       }
