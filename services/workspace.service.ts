@@ -26,6 +26,6 @@ export class WorkspaceService extends APIService {
   }
 
   public async inviteMembers(slug: string, data: InviteMembersDto) {
-    return this.post(`/workspace/${slug}/invite`, data).then((res) => res);
+    return this.post(`/workspace/${slug}/invitations`, data).then((res) => res);
   }
 }

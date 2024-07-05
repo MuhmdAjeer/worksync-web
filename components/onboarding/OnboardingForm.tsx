@@ -56,7 +56,7 @@ const OnboardingForm = observer(() => {
     await updateProfile({ onboarding: data });
   };
 
-  const finishOnboarding = () => {
+  const finishOnboarding = async () => {
     if (!workspaces || !user) return;
     const lastWorkspace = workspaces[0];
     updateProfile({
@@ -119,6 +119,7 @@ const OnboardingForm = observer(() => {
             <CreateOrJoinWorkspace
               changeStep={changeStep}
               invitations={workspaceInvitations}
+              finishOnboarding={finishOnboarding}
             />
           </motion.div>
         )}
