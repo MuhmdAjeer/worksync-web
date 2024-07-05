@@ -18,16 +18,23 @@ import {
 import { CommandList } from "cmdk";
 import { useSession } from "next-auth/react";
 import { User } from "next-auth";
+import { useWorkspace, useWorkspaceMembers } from "@/hooks/workspaces";
+import { useRouter } from "next/router";
 
 interface IProps {
   label?: string;
 }
 
 const MemberDropdown: React.FC<IProps> = ({ label = "Lead" }) => {
+  const router = useRouter();
+  const workspaceSlug = router.query.workspaceSlug?.toString();
+  const { data: members } = useWorkspaceMembers(workspaceSlug!);
   const [open, setOpen] = React.useState(false);
   const [value, setValue] = React.useState("");
-  const session = useSession();
-  const members: User[] = [session.data?.user!];
+
+  if (!members) {
+    return <></>;
+  }
 
   return (
     <Popover open={open} onOpenChange={setOpen}>
@@ -40,7 +47,7 @@ const MemberDropdown: React.FC<IProps> = ({ label = "Lead" }) => {
           className=" justify-between"
         >
           {value
-            ? members.find((member) => member?.name === value)?.name
+            ? members.find((member) => member?.id === value)?.user.email
             : label}
           <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
         </Button>
@@ -68,7 +75,7 @@ const MemberDropdown: React.FC<IProps> = ({ label = "Lead" }) => {
                           value === member.id ? "opacity-100" : "opacity-0"
                         )}
                       />
-                      {member.name}
+                      {member.user.username ?? member.user.email}
                     </CommandItem>
                   )
               )}

@@ -52,3 +52,11 @@ export const useInviteMembers = () => {
     },
   });
 };
+
+export const useWorkspaceMembers = (slug: string) => {
+  return useQuery({
+    queryKey: [QUERY_KEYS.GET_WORKSPACE_MEMBERS, slug],
+    queryFn: async () => await workspaceService.getMembers(slug),
+    enabled: !!slug,
+  });
+};

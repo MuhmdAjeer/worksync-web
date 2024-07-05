@@ -172,7 +172,6 @@ const CreateProjectModal = observer((props: TProps) => {
               />
             )}
           />
-          {JSON.stringify(errors)}
         </form>
         <DialogFooter>
           <MemberDropdown />

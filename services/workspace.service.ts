@@ -3,6 +3,7 @@ import { APIService } from "./api.service";
 import { WorkspaceDto } from "@/generated/dto/workspace-dto";
 import { CreateWorkspaceDto } from "@/generated/dto/create-workspace-dto";
 import { InviteMembersDto } from "@/generated/dto/invite-members-dto";
+import { WorkspaceMemberDto } from "@/generated/dto/workspace-member-dto";
 
 export class WorkspaceService extends APIService {
   constructor() {
@@ -27,5 +28,9 @@ export class WorkspaceService extends APIService {
 
   public async inviteMembers(slug: string, data: InviteMembersDto) {
     return this.post(`/workspace/${slug}/invitations`, data).then((res) => res);
+  }
+
+  public async getMembers(slug: string): Promise<WorkspaceMemberDto[]> {
+    return this.get(`/workspace/${slug}/members`).then((res) => res.data);
   }
 }

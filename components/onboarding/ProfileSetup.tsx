@@ -34,7 +34,7 @@ const WORKSYNC_USE_OPTIONS = [
 ];
 
 interface IProfileSetupFormValues {
-  user_name: string;
+  username: string;
   use: string;
   profile_picture?: string;
 }
@@ -52,7 +52,7 @@ const ProfileSetup: React.FC<IProps> = ({ changeStep }) => {
 
   const form = useForm<IProfileSetupFormValues>({
     defaultValues: {
-      user_name: user?.username,
+      username: user?.username,
       profile_picture: user?.profile_picture,
     },
     mode: "onChange",
@@ -91,7 +91,7 @@ const ProfileSetup: React.FC<IProps> = ({ changeStep }) => {
           <div>
             <Controller
               control={form.control}
-              name="user_name"
+              name="username"
               render={({ field, fieldState }) => (
                 <Input
                   {...field}
