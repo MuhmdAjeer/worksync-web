@@ -1,5 +1,3 @@
-/* eslint-disable react/no-unescaped-entities */
-"use client";
 import Typography from "@/components/ui/Typography";
 import { Button } from "@/components/ui/button";
 import {
@@ -8,13 +6,8 @@ import {
   CardContent,
   CardFooter,
 } from "@/components/ui/card";
-import { GitHubLogoIcon } from "@radix-ui/react-icons";
-import { Separator } from "@/components/ui/separator";
-import Link from "next/link";
+import React, { useEffect, useState } from "react";
 
-import React, { useState } from "react";
-import { Controller } from "react-hook-form";
-import { Input } from "@/components/ui/input";
 import {
   InputOTP,
   InputOTPGroup,
@@ -24,17 +17,28 @@ import {
 import { useVerifyCode } from "@/hooks/Auth";
 import { useSearchParams } from "next/navigation";
 import { toast } from "sonner";
-import ApiClient from "@/lib/apiClient";
 import { useRouter } from "next/navigation";
 import AuthLayout from "@/components/layouts/AuthLayout";
 import { NextPageWithLayout } from "@/pages/_app";
+import { AuthService } from "@/services/auth.service";
+
+const authService = new AuthService();
 
 const Page: NextPageWithLayout = () => {
   const [value, setValue] = useState<string>("");
+
   const verifyCodeMutation = useVerifyCode();
   const params = useSearchParams();
-  const email = params.get("email");
   const router = useRouter();
+
+  const email = params.get("email");
+
+  useEffect(() => {
+    if (!email) {
+      router.push("/auth/register");
+    }
+  }, [email]);
+
   const handleSubmit = () => {
     if (!email) {
       return;
@@ -49,62 +53,76 @@ const Page: NextPageWithLayout = () => {
       }
     );
   };
+
   const resendCode = async () => {
     try {
       if (!email) {
         return;
       }
-      await ApiClient.resendCode({ email });
+      await authService.resendCode({ email });
       toast.success("New code send successfully!");
     } catch (error) {
       toast.error("Failed to send new code");
     }
   };
+
   return (
-    <div className="relative z-10 mt-[calc(30vh)] h-fit w-full max-w-md overflow-hidden border-y border-gray-200 sm:rounded-2xl sm:border sm:shadow-xl">
+    <div className="relative z-10 mt-[calc(30vh)] h-fit w-full max-w-md overflow-hidden border-y border-secondary sm:rounded-2xl sm:border sm:shadow-xl">
       <Card>
-        <CardHeader>
-          <Typography variant="h4">Please enter your Code to verify</Typography>
-        </CardHeader>
-        <CardContent>
-          <div className="flex items-center justify-center">
-            <InputOTP onChange={(e) => setValue(e)} value={value} maxLength={6}>
-              <InputOTPGroup>
-                <InputOTPSlot index={0} />
-                <InputOTPSlot index={1} />
-                <InputOTPSlot index={2} />
-              </InputOTPGroup>
-              <InputOTPSeparator />
-              <InputOTPGroup>
-                <InputOTPSlot index={3} />
-                <InputOTPSlot index={4} />
-                <InputOTPSlot index={5} />
-              </InputOTPGroup>
-            </InputOTP>
-          </div>
-          {/* <Typography affects="muted" variant="p">
-            By signing up, I accept the Tenant Cloud Terms of Service and
-            acknowledge the Privacy Policy.
-          </Typography> */}
-        </CardContent>
-        <CardFooter className="flex flex-col gap-2">
-          <Button
-            disabled={value!.length < 6}
-            onClick={handleSubmit}
-            className="w-full"
-          >
-            Confirm
-          </Button>
-          {/* <Typography affects={"removePMargin"} variant="h4">
-            Or continue with:
-          </Typography> */}
-          <Typography color="gray" variant="h4" affects="muted">
-            Didn't received code?{" "}
-            <Button variant="link" className="text-info" onClick={resendCode}>
-              Resend Code
+        <form
+          onSubmit={(e) => {
+            e.preventDefault();
+            handleSubmit();
+          }}
+        >
+          <CardHeader>
+            <Typography variant="h4">
+              Please enter your Code to verify
+            </Typography>
+          </CardHeader>
+          <CardContent>
+            <div className="flex items-center justify-center">
+              <InputOTP
+                onChange={(e) => setValue(e)}
+                value={value}
+                maxLength={6}
+              >
+                <InputOTPGroup>
+                  <InputOTPSlot index={0} />
+                  <InputOTPSlot index={1} />
+                  <InputOTPSlot index={2} />
+                </InputOTPGroup>
+                <InputOTPSeparator />
+                <InputOTPGroup>
+                  <InputOTPSlot index={3} />
+                  <InputOTPSlot index={4} />
+                  <InputOTPSlot index={5} />
+                </InputOTPGroup>
+              </InputOTP>
+            </div>
+          </CardContent>
+          <CardFooter className="flex flex-col gap-2">
+            <Button
+              type="submit"
+              disabled={value!.length < 6 || verifyCodeMutation.isPending}
+              className="w-full"
+            >
+              Confirm
             </Button>
-          </Typography>
-        </CardFooter>
+            \
+            <Typography color="gray" variant="h4" affects="muted">
+              Didn't received code?{" "}
+              <Button
+                disabled={verifyCodeMutation.isPending}
+                variant="link"
+                className="text-info"
+                onClick={resendCode}
+              >
+                Resend Code
+              </Button>
+            </Typography>
+          </CardFooter>
+        </form>
       </Card>
     </div>
   );
