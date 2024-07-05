@@ -24,7 +24,7 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
           {...props}
         />
         {props.message && (
-          <Typography affects={"small"} className="text-red-500 mt-2">
+          <Typography affects={"small"} className="text-red-500 ">
             {props.message}
           </Typography>
         )}
