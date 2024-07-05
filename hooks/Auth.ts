@@ -1,13 +1,15 @@
 import { CreateUserDto } from "@/generated/dto/create-user-dto";
 import { VerifyOTPDto } from "@/generated/dto/verify-otpdto";
-import ApiClient from "@/lib/apiClient";
 import { is4xxError, isDuplicateError, isNotFoundError } from "@/lib/utils";
+import { AuthService } from "@/services/auth.service";
 import {
   UseMutationOptions,
   UseMutationResult,
   useMutation,
 } from "@tanstack/react-query";
 import { toast } from "sonner";
+
+const authService = new AuthService();
 
 export const useLogin = (): UseMutationResult<
   { access_token: string },
@@ -23,7 +25,7 @@ export const useLogin = (): UseMutationResult<
     unknown
   > = {
     mutationFn: async (userDto: CreateUserDto) => {
-      return await ApiClient.login(userDto);
+      return await authService.login(userDto);
     },
     onError: (error) => {
       if (is4xxError(error, 401) || isNotFoundError(error)) {
@@ -45,7 +47,7 @@ export const useRegisterUser = (): UseMutationResult<
 > => {
   return useMutation({
     mutationFn: async (userDto: CreateUserDto) => {
-      return await ApiClient.registerUser(userDto);
+      return await authService.registerUser(userDto);
     },
     onError: (error) => {
       if (isDuplicateError(error)) {
@@ -68,7 +70,7 @@ export const useVerifyCode = (): UseMutationResult<
     unknown
   > = {
     mutationFn: async (data: VerifyOTPDto) => {
-      await ApiClient.verifyToken(data);
+      await authService.verifyToken(data);
     },
     onError: (error) => {
       if (is4xxError(error, 400)) {
