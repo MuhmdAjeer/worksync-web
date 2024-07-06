@@ -107,11 +107,5 @@ export interface ProjectDto {
      * @memberof ProjectDto
      */
     'logo'?: string;
-    /**
-     * 
-     * @type {Array<UserDto>}
-     * @memberof ProjectDto
-     */
-    'members': Array<UserDto>;
 }
 

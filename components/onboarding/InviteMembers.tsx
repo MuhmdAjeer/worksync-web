@@ -7,6 +7,8 @@ import { useInviteMembers } from "@/hooks/workspaces";
 import { is4xxError } from "@/lib/utils";
 import { toast } from "sonner";
 import { Spinner } from "../Spinner/Spinner";
+import { EUserWorkspaceRoles } from "@/lib/types/Workspace";
+import { RoleEnum } from "@/generated/dto/invite-member-dto";
 
 export interface FormValues {
   emails: IField[];
@@ -14,7 +16,7 @@ export interface FormValues {
 
 interface IField {
   email: string;
-  role: string;
+  role: RoleEnum;
 }
 
 interface IProps {
@@ -39,7 +41,7 @@ const InviteMembers: React.FC<IProps> = ({ finishOnboarding, workspace }) => {
   const { mutate: inviteMembers } = useInviteMembers();
 
   const appendField = () => {
-    append({ email: "", role: "" });
+    append({ email: "", role: RoleEnum.Admin });
   };
 
   const handleInvite = async (data: FormValues) => {
@@ -58,9 +60,9 @@ const InviteMembers: React.FC<IProps> = ({ finishOnboarding, workspace }) => {
     if (fields.length === 0) {
       append(
         [
-          { email: "muhdajeer@gmail.com", role: "admin" },
-          { email: "muhmdajeer.dev@gmail.com", role: "admin" },
-          { email: "", role: "" },
+          { email: "muhdajeer@gmail.com", role: RoleEnum.Admin },
+          { email: "muhmdajeer.dev@gmail.com", role: RoleEnum.Admin },
+          { email: "", role: RoleEnum.Admin },
         ],
         {
           focusIndex: 0,

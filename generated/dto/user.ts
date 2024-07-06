@@ -64,12 +64,6 @@ export interface User {
      * @type {object}
      * @memberof User
      */
-    'projects': object;
-    /**
-     * 
-     * @type {object}
-     * @memberof User
-     */
     'workspaces': object;
     /**
      * 
