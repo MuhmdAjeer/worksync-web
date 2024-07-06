@@ -59,7 +59,6 @@ const CreateProjectModal = observer((props: TProps) => {
   } = useForm<CreateProjectDto>({
     resolver: zodResolver(createProjectSchema),
     defaultValues: {
-      lead_id: "432432",
       cover_image:
         PROJECT_UNSPLASH_COVERS[
           Math.floor(Math.random() * PROJECT_UNSPLASH_COVERS.length)
@@ -74,10 +73,10 @@ const CreateProjectModal = observer((props: TProps) => {
     createProject(
       { project: data, slug: currentWorkspace.name },
       {
-        // onSuccess: () => {
-        //   onClose();
-        //   toast.success("Project created successfully");
-        // },
+        onSuccess: () => {
+          onClose();
+          toast.success("Project created successfully");
+        },
       }
     );
   };
@@ -120,6 +119,8 @@ const CreateProjectModal = observer((props: TProps) => {
                     <PopoverContent className="w-full">
                       <EmojiPicker
                         onEmojiClick={(emoji) => {
+                          console.log({ emoji });
+
                           field.onChange(
                             convertHexEmojiToDecimal(emoji.unified)
                           );
@@ -174,7 +175,13 @@ const CreateProjectModal = observer((props: TProps) => {
           />
         </form>
         <DialogFooter>
-          <MemberDropdown />
+          <Controller
+            control={control}
+            name="lead_id"
+            render={({ field }) => (
+              <MemberDropdown onChange={(value) => field.onChange(value)} />
+            )}
+          />
           <Button
             onClick={() => {
               void handleSubmit(submit)();
