@@ -9,17 +9,17 @@ import {
   CommandGroup,
   CommandInput,
   CommandItem,
+  CommandList,
 } from "@/components/ui/command";
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import { Project } from "@/generated/dto/project";
 import { observer } from "mobx-react";
-import { useProject } from "@/hooks/project";
-import { CommandList } from "cmdk";
 import ProjectLogo from "./ProjectLogo";
+import { useProject, useProjects } from "@/hooks/projects";
+import { useRouter } from "next/router";
 
 interface IProps {
   open: boolean;
@@ -30,8 +30,10 @@ interface IProps {
 
 const ProjectsComboBox: React.FC<IProps> = observer(
   ({ onOpenChange, open, onChange, value }) => {
-    const { getProjectById, workspaceProjects } = useProject();
-    const selectedProject = value ? getProjectById(value) : null;
+    const router = useRouter();
+    const workspaceSlug = router.query.workspaceSlug?.toString();
+    const { data: workspaceProjects } = useProjects(workspaceSlug!);
+    const { data: selectedProject } = useProject(value);
 
     return (
       <Popover open={open} onOpenChange={onOpenChange}>
@@ -57,7 +59,7 @@ const ProjectsComboBox: React.FC<IProps> = observer(
             <CommandEmpty>No project found.</CommandEmpty>
             <CommandGroup>
               <CommandList>
-                {workspaceProjects.map((project) => (
+                {workspaceProjects?.map((project) => (
                   <CommandItem
                     key={project.id}
                     value={project.id}

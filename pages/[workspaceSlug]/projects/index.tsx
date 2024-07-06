@@ -12,11 +12,12 @@ import { AppLayout } from "@/components/layouts/app/AppLayout";
 import { NextPageWithLayout } from "@/pages/_app";
 import { observer } from "mobx-react";
 import React, { ReactElement, useState } from "react";
+import { Spinner } from "@/components/Spinner/Spinner";
 
 const ProjectsPage: NextPageWithLayout = observer(() => {
   const [openCreateModal, setOpenCreateModal] = useState(false);
   const { workspaceSlug } = useAppRouter();
-  const { data: workspaceProjects } = useProjects(workspaceSlug!);
+  const { data: workspaceProjects, isLoading } = useProjects(workspaceSlug!);
 
   if (!workspaceProjects?.length) {
     return (

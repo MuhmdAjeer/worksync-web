@@ -1,7 +1,7 @@
 import React, { FC, useEffect, useState } from "react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "../ui/dialog";
 import ProjectsComboBox from "../projects/ProjectsComboBox";
-import { useProject } from "@/hooks/project";
+import { useCurrentProject } from "@/hooks/projects";
 import { observer } from "mobx-react";
 import { Input } from "../ui/input";
 import { Textarea } from "../ui/textarea";
@@ -16,7 +16,8 @@ interface IProps {
 
 const CreateIssueModal: FC<IProps> = observer(({ onClose, open }) => {
   const [openProjectsComboBox, setProjectsComboBox] = useState(false);
-  const { currentProject } = useProject();
+
+  const { data: currentProject } = useCurrentProject();
   const [activeProjectId, setActiveProjectId] = useState<string | null>(null);
 
   useEffect(() => {
@@ -46,15 +47,15 @@ const CreateIssueModal: FC<IProps> = observer(({ onClose, open }) => {
           <Textarea rows={10} name="Description" placeholder="Description" />
         </div>
         <div className="flex gap-2">
-          <IssueStatesDropdown
+          {/* <IssueStatesDropdown
           // open={stateDropdown}
           // onOpenChange={(v) => setStateDropdown(v)}
-          />
+          /> */}
           <IssuePriorityDropdown
             open={stateDropdown}
             onOpenChange={(v) => setStateDropdown(v)}
           />
-          <MemberDropdown label="Assignees" />
+          {/* <MemberDropdown label="Assignees" /> */}
         </div>
       </DialogContent>
     </Dialog>

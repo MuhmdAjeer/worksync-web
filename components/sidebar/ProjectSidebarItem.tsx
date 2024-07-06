@@ -1,4 +1,3 @@
-import { Project } from "@/generated/dto/project";
 import { observer } from "mobx-react";
 import Link from "next/link";
 import React from "react";
@@ -18,9 +17,10 @@ import {
   Settings,
 } from "lucide-react";
 import { useRouter } from "next/router";
+import { ProjectDto } from "@/generated/dto/project-dto";
 
 interface IProps {
-  project: Project;
+  project: ProjectDto;
 }
 
 const projectLinks = (workspaceSlug: string, projectId: string) => {
