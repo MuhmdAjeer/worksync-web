@@ -74,10 +74,10 @@ const CreateProjectModal = observer((props: TProps) => {
     createProject(
       { project: data, slug: currentWorkspace.name },
       {
-        onSuccess: () => {
-          onClose();
-          toast.success("Project created successfully");
-        },
+        // onSuccess: () => {
+        //   onClose();
+        //   toast.success("Project created successfully");
+        // },
       }
     );
   };

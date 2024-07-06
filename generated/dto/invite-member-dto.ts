@@ -25,12 +25,23 @@ export interface InviteMemberDto {
      * @type {string}
      * @memberof InviteMemberDto
      */
-    'email': string;
+    'role': RoleEnum;
     /**
      * 
      * @type {string}
      * @memberof InviteMemberDto
      */
-    'role': string;
+    'email': string;
 }
+
+/**
+    * @export
+    * @enum {string}
+    */
+export enum RoleEnum {
+    Admin = 'ADMIN',
+    Member = 'MEMBER',
+    Guest = 'GUEST'
+}
+
 

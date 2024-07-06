@@ -47,7 +47,7 @@ const MemberDropdown: React.FC<IProps> = ({ label = "Lead" }) => {
           className=" justify-between"
         >
           {value
-            ? members.find((member) => member?.id === value)?.user.email
+            ? members.find((member) => member?.id === value)?.user.username
             : label}
           <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
         </Button>
@@ -75,7 +75,7 @@ const MemberDropdown: React.FC<IProps> = ({ label = "Lead" }) => {
                           value === member.id ? "opacity-100" : "opacity-0"
                         )}
                       />
-                      {member.user.username ?? member.user.email}
+                      {member.user.username}
                     </CommandItem>
                   )
               )}

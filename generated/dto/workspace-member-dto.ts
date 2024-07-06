@@ -73,6 +73,17 @@ export interface WorkspaceMemberDto {
      * @type {string}
      * @memberof WorkspaceMemberDto
      */
-    'role': string;
+    'role': RoleEnum;
 }
+
+/**
+    * @export
+    * @enum {string}
+    */
+export enum RoleEnum {
+    Admin = 'ADMIN',
+    Member = 'MEMBER',
+    Guest = 'GUEST'
+}
+
 

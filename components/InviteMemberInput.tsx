@@ -22,6 +22,8 @@ import {
   useForm,
 } from "react-hook-form";
 import { FormValues } from "./onboarding/InviteMembers";
+import { EUserWorkspaceRoles } from "@/lib/types/Workspace";
+import { RoleEnum } from "@/generated/dto/invitation-dto";
 
 type InviteMemberFormProps = {
   index: number;
@@ -37,7 +39,7 @@ type InviteMemberFormProps = {
 
 export interface Field {
   email: string;
-  role: string;
+  role: EUserWorkspaceRoles;
 }
 
 const emailRegex = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i;
@@ -86,9 +88,9 @@ const InviteMemberInput = (props: InviteMemberFormProps) => {
             <SelectContent>
               <SelectGroup>
                 <SelectLabel>Role</SelectLabel>
-                <SelectItem value="admin">Admin</SelectItem>
-                <SelectItem value="member">Member</SelectItem>
-                <SelectItem value="guest">Guest</SelectItem>
+                <SelectItem value={RoleEnum.Admin}>Admin</SelectItem>
+                <SelectItem value={RoleEnum.Member}>Member</SelectItem>
+                <SelectItem value={RoleEnum.Guest}>Guest</SelectItem>
               </SelectGroup>
             </SelectContent>
           </Select>
