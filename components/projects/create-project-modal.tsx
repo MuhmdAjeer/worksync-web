@@ -47,7 +47,7 @@ const CreateProjectModal = observer((props: TProps) => {
   const { data: currentWorkspace } = useWorkspace(
     router.query.workspaceSlug?.toString()!
   );
-  const { mutate: createProject } = useCreateProject();
+  const { mutate: createProject, isPending } = useCreateProject();
 
   const {
     control,
@@ -55,7 +55,7 @@ const CreateProjectModal = observer((props: TProps) => {
     handleSubmit,
     watch,
     setValue,
-    formState: { errors },
+    formState: { errors, isSubmitting },
   } = useForm<CreateProjectDto>({
     resolver: zodResolver(createProjectSchema),
     defaultValues: {
@@ -84,6 +84,8 @@ const CreateProjectModal = observer((props: TProps) => {
   useEffect(() => {
     reset();
   }, [reset, open]);
+
+  const isButtonDisabled = isPending || isSubmitting;
 
   return (
     <Dialog onOpenChange={() => onClose()} modal={true} open={open}>
@@ -186,9 +188,10 @@ const CreateProjectModal = observer((props: TProps) => {
             onClick={() => {
               void handleSubmit(submit)();
             }}
+            disabled={isButtonDisabled}
             size="sm"
           >
-            Create project
+            {isButtonDisabled ? "Creating..." : "Create project"}
           </Button>
         </DialogFooter>
       </DialogContent>

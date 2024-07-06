@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import Typography from "../ui/Typography";
 import { observer } from "mobx-react";
-import { useProject } from "@/hooks/project";
 import ProjectSidebarItem from "./ProjectSidebarItem";
 import { ChevronDown, ChevronRight } from "lucide-react";
 import { motion } from "framer-motion";
