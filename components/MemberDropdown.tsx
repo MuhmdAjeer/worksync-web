@@ -23,9 +23,10 @@ import { useRouter } from "next/router";
 
 interface IProps {
   label?: string;
+  onChange: (value: string) => void;
 }
 
-const MemberDropdown: React.FC<IProps> = ({ label = "Lead" }) => {
+const MemberDropdown: React.FC<IProps> = ({ label = "Lead", onChange }) => {
   const router = useRouter();
   const workspaceSlug = router.query.workspaceSlug?.toString();
   const { data: members } = useWorkspaceMembers(workspaceSlug!);
@@ -65,7 +66,8 @@ const MemberDropdown: React.FC<IProps> = ({ label = "Lead" }) => {
                       key={member.id}
                       value={member.id}
                       onSelect={(currentValue) => {
-                        setValue(currentValue === value ? "" : currentValue);
+                        setValue(currentValue);
+                        onChange(member.user.id);
                         setOpen(false);
                       }}
                     >

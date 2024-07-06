@@ -16,6 +16,7 @@ import Link from "next/link";
 import { observer } from "mobx-react";
 import { useWorkspace, useWorkspaces } from "@/hooks/workspaces";
 import { useAppRouter } from "@/hooks/router";
+import { ScrollArea } from "../ui/scroll-area";
 
 const WorkspaceSidebarDropdown = observer(() => {
   const handleLogout = () => {
@@ -41,9 +42,10 @@ const WorkspaceSidebarDropdown = observer(() => {
             {session.data?.user.email}
           </DropdownMenuLabel>
           <DropdownMenuSeparator />
+          <ScrollArea className="h-56" > 
           {Object.values(workspaces ?? {}).map((workspace) => (
             <DropdownMenuItem key={workspace.id}>
-              <Link href={`/${workspace.name}`} className="flex gap-2">
+              <Link href={`/${workspace.name}`} className="flex gap-2 w-full">
                 <div className="bg-custom-primary-dark h-5 w-5 rounded flex items-center justify-center">
                   <span className="text-secondary text-xs">
                     {workspace.name.charAt(0).toUpperCase()}
@@ -53,28 +55,28 @@ const WorkspaceSidebarDropdown = observer(() => {
               </Link>
             </DropdownMenuItem>
           ))}
+          </ScrollArea>
           <DropdownMenuSeparator />
-
-          <DropdownMenuItem className="flex gap-2 px-4">
-            <PlusSquare className="h-4 w-4" />
-            <p className="leading-5">Create workspace</p>
-          </DropdownMenuItem>
-          <DropdownMenuItem className="flex gap-2 px-4">
-            <User className="h-4 w-4" />
-            <p className="leading-5">My activity</p>
-          </DropdownMenuItem>
-          <DropdownMenuItem className="flex gap-2 px-4">
-            <Settings className="h-4 w-4" />
-            <p className="leading-5">Settings</p>
-          </DropdownMenuItem>
-          <DropdownMenuSeparator />
-          <DropdownMenuItem
-            onClick={handleLogout}
-            className="text-destructive flex gap-2 px-4"
-          >
-            <LogOut className="  h-4 w-4" />
-            <p className="leading-5">Logout</p>
-          </DropdownMenuItem>
+            <DropdownMenuItem className="flex gap-2 px-4">
+              <PlusSquare className="h-4 w-4" />
+              <p className="leading-5">Create workspace</p>
+            </DropdownMenuItem>
+            <DropdownMenuItem className="flex gap-2 px-4">
+              <User className="h-4 w-4" />
+              <p className="leading-5">My activity</p>
+            </DropdownMenuItem>
+            <DropdownMenuItem className="flex gap-2 px-4">
+              <Settings className="h-4 w-4" />
+              <p className="leading-5">Settings</p>
+            </DropdownMenuItem>
+            <DropdownMenuSeparator />
+            <DropdownMenuItem
+              onClick={handleLogout}
+              className="text-destructive flex gap-2 px-4"
+            >
+              <LogOut className="  h-4 w-4" />
+              <p className="leading-5">Logout</p>
+            </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
       <DropdownMenu>
