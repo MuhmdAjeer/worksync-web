@@ -1,3 +1,5 @@
+import { GroupEnum } from "@/generated/dto/issue-state-dto";
+import { STATE_GROUP_COLORS } from "@/lib/constants";
 import {
   CircleCheckIcon,
   CircleDashedIcon,
@@ -5,38 +7,21 @@ import {
   CircleXIcon,
   LoaderCircle,
 } from "lucide-react";
-import React from "react";
-
-export type TStateGroups =
-  | "backlog"
-  | "todo"
-  | "inProgress"
-  | "done"
-  | "cancelled";
+import React, { ReactElement, ReactNode } from "react";
 
 interface IssueStateIconProps {
-  group: TStateGroups;
+  group: GroupEnum;
   color?: string;
-  className: string;
+  className?: string;
   height?: string;
   width?: string;
 }
 
-export const STATE_GROUP_COLORS: {
-  [key in TStateGroups]: string;
-} = {
-  backlog: "#d9d9d9",
-  inProgress: "#3f76ff",
-  todo: "#f59e0b",
-  done: "#16a34a",
-  cancelled: "#dc2626",
-};
-
-const IssueIcons = {
+const IssueIcons: {[key in GroupEnum]: any;} = {
   backlog: CircleDashedIcon,
-  todo: CircleIcon,
-  inProgress: LoaderCircle,
-  done: CircleCheckIcon,
+  unstarted: CircleIcon,
+  started: LoaderCircle,
+  completed: CircleCheckIcon,
   cancelled: CircleXIcon,
 };
 

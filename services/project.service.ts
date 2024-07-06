@@ -23,15 +23,11 @@ export class ProjectService extends APIService {
     return this.get(`workspace/${slug}/projects`).then((res) => res.data);
   }
 
-  public async fetchProject(
-    projectId: string,
-  ): Promise<ProjectDto> {
+  public async fetchProject(projectId: string): Promise<ProjectDto> {
     return this.get(`project/${projectId}`).then((res) => res.data);
   }
 
   public async fetchStates(projectId: string): Promise<IssueStateDto[]> {
-    return this.get(`project/${projectId}/issue-states`).then(
-      (res) => res.data
-    );
+    return this.get(`project/${projectId}/states`).then((res) => res.data);
   }
 }

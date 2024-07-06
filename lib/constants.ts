@@ -1,3 +1,5 @@
+import { GroupEnum } from "@/generated/dto/issue-state-dto";
+
 export const PROJECT_UNSPLASH_COVERS = [
   "https://images.unsplash.com/photo-1531045535792-b515d59c3d1f?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=870&q=80",
   "https://images.unsplash.com/photo-1693027407934-e3aa8a54c7ae?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=870&q=80",
@@ -26,4 +28,15 @@ export enum QUERY_KEYS {
   UPLOAD_FILE = "UPLOAD_FILE",
   GET_WORKSPACE_MEMBERS = "GET_WORKSPACE_MEMBERS",
   GET_PROJECT = "GET_PROJECT",
+  GET_PROJECT_STATES = "GET_PROJECT_STATES",
 }
+
+export const STATE_GROUP_COLORS: {
+  [key in GroupEnum]: string;
+} = {
+  backlog: "#d9d9d9",
+  started: "#3f76ff",
+  unstarted: "#f59e0b",
+  completed: "#16a34a",
+  cancelled: "#dc2626",
+};

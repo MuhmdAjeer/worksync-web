@@ -27,6 +27,7 @@ const CreateIssueModal: FC<IProps> = observer(({ onClose, open }) => {
   }, [currentProject]);
 
   const [stateDropdown, setStateDropdown] = useState(false);
+  const [priorityDropdown, setPriorityDropdown] = useState(false);
 
   return (
     <Dialog open={open} onOpenChange={onClose}>
@@ -47,13 +48,14 @@ const CreateIssueModal: FC<IProps> = observer(({ onClose, open }) => {
           <Textarea rows={10} name="Description" placeholder="Description" />
         </div>
         <div className="flex gap-2">
-          {/* <IssueStatesDropdown
-          // open={stateDropdown}
-          // onOpenChange={(v) => setStateDropdown(v)}
-          /> */}
-          <IssuePriorityDropdown
+          <IssueStatesDropdown
             open={stateDropdown}
             onOpenChange={(v) => setStateDropdown(v)}
+            onChange={() => {}}
+          />
+          <IssuePriorityDropdown
+            open={priorityDropdown}
+            onOpenChange={(v) => setPriorityDropdown(v)}
           />
           {/* <MemberDropdown label="Assignees" /> */}
         </div>
