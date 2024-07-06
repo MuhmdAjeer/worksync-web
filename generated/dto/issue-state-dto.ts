@@ -55,6 +55,12 @@ export interface IssueStateDto {
      * @type {string}
      * @memberof IssueStateDto
      */
+    'group': GroupEnum;
+    /**
+     * 
+     * @type {string}
+     * @memberof IssueStateDto
+     */
     'name': string;
     /**
      * 
@@ -67,12 +73,19 @@ export interface IssueStateDto {
      * @type {string}
      * @memberof IssueStateDto
      */
-    'group': string;
-    /**
-     * 
-     * @type {string}
-     * @memberof IssueStateDto
-     */
     'description'?: string;
 }
+
+/**
+    * @export
+    * @enum {string}
+    */
+export enum GroupEnum {
+    Backlog = 'backlog',
+    Unstarted = 'unstarted',
+    Started = 'started',
+    Completed = 'completed',
+    Cancelled = 'cancelled'
+}
+
 

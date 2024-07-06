@@ -54,3 +54,11 @@ export const useCreateProject = () => {
     },
   });
 };
+
+export const useProjectStates = (id: string) => {
+  return useQuery({
+    queryKey: [QUERY_KEYS.GET_PROJECT_STATES, id],
+    queryFn: async () => await projectService.fetchStates(id),
+    enabled: !!id,
+  });
+};

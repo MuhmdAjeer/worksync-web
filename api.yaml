@@ -1,0 +1,920 @@
+openapi: 3.0.0
+paths:
+  /:
+    get:
+      operationId: AppController_getHello
+      parameters: []
+      responses:
+        "200":
+          description: ""
+          content:
+            application/json:
+              schema:
+                type: string
+  /onboarding:
+    post:
+      operationId: OnboardingController_onboardUser
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/OnboardDto"
+      responses:
+        "201":
+          description: ""
+          content:
+            application/json:
+              schema:
+                type: object
+  /upload:
+    post:
+      operationId: UploadController_getUploadParams
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/FileUploadRequestDto"
+      responses:
+        "201":
+          description: ""
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/FileUploadResponseDto"
+      tags:
+        - Uploads
+  /workspace:
+    post:
+      operationId: WorkspaceController_createWorkspace
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateWorkspaceDto"
+      responses:
+        "201":
+          description: ""
+  /workspace/me:
+    get:
+      operationId: WorkspaceController_getWorkspaces
+      parameters: []
+      responses:
+        "200":
+          description: ""
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Workspace"
+  /workspace/{slug}:
+    get:
+      operationId: WorkspaceController_getWorkspaceBySlug
+      parameters:
+        - name: slug
+          required: true
+          in: path
+          schema:
+            type: string
+      responses:
+        "200":
+          description: ""
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/WorkspaceDto"
+  /workspace/{slug}/projects:
+    get:
+      operationId: WorkspaceController_getWorkspaceProjects
+      parameters:
+        - name: slug
+          required: true
+          in: path
+          schema:
+            type: string
+      responses:
+        "200":
+          description: ""
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/ProjectDto"
+  /workspace/{slug}/invitations:
+    post:
+      operationId: WorkspaceController_inviteMembers
+      parameters:
+        - name: slug
+          required: true
+          in: path
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/InviteMembersDto"
+      responses:
+        "201":
+          description: ""
+  /workspace/{slug}/members:
+    get:
+      operationId: WorkspaceController_getMembers
+      parameters:
+        - name: slug
+          required: true
+          in: path
+          schema:
+            type: string
+      responses:
+        "200":
+          description: ""
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/WorkspaceMemberDto"
+  /workspace/{slug}/project:
+    post:
+      operationId: WorkspaceController_create
+      parameters:
+        - name: slug
+          required: true
+          in: path
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/createProjectDto"
+      responses:
+        "201":
+          description: ""
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ProjectDto"
+  /workspace/users:
+    get:
+      operationId: WorkspaceController_listUsers
+      parameters: []
+      responses:
+        "200":
+          description: ""
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+  /project/{id}:
+    get:
+      operationId: ProjectsController_getProject
+      parameters:
+        - name: id
+          required: true
+          in: path
+          schema:
+            type: string
+      responses:
+        "200":
+          description: ""
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ProjectDto"
+  /project/{id}/states:
+    get:
+      operationId: ProjectsController_getProjectStates
+      parameters:
+        - name: id
+          required: true
+          in: path
+          schema:
+            type: string
+      responses:
+        "200":
+          description: ""
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/IssueStateDto"
+  /project/{projectId}/issue:
+    post:
+      operationId: IssueController_createPost
+      parameters:
+        - name: projectId
+          required: true
+          in: path
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateIssueDto"
+      responses:
+        "201":
+          description: ""
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/IssueDto"
+  /user/me:
+    get:
+      operationId: UserController_getCurrentUser
+      parameters: []
+      responses:
+        "200":
+          description: ""
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UserDto"
+    patch:
+      operationId: UserController_updateUserProfile
+      parameters: []
+      responses:
+        "200":
+          description: ""
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UserDto"
+  /user/invitations:
+    get:
+      operationId: UserController_getInvitations
+      parameters: []
+      responses:
+        "200":
+          description: ""
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/InvitationDto"
+  /invitations/accept:
+    post:
+      operationId: InvitationController_acceptInvite
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/AcceptInvitationsDto"
+      responses:
+        "201":
+          description: ""
+  /auth/register:
+    post:
+      operationId: AuthController_register
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateUserDto"
+      responses:
+        "201":
+          description: ""
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/User"
+        "400":
+          description: ""
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BadRequestException"
+  /auth/login:
+    post:
+      operationId: AuthController_login
+      parameters: []
+      responses:
+        "201":
+          description: ""
+          content:
+            application/json:
+              schema:
+                type: object
+  /auth/logout:
+    post:
+      operationId: AuthController_logout
+      parameters: []
+      responses:
+        "201":
+          description: ""
+  /auth/verify/otp/send:
+    post:
+      operationId: AuthController_sendOtp
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/SendOTPDto"
+      responses:
+        "201":
+          description: ""
+  /auth/verify/otp:
+    post:
+      operationId: AuthController_verifyOtp
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/verifyOTPDto"
+      responses:
+        "201":
+          description: ""
+info:
+  title: Auth API
+  description: ""
+  version: "1.0"
+  contact: {}
+tags:
+  - name: auth
+    description: ""
+servers: []
+components:
+  schemas:
+    MemberDto:
+      type: object
+      properties:
+        email:
+          type: string
+        role:
+          type: string
+      required:
+        - email
+        - role
+    OnboardDto:
+      type: object
+      properties:
+        name:
+          type: string
+        use:
+          type: string
+        slug:
+          type: string
+        members:
+          type: array
+          items:
+            $ref: "#/components/schemas/MemberDto"
+        profile_picture:
+          type: string
+        user_name:
+          type: string
+      required:
+        - name
+        - use
+        - slug
+        - members
+        - profile_picture
+        - user_name
+    FileUploadRequestDto:
+      type: object
+      properties:
+        type:
+          type: string
+          enum:
+            - user_image
+        file_name:
+          type: string
+        mimeType:
+          type: string
+      required:
+        - type
+        - file_name
+    FileUploadResponseDto:
+      type: object
+      properties:
+        url:
+          type: string
+        fields:
+          type: object
+        public_url:
+          type: string
+      required:
+        - url
+        - fields
+        - public_url
+    CreateWorkspaceDto:
+      type: object
+      properties:
+        name:
+          type: string
+        use:
+          type: string
+        slug:
+          type: string
+        members:
+          type: array
+          items:
+            $ref: "#/components/schemas/MemberDto"
+      required:
+        - name
+        - use
+        - slug
+        - members
+    Workspace:
+      type: object
+      properties:
+        name:
+          type: string
+        use:
+          type: string
+        projects:
+          type: object
+          default:
+            initialized: true
+            dirty: false
+            snapshot: []
+        members:
+          type: object
+          default:
+            initialized: true
+            dirty: false
+            snapshot: []
+        owner_id:
+          type: string
+        id:
+          type: string
+          default: d6359f4a-85ae-4ad6-86f0-16a5ef45eb0e
+        created_at:
+          type: object
+          default: 2024-07-06T15:29:01.708Z
+        updated_at:
+          type: object
+          default: 2024-07-06T15:29:01.708Z
+        deleted_at:
+          format: date-time
+          type: string
+          nullable: true
+          default: null
+        version:
+          type: number
+      required:
+        - name
+        - use
+        - projects
+        - members
+        - owner_id
+        - id
+        - created_at
+        - updated_at
+        - deleted_at
+        - version
+    WorkspaceDto:
+      type: object
+      properties:
+        id:
+          type: string
+        created_at:
+          format: date-time
+          type: string
+        updated_at:
+          format: date-time
+          type: string
+        deleted_at:
+          format: date-time
+          type: string
+          nullable: true
+        version:
+          type: number
+        name:
+          type: string
+        use:
+          type: string
+        owner_id:
+          type: string
+      required:
+        - id
+        - version
+        - name
+        - use
+        - owner_id
+    IssueStateDto:
+      type: object
+      properties:
+        id:
+          type: string
+        created_at:
+          format: date-time
+          type: string
+        updated_at:
+          format: date-time
+          type: string
+        deleted_at:
+          format: date-time
+          type: string
+          nullable: true
+        version:
+          type: number
+        group:
+          type: object
+        name:
+          type: string
+        color:
+          type: string
+        description:
+          type: string
+      required:
+        - id
+        - version
+        - group
+        - name
+    OnboardMeta:
+      type: object
+      properties:
+        is_onboarded:
+          type: boolean
+        profile_complete:
+          type: boolean
+        workspace_create:
+          type: boolean
+        workspace_invite:
+          type: boolean
+        workspace_join:
+          type: boolean
+    UserDto:
+      type: object
+      properties:
+        id:
+          type: string
+        created_at:
+          format: date-time
+          type: string
+        updated_at:
+          format: date-time
+          type: string
+        deleted_at:
+          format: date-time
+          type: string
+          nullable: true
+        version:
+          type: number
+        username:
+          type: string
+        email:
+          type: string
+        google_id:
+          type: string
+        verified_at:
+          format: date-time
+          type: string
+        profile_picture:
+          type: string
+        onboarding:
+          $ref: "#/components/schemas/OnboardMeta"
+      required:
+        - id
+        - version
+        - email
+    ProjectDto:
+      type: object
+      properties:
+        id:
+          type: string
+        created_at:
+          format: date-time
+          type: string
+        updated_at:
+          format: date-time
+          type: string
+        deleted_at:
+          format: date-time
+          type: string
+          nullable: true
+        version:
+          type: number
+        name:
+          type: string
+        description:
+          type: string
+        custom_id:
+          type: string
+        workspace:
+          $ref: "#/components/schemas/WorkspaceDto"
+        states:
+          type: array
+          items:
+            $ref: "#/components/schemas/IssueStateDto"
+        lead:
+          $ref: "#/components/schemas/UserDto"
+        cover_image:
+          type: string
+        logo:
+          type: string
+      required:
+        - id
+        - version
+        - name
+        - description
+        - custom_id
+        - workspace
+        - states
+        - lead
+    InviteMemberDto:
+      type: object
+      properties:
+        role:
+          enum:
+            - ADMIN
+            - MEMBER
+            - GUEST
+          type: string
+        email:
+          type: string
+      required:
+        - role
+        - email
+    InviteMembersDto:
+      type: object
+      properties:
+        emails:
+          type: array
+          items:
+            $ref: "#/components/schemas/InviteMemberDto"
+      required:
+        - emails
+    WorkspaceMemberDto:
+      type: object
+      properties:
+        id:
+          type: string
+        created_at:
+          format: date-time
+          type: string
+        updated_at:
+          format: date-time
+          type: string
+        deleted_at:
+          format: date-time
+          type: string
+          nullable: true
+        version:
+          type: number
+        user:
+          $ref: "#/components/schemas/UserDto"
+        workspace:
+          $ref: "#/components/schemas/WorkspaceDto"
+        role:
+          type: string
+          enum:
+            - ADMIN
+            - MEMBER
+            - GUEST
+      required:
+        - id
+        - version
+        - user
+        - workspace
+        - role
+    createProjectDto:
+      type: object
+      properties:
+        name:
+          type: string
+        description:
+          type: string
+        custom_id:
+          type: string
+        lead_id:
+          type: string
+        cover_image:
+          type: string
+        logo:
+          type: string
+      required:
+        - name
+        - description
+        - custom_id
+        - lead_id
+    CreateIssueDto:
+      type: object
+      properties:
+        title:
+          type: string
+        description:
+          type: string
+        priority:
+          type: string
+          enum:
+            - Urgent
+            - High
+            - Medium
+            - Low
+        state:
+          type: string
+          enum:
+            - Backlog
+            - Todo
+            - In progress
+            - Done
+            - Cancelled
+        assignees_id:
+          type: array
+          items:
+            type: string
+        start_date:
+          format: date-time
+          type: string
+        end_date:
+          format: date-time
+          type: string
+      required:
+        - title
+        - description
+        - priority
+        - state
+        - assignees_id
+        - start_date
+        - end_date
+    IssueDto:
+      type: object
+      properties:
+        id:
+          type: string
+        created_at:
+          format: date-time
+          type: string
+        updated_at:
+          format: date-time
+          type: string
+        deleted_at:
+          format: date-time
+          type: string
+          nullable: true
+        version:
+          type: number
+        title:
+          type: string
+        description:
+          type: string
+        start_date:
+          format: date-time
+          type: string
+        end_date:
+          format: date-time
+          type: string
+      required:
+        - id
+        - version
+        - title
+        - description
+        - start_date
+        - end_date
+    InvitationDto:
+      type: object
+      properties:
+        id:
+          type: string
+        created_at:
+          format: date-time
+          type: string
+        updated_at:
+          format: date-time
+          type: string
+        deleted_at:
+          format: date-time
+          type: string
+          nullable: true
+        version:
+          type: number
+        email:
+          type: string
+        workspace:
+          $ref: "#/components/schemas/WorkspaceDto"
+        is_accepted:
+          type: boolean
+        role:
+          type: string
+          enum:
+            - ADMIN
+            - MEMBER
+            - GUEST
+      required:
+        - id
+        - version
+        - email
+        - workspace
+        - is_accepted
+        - role
+    AcceptInvitationsDto:
+      type: object
+      properties:
+        invitations:
+          type: array
+          items:
+            type: string
+      required:
+        - invitations
+    CreateUserDto:
+      type: object
+      properties:
+        email:
+          type: string
+        password:
+          type: string
+      required:
+        - email
+        - password
+    User:
+      type: object
+      properties:
+        username:
+          type: string
+        email:
+          type: string
+        google_id:
+          type: string
+        password:
+          type: string
+        verified_at:
+          format: date-time
+          type: string
+        profile_picture:
+          type: string
+        workspaces:
+          type: object
+          default:
+            initialized: true
+            dirty: false
+            snapshot: []
+        onboarding:
+          default:
+            is_onboarded: false
+            profile_complete: false
+            workspace_create: false
+            workspace_invite: false
+            workspace_join: false
+          allOf:
+            - $ref: "#/components/schemas/OnboardMeta"
+        id:
+          type: string
+          default: 128f2595-4467-4bd6-82df-2e64bcba85b6
+        created_at:
+          type: object
+          default: 2024-07-06T15:29:01.729Z
+        updated_at:
+          type: object
+          default: 2024-07-06T15:29:01.729Z
+        deleted_at:
+          format: date-time
+          type: string
+          nullable: true
+          default: null
+        version:
+          type: number
+      required:
+        - email
+        - password
+        - workspaces
+        - onboarding
+        - id
+        - created_at
+        - updated_at
+        - deleted_at
+        - version
+    BadRequestException:
+      type: object
+      properties: {}
+    SendOTPDto:
+      type: object
+      properties:
+        email:
+          type: string
+      required:
+        - email
+    verifyOTPDto:
+      type: object
+      properties:
+        code:
+          type: string
+        email:
+          type: string
+      required:
+        - code
+        - email

@@ -1,4 +1,4 @@
-import * as React from "react";
+import React, { useEffect } from "react";
 import {
   Check,
   ChevronsUpDown,
@@ -25,6 +25,10 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { observer } from "mobx-react";
+import { useProjectStates } from "@/hooks/projects";
+import { useAppRouter } from "@/hooks/router";
+import { IssueStateDto } from "@/generated/dto/issue-state-dto";
+import IssueStateIcon from "../icons/IssueStateIcon";
 
 type TState = {
   name: string;
@@ -34,12 +38,20 @@ type TState = {
 interface IProps {
   open: boolean;
   onOpenChange?: (value: boolean) => void;
-  onChange?: (value: TState) => void;
+  onChange: (value: IssueStateDto) => void;
 }
 
 const IssueStatesDropdown: React.FC<IProps> = observer(
   ({ onOpenChange, open, onChange }) => {
-    const [value, setValue] = React.useState(issueStates.at(0));
+    const { projectId } = useAppRouter();
+    const { data: issueStates } = useProjectStates(projectId!);
+    const [value, setValue] = React.useState(issueStates?.at(0));
+
+    useEffect(() => {
+      if (issueStates) {
+        setValue(issueStates.at(0));
+      }
+    }, [issueStates]);
 
     return (
       <Popover open={open} onOpenChange={onOpenChange}>
@@ -53,7 +65,7 @@ const IssueStatesDropdown: React.FC<IProps> = observer(
           >
             {value && (
               <>
-                {value.Icon}
+                <IssueStateIcon height='16px' width="16px" group={value.group} />
                 <p className=" text-xs">{value.name}</p>
               </>
             )}
@@ -65,19 +77,19 @@ const IssueStatesDropdown: React.FC<IProps> = observer(
             <CommandEmpty>No state found.</CommandEmpty>
             <CommandGroup>
               <CommandList>
-                {issueStates.map((state) => (
+                {issueStates?.map((state) => (
                   <CommandItem
                     key={state.name}
                     value={state.name}
                     onSelect={(currentValue) => {
                       setValue(state);
-                      onChange?.(state);
+                      onChange(state);
                       onOpenChange?.(false);
                     }}
                     className="flex items-center justify-between"
                   >
                     <span className="flex items-center gap-2">
-                      {state.Icon}
+                      <IssueStateIcon group={state.group} />
                       <p className=" text-xs">{state.name}</p>
                     </span>
                     <Check
