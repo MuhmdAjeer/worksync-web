@@ -3,7 +3,6 @@ import { ReactElement } from "react";
 import { AppLayout } from "@/components/layouts/app/AppLayout";
 import { observer } from "mobx-react";
 import { useAppRouter } from "@/hooks/router";
-import { useProject } from "@/hooks/project";
 import { useWorkspace } from "@/hooks/workspaces";
 
 const Page: NextPageWithLayout = observer(() => {

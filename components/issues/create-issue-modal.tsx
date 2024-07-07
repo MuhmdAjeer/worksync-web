@@ -1,4 +1,4 @@
-import React, { FC, useEffect, useState } from "react";
+import React, { FC, use, useEffect, useState } from "react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "../ui/dialog";
 import ProjectsComboBox from "../projects/ProjectsComboBox";
 import { useCurrentProject } from "@/hooks/projects";
@@ -7,7 +7,6 @@ import { Input } from "../ui/input";
 import { Textarea } from "../ui/textarea";
 import IssueStatesDropdown from "./IssueStateDropdown";
 import IssuePriorityDropdown from "./IssuePriorityDropdown";
-import MemberDropdown from "../MemberDropdown";
 
 interface IProps {
   open: boolean;
@@ -29,8 +28,12 @@ const CreateIssueModal: FC<IProps> = observer(({ onClose, open }) => {
   const [stateDropdown, setStateDropdown] = useState(false);
   const [priorityDropdown, setPriorityDropdown] = useState(false);
 
+  if (!activeProjectId) {
+    return null;
+  }
+
   return (
-    <Dialog open={open} onOpenChange={onClose}>
+    <Dialog modal={true} open={open} onOpenChange={onClose}>
       <DialogContent className="min-w-[40%]">
         <DialogHeader className="flex flex-row items-center gap-2">
           <ProjectsComboBox
@@ -49,6 +52,7 @@ const CreateIssueModal: FC<IProps> = observer(({ onClose, open }) => {
         </div>
         <div className="flex gap-2">
           <IssueStatesDropdown
+            projectId={activeProjectId}
             open={stateDropdown}
             onOpenChange={(v) => setStateDropdown(v)}
             onChange={() => {}}
