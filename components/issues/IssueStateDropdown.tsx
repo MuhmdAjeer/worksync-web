@@ -29,6 +29,7 @@ import { useProjectStates } from "@/hooks/projects";
 import { useAppRouter } from "@/hooks/router";
 import { IssueStateDto } from "@/generated/dto/issue-state-dto";
 import IssueStateIcon from "../icons/IssueStateIcon";
+import { useRouter } from "next/router";
 
 type TState = {
   name: string;
@@ -39,12 +40,15 @@ interface IProps {
   open: boolean;
   onOpenChange?: (value: boolean) => void;
   onChange: (value: IssueStateDto) => void;
+  projectId: string;
 }
 
 const IssueStatesDropdown: React.FC<IProps> = observer(
-  ({ onOpenChange, open, onChange }) => {
-    const { projectId } = useAppRouter();
-    const { data: issueStates } = useProjectStates(projectId!);
+  ({ onOpenChange, open, onChange, projectId }) => {
+    // const router = useRouter();
+    // const projectId = router.query.projectId?.toString();
+    // const { projectId } = useAppRouter();
+    const { data: issueStates } = useProjectStates(projectId);
     const [value, setValue] = React.useState(issueStates?.at(0));
 
     useEffect(() => {
@@ -65,7 +69,11 @@ const IssueStatesDropdown: React.FC<IProps> = observer(
           >
             {value && (
               <>
-                <IssueStateIcon height='16px' width="16px" group={value.group} />
+                <IssueStateIcon
+                  height="16px"
+                  width="16px"
+                  group={value.group}
+                />
                 <p className=" text-xs">{value.name}</p>
               </>
             )}
