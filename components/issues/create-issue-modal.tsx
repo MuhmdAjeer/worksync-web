@@ -33,14 +33,17 @@ const CreateIssueModal: FC<IProps> = observer(({ onClose, open }) => {
   const [activeProjectId, setActiveProjectId] = useState<string | null>(null);
 
   const { data: currentProject } = useCurrentProject();
-  const { mutateAsync: createIssue } = useCreateIssue();
-  const { handleSubmit, ...form } = useForm<CreateIssueDto>({
+  const { mutateAsync: createIssue, isPending } = useCreateIssue();
+  const {
+    handleSubmit,
+    formState: { isSubmitting },
+    ...form
+  } = useForm<CreateIssueDto>({
     defaultValues: {
       assignees_id: [],
       title: "",
     },
   });
-
   const minDate = form.watch("start_date");
   const maxDate = form.watch("end_date");
 
@@ -49,6 +52,7 @@ const CreateIssueModal: FC<IProps> = observer(({ onClose, open }) => {
     createIssue({ ...data, projectId: activeProjectId })
       .then((res) => {
         toast.success("Issue added successfully");
+        form.reset();
       })
       .catch((err) => {
         toast.error("Failed to add issue");
@@ -184,8 +188,12 @@ const CreateIssueModal: FC<IProps> = observer(({ onClose, open }) => {
                   )}
                 />
               </div>
-              <Button type="submit" size="sm">
-                Add Issue
+              <Button
+                disabled={isPending || isSubmitting}
+                type="submit"
+                size="sm"
+              >
+                {isPending || isSubmitting ? "Adding..." : "Add Issue"}
               </Button>
             </div>
           </div>
