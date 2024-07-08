@@ -62,3 +62,11 @@ export const useProjectStates = (id: string) => {
     enabled: !!id,
   });
 };
+
+export const useProjectMembers = (id: string) => {
+  return useQuery({
+    queryKey: [QUERY_KEYS.GET_PROJECT_MEMBERS, id],
+    queryFn: async () => await projectService.fetchMembers(id),
+    enabled: !!id,
+  });
+};

@@ -31,22 +31,22 @@ export interface UserDto {
     'id': string;
     /**
      * 
-     * @type {string}
+     * @type {Date}
      * @memberof UserDto
      */
-    'created_at'?: string;
+    'created_at'?: Date;
     /**
      * 
-     * @type {string}
+     * @type {Date}
      * @memberof UserDto
      */
-    'updated_at'?: string;
+    'updated_at'?: Date;
     /**
      * 
-     * @type {string}
+     * @type {Date}
      * @memberof UserDto
      */
-    'deleted_at'?: string | null;
+    'deleted_at'?: Date | null;
     /**
      * 
      * @type {number}
@@ -73,10 +73,10 @@ export interface UserDto {
     'google_id'?: string;
     /**
      * 
-     * @type {string}
+     * @type {Date}
      * @memberof UserDto
      */
-    'verified_at'?: string;
+    'verified_at'?: Date;
     /**
      * 
      * @type {string}

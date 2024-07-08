@@ -1,5 +1,11 @@
 import React, { FC, use, useEffect, useState } from "react";
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "../ui/dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "../ui/dialog";
 import ProjectsComboBox from "../projects/ProjectsComboBox";
 import { useCurrentProject } from "@/hooks/projects";
 import { observer } from "mobx-react";
@@ -7,7 +13,14 @@ import { Input } from "../ui/input";
 import { Textarea } from "../ui/textarea";
 import IssueStatesDropdown from "./IssueStateDropdown";
 import IssuePriorityDropdown from "./IssuePriorityDropdown";
-
+import ProjectMembersDropdown from "../Multiselect/ProjectMembers";
+import { Controller, useForm } from "react-hook-form";
+import { CreateIssueDto } from "@/generated/dto/create-issue-dto";
+import DatePicker from "../ui/datePicker";
+import { Button } from "../ui/button";
+import { Separator } from "../ui/separator";
+import { useCreateIssue } from "@/hooks/issue";
+import { toast } from "sonner";
 interface IProps {
   open: boolean;
   onClose: () => void;
@@ -15,9 +28,32 @@ interface IProps {
 
 const CreateIssueModal: FC<IProps> = observer(({ onClose, open }) => {
   const [openProjectsComboBox, setProjectsComboBox] = useState(false);
+  const [stateDropdown, setStateDropdown] = useState(false);
+  const [priorityDropdown, setPriorityDropdown] = useState(false);
+  const [activeProjectId, setActiveProjectId] = useState<string | null>(null);
 
   const { data: currentProject } = useCurrentProject();
-  const [activeProjectId, setActiveProjectId] = useState<string | null>(null);
+  const { mutateAsync: createIssue } = useCreateIssue();
+  const { handleSubmit, ...form } = useForm<CreateIssueDto>({
+    defaultValues: {
+      assignees_id: [],
+      title: "",
+    },
+  });
+
+  const minDate = form.watch("start_date");
+  const maxDate = form.watch("end_date");
+
+  const handleAddIssue = (data: CreateIssueDto) => {
+    if (!activeProjectId) return;
+    createIssue({ ...data, projectId: activeProjectId })
+      .then((res) => {
+        toast.success("Issue added successfully");
+      })
+      .catch((err) => {
+        toast.error("Failed to add issue");
+      });
+  };
 
   useEffect(() => {
     if (currentProject) {
@@ -25,8 +61,9 @@ const CreateIssueModal: FC<IProps> = observer(({ onClose, open }) => {
     }
   }, [currentProject]);
 
-  const [stateDropdown, setStateDropdown] = useState(false);
-  const [priorityDropdown, setPriorityDropdown] = useState(false);
+  useEffect(() => {
+    form.reset();
+  }, [open]);
 
   if (!activeProjectId) {
     return null;
@@ -46,23 +83,113 @@ const CreateIssueModal: FC<IProps> = observer(({ onClose, open }) => {
           />
           <DialogTitle className="!m-0">Create Issue</DialogTitle>
         </DialogHeader>
-        <div className="flex flex-col gap-2">
-          <Input name="Title" placeholder="Title" />
-          <Textarea rows={10} name="Description" placeholder="Description" />
-        </div>
-        <div className="flex gap-2">
-          <IssueStatesDropdown
-            projectId={activeProjectId}
-            open={stateDropdown}
-            onOpenChange={(v) => setStateDropdown(v)}
-            onChange={() => {}}
-          />
-          <IssuePriorityDropdown
-            open={priorityDropdown}
-            onOpenChange={(v) => setPriorityDropdown(v)}
-          />
-          {/* <MemberDropdown label="Assignees" /> */}
-        </div>
+        <form onSubmit={handleSubmit(handleAddIssue)}>
+          <div className="flex flex-col gap-4">
+            <div className="flex flex-col gap-2">
+              <Controller
+                control={form.control}
+                name="title"
+                rules={{
+                  required: "Title is required",
+                  maxLength: {
+                    value: 120,
+                    message: "Title is too long",
+                  },
+                }}
+                render={({ field, fieldState }) => (
+                  <Input
+                    {...field}
+                    name="Title"
+                    placeholder="Title"
+                    message={fieldState.error?.message}
+                  />
+                )}
+              />
+              <Controller
+                control={form.control}
+                name="description"
+                render={({ field }) => (
+                  <Textarea
+                    {...field}
+                    rows={10}
+                    name="Description"
+                    placeholder="Description"
+                  />
+                )}
+              />
+            </div>
+            <div className="flex items-center gap-2 justify-between">
+              <div className="flex gap-2 items-center">
+                <Controller
+                  control={form.control}
+                  name="state"
+                  render={({ field: { onChange, value } }) => (
+                    <IssueStatesDropdown
+                      projectId={activeProjectId}
+                      open={stateDropdown}
+                      onOpenChange={(v) => setStateDropdown(v)}
+                      onChange={(value) => {
+                        onChange(value.name);
+                      }}
+                    />
+                  )}
+                />
+                <Controller
+                  control={form.control}
+                  name="priority"
+                  render={({ field: { onChange, value } }) => (
+                    <IssuePriorityDropdown
+                      open={priorityDropdown}
+                      onOpenChange={(v) => setPriorityDropdown(v)}
+                      onChange={(value) => {
+                        onChange(value.name);
+                      }}
+                    />
+                  )}
+                />
+                <Controller
+                  name="assignees_id"
+                  control={form.control}
+                  render={({ field: { value, onChange } }) => (
+                    <ProjectMembersDropdown
+                      projectId={activeProjectId}
+                      value={value}
+                      label="Assignees"
+                      onChange={onChange}
+                    />
+                  )}
+                />
+                <Controller
+                  control={form.control}
+                  name="start_date"
+                  render={({ field: { onChange, value } }) => (
+                    <DatePicker
+                      label="Start Date"
+                      value={value}
+                      onChange={onChange}
+                      maxDate={maxDate}
+                    />
+                  )}
+                />
+                <Controller
+                  control={form.control}
+                  name="end_date"
+                  render={({ field: { onChange, value } }) => (
+                    <DatePicker
+                      label="End Date"
+                      value={value}
+                      minDate={minDate}
+                      onChange={onChange}
+                    />
+                  )}
+                />
+              </div>
+              <Button type="submit" size="sm">
+                Add Issue
+              </Button>
+            </div>
+          </div>
+        </form>
       </DialogContent>
     </Dialog>
   );

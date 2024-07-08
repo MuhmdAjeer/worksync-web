@@ -49,10 +49,10 @@ export interface User {
     'password': string;
     /**
      * 
-     * @type {string}
+     * @type {Date}
      * @memberof User
      */
-    'verified_at'?: string;
+    'verified_at'?: Date;
     /**
      * 
      * @type {string}
@@ -91,10 +91,10 @@ export interface User {
     'updated_at': object;
     /**
      * 
-     * @type {string}
+     * @type {Date}
      * @memberof User
      */
-    'deleted_at': string | null;
+    'deleted_at': Date | null;
     /**
      * 
      * @type {number}

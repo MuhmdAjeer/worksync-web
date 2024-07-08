@@ -4,6 +4,7 @@ import { AppLayout } from "@/components/layouts/app/AppLayout";
 import { observer } from "mobx-react";
 import { useAppRouter } from "@/hooks/router";
 import { useWorkspace } from "@/hooks/workspaces";
+import Tiptap from "@/components/Editor";
 
 const Page: NextPageWithLayout = observer(() => {
   const { workspaceSlug } = useAppRouter();
