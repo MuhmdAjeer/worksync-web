@@ -18,6 +18,9 @@
           "withSeparateModelsAndApi": true,
           "stringEnums": true,
           "withoutPrefixEnums": true
+        },
+        "typeMappings": {
+          "DateTime": "Date"
         }
       }
     }

@@ -70,10 +70,10 @@ export interface Workspace {
     'updated_at': object;
     /**
      * 
-     * @type {string}
+     * @type {Date}
      * @memberof Workspace
      */
-    'deleted_at': string | null;
+    'deleted_at': Date | null;
     /**
      * 
      * @type {number}

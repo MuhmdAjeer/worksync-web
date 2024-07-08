@@ -34,22 +34,22 @@ export interface WorkspaceMemberDto {
     'id': string;
     /**
      * 
-     * @type {string}
+     * @type {Date}
      * @memberof WorkspaceMemberDto
      */
-    'created_at'?: string;
+    'created_at'?: Date;
     /**
      * 
-     * @type {string}
+     * @type {Date}
      * @memberof WorkspaceMemberDto
      */
-    'updated_at'?: string;
+    'updated_at'?: Date;
     /**
      * 
-     * @type {string}
+     * @type {Date}
      * @memberof WorkspaceMemberDto
      */
-    'deleted_at'?: string | null;
+    'deleted_at'?: Date | null;
     /**
      * 
      * @type {number}

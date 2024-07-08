@@ -52,16 +52,16 @@ export interface CreateIssueDto {
     'assignees_id': Array<string>;
     /**
      * 
-     * @type {string}
+     * @type {Date}
      * @memberof CreateIssueDto
      */
-    'start_date': string;
+    'start_date': Date;
     /**
      * 
-     * @type {string}
+     * @type {Date}
      * @memberof CreateIssueDto
      */
-    'end_date': string;
+    'end_date': Date;
 }
 
 /**

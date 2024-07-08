@@ -13,60 +13,74 @@
  */
 
 
+// May contain unused imports in some cases
+// @ts-ignore
+import { UserDto } from './user-dto';
 
 /**
  * 
  * @export
- * @interface WorkspaceDto
+ * @interface ProjectMemberDto
  */
-export interface WorkspaceDto {
+export interface ProjectMemberDto {
     /**
      * 
      * @type {string}
-     * @memberof WorkspaceDto
+     * @memberof ProjectMemberDto
      */
     'id': string;
     /**
      * 
      * @type {Date}
-     * @memberof WorkspaceDto
+     * @memberof ProjectMemberDto
      */
     'created_at'?: Date;
     /**
      * 
      * @type {Date}
-     * @memberof WorkspaceDto
+     * @memberof ProjectMemberDto
      */
     'updated_at'?: Date;
     /**
      * 
      * @type {Date}
-     * @memberof WorkspaceDto
+     * @memberof ProjectMemberDto
      */
     'deleted_at'?: Date | null;
     /**
      * 
      * @type {number}
-     * @memberof WorkspaceDto
+     * @memberof ProjectMemberDto
      */
     'version': number;
     /**
      * 
-     * @type {string}
-     * @memberof WorkspaceDto
+     * @type {UserDto}
+     * @memberof ProjectMemberDto
      */
-    'name': string;
+    'user': UserDto;
     /**
      * 
      * @type {string}
-     * @memberof WorkspaceDto
+     * @memberof ProjectMemberDto
      */
-    'use': string;
+    'project': string;
     /**
      * 
      * @type {string}
-     * @memberof WorkspaceDto
+     * @memberof ProjectMemberDto
      */
-    'owner_id': string;
+    'role': RoleEnum;
 }
+
+/**
+    * @export
+    * @enum {string}
+    */
+export enum RoleEnum {
+    Admin = 'ADMIN',
+    Member = 'MEMBER',
+    Guest = 'GUEST'
+}
+
 

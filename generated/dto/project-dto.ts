@@ -37,22 +37,22 @@ export interface ProjectDto {
     'id': string;
     /**
      * 
-     * @type {string}
+     * @type {Date}
      * @memberof ProjectDto
      */
-    'created_at'?: string;
+    'created_at'?: Date;
     /**
      * 
-     * @type {string}
+     * @type {Date}
      * @memberof ProjectDto
      */
-    'updated_at'?: string;
+    'updated_at'?: Date;
     /**
      * 
-     * @type {string}
+     * @type {Date}
      * @memberof ProjectDto
      */
-    'deleted_at'?: string | null;
+    'deleted_at'?: Date | null;
     /**
      * 
      * @type {number}

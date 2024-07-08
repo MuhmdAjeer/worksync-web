@@ -31,22 +31,22 @@ export interface InvitationDto {
     'id': string;
     /**
      * 
-     * @type {string}
+     * @type {Date}
      * @memberof InvitationDto
      */
-    'created_at'?: string;
+    'created_at'?: Date;
     /**
      * 
-     * @type {string}
+     * @type {Date}
      * @memberof InvitationDto
      */
-    'updated_at'?: string;
+    'updated_at'?: Date;
     /**
      * 
-     * @type {string}
+     * @type {Date}
      * @memberof InvitationDto
      */
-    'deleted_at'?: string | null;
+    'deleted_at'?: Date | null;
     /**
      * 
      * @type {number}

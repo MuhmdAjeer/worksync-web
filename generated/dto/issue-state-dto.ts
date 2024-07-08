@@ -28,22 +28,22 @@ export interface IssueStateDto {
     'id': string;
     /**
      * 
-     * @type {string}
+     * @type {Date}
      * @memberof IssueStateDto
      */
-    'created_at'?: string;
+    'created_at'?: Date;
     /**
      * 
-     * @type {string}
+     * @type {Date}
      * @memberof IssueStateDto
      */
-    'updated_at'?: string;
+    'updated_at'?: Date;
     /**
      * 
-     * @type {string}
+     * @type {Date}
      * @memberof IssueStateDto
      */
-    'deleted_at'?: string | null;
+    'deleted_at'?: Date | null;
     /**
      * 
      * @type {number}

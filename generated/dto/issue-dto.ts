@@ -28,22 +28,22 @@ export interface IssueDto {
     'id': string;
     /**
      * 
-     * @type {string}
+     * @type {Date}
      * @memberof IssueDto
      */
-    'created_at'?: string;
+    'created_at'?: Date;
     /**
      * 
-     * @type {string}
+     * @type {Date}
      * @memberof IssueDto
      */
-    'updated_at'?: string;
+    'updated_at'?: Date;
     /**
      * 
-     * @type {string}
+     * @type {Date}
      * @memberof IssueDto
      */
-    'deleted_at'?: string | null;
+    'deleted_at'?: Date | null;
     /**
      * 
      * @type {number}
@@ -64,15 +64,15 @@ export interface IssueDto {
     'description': string;
     /**
      * 
-     * @type {string}
+     * @type {Date}
      * @memberof IssueDto
      */
-    'start_date': string;
+    'start_date': Date;
     /**
      * 
-     * @type {string}
+     * @type {Date}
      * @memberof IssueDto
      */
-    'end_date': string;
+    'end_date': Date;
 }
 

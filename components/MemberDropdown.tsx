@@ -53,12 +53,12 @@ const MemberDropdown: React.FC<IProps> = ({ label = "Lead", onChange }) => {
           <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
         </Button>
       </PopoverTrigger>
-      <PopoverContent className="w-[200px] p-0">
-        <Command>
+      <PopoverContent  className="w-[200px] p-0">
+        <Command >
           <CommandInput placeholder="Search member" />
           <CommandEmpty>No member found.</CommandEmpty>
-          <CommandGroup>
-            <CommandList>
+          <CommandGroup  >
+            <CommandList >
               {members.map(
                 (member) =>
                   member && (

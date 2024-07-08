@@ -4,6 +4,7 @@ import { Workspace } from "@/generated/dto/workspace";
 import { CreateProjectDto } from "@/generated/dto/create-project-dto";
 import { ProjectDto } from "@/generated/dto/project-dto";
 import { IssueStateDto } from "@/generated/dto/issue-state-dto";
+import { ProjectMemberDto } from "@/generated/dto/project-member-dto";
 
 export class ProjectService extends APIService {
   constructor() {
@@ -29,5 +30,9 @@ export class ProjectService extends APIService {
 
   public async fetchStates(projectId: string): Promise<IssueStateDto[]> {
     return this.get(`project/${projectId}/states`).then((res) => res.data);
+  }
+
+  public async fetchMembers(projectId: string): Promise<ProjectMemberDto[]> {
+    return this.get(`project/${projectId}/members`).then((res) => res.data);
   }
 }
