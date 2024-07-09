@@ -45,7 +45,7 @@ export const useInviteMembers = () => {
     onSuccess: () => {
       client.invalidateQueries({ queryKey: [QUERY_KEYS.GET_WORKSPACE] });
     },
-    onError(error, variables, context) {
+    onError(error) {
       if (is4xxError(error, 409)) {
         toast.error("One of the user is already a member");
       }

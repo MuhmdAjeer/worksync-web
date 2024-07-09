@@ -53,6 +53,7 @@ const JoinWorkspaces = ({ invitations, toggleView, nextStep }: IProps) => {
           const selected = acceptedInvites.includes(invitation.id);
           return (
             <div
+              key={invitation.id}
               onClick={(e) => {
                 e.stopPropagation();
                 console.log({ selected });

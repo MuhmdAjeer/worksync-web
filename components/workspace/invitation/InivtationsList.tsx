@@ -10,7 +10,10 @@ interface IProps {
 
 const InvitationsList = ({ invitations }: IProps) => {
   return invitations.map((invitation) => (
-    <div className=" rounded border-primary/10 border p-2 hover:border-primary/20 hover:bg-primary-foreground/50">
+    <div
+      key={invitation.id}
+      className=" rounded border-primary/10 border p-2 hover:border-primary/20 hover:bg-primary-foreground/50"
+    >
       <label
         htmlFor={invitation.id}
         className="flex flex-row justify-between px-1 items-center cursor-pointer"

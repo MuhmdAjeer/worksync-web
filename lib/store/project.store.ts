@@ -54,7 +54,10 @@ export class ProjectStore implements IProjectStore {
 
   createProject = async (data: CreateProjectDto) => {
     try {
-      const response = await this.projectService.createProject(data);
+      const response = await this.projectService.createProject(
+        this.router.workspaceSlug!,
+        data
+      );
       runInAction(() => {
         set(this.projectMap, [response.id], response);
       });

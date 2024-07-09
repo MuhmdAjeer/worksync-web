@@ -108,7 +108,7 @@ const InviteMembers: React.FC<IProps> = ({ finishOnboarding, workspace }) => {
           onClick={finishOnboarding}
           variant="link"
         >
-          I'll do it later
+          Ill do it later
         </Button>
       </div>
     </form>

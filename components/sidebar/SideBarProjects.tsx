@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Typography from "../ui/Typography";
 import { observer } from "mobx-react";
 import ProjectSidebarItem from "./ProjectSidebarItem";
@@ -6,11 +6,19 @@ import { ChevronDown, ChevronRight } from "lucide-react";
 import { motion } from "framer-motion";
 import { useProjects } from "@/hooks/projects";
 import { useAppRouter } from "@/hooks/router";
+import { useRouter } from "next/router";
+import { useWorkspaceStore } from "@/hooks/store/workspace";
 
 const SideBarProjects = observer(() => {
   const [isCollapsed, setCollapsed] = useState(false);
   const { workspaceSlug } = useAppRouter();
-  const { data: workspaceProjects } = useProjects(workspaceSlug!);
+  const { currentWorkspace } = useWorkspaceStore();
+
+  const { data: workspaceProjects, isLoading } = useProjects(
+    currentWorkspace?.name!
+  );
+
+  if (!workspaceProjects || isLoading || !workspaceSlug) return <></>;
 
   return (
     <div className="w-full cursor-pointer space-y-2 p-4">
@@ -30,7 +38,7 @@ const SideBarProjects = observer(() => {
 
       {!isCollapsed && (
         <motion.div initial={{ x: 20 }} animate={{ x: 0 }}>
-          {workspaceProjects?.map((x) => (
+          {workspaceProjects.map((x) => (
             <ProjectSidebarItem project={x} key={x.id} />
           ))}
         </motion.div>

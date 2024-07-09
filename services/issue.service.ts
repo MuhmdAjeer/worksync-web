@@ -7,8 +7,12 @@ export class IssueService extends APIService {
     projectId: string,
     data: CreateIssueDto
   ): Promise<IssueDto> {
-    return this.post(`project/${projectId}/issue`, data).then(
+    return this.post(`project/${projectId}/issues`, data).then(
       (response) => response.data
     );
+  }
+
+  public async fetchProjectIssues(projectId: string): Promise<IssueDto[]> {
+    return this.get(`project/${projectId}/issues`).then((res) => res.data);
   }
 }

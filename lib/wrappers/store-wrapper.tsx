@@ -8,11 +8,10 @@ const StoreWrapper = observer(({ children }: PropsWithChildren) => {
   const { setQuery } = useAppRouter();
 
   useEffect(() => {
-    console.log(router.query);
-
     if (!router.query) return;
+    if (!router.isReady) return;
     setQuery(router.query);
-  }, [router.query, setQuery]);
+  }, [router.query, setQuery, router.isReady]);
 
   return children;
 });
