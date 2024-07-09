@@ -11,8 +11,10 @@ import { useWorkspace } from "@/hooks/workspaces";
 import { AppLayout } from "@/components/layouts/app/AppLayout";
 import { NextPageWithLayout } from "@/pages/_app";
 import { observer } from "mobx-react";
-import React, { ReactElement, useState } from "react";
+import React, { ReactElement, useEffect, useState } from "react";
 import { Spinner } from "@/components/Spinner/Spinner";
+import { useProjectStore } from "@/hooks/store/project";
+import { useRouter } from "next/router";
 
 const ProjectsPage: NextPageWithLayout = observer(() => {
   const [openCreateModal, setOpenCreateModal] = useState(false);

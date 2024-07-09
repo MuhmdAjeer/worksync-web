@@ -31,37 +31,37 @@ export interface CreateIssueDto {
      * @type {string}
      * @memberof CreateIssueDto
      */
-    'description': string;
+    'description'?: string;
     /**
      * 
      * @type {string}
      * @memberof CreateIssueDto
      */
-    'priority': PriorityEnum;
+    'priority'?: PriorityEnum;
     /**
      * 
      * @type {string}
      * @memberof CreateIssueDto
      */
-    'state': StateEnum;
+    'state'?: StateEnum;
     /**
      * 
      * @type {Array<string>}
      * @memberof CreateIssueDto
      */
-    'assignees_id': Array<string>;
+    'assignees_id'?: Array<string>;
     /**
      * 
      * @type {Date}
      * @memberof CreateIssueDto
      */
-    'start_date': Date;
+    'start_date'?: Date;
     /**
      * 
      * @type {Date}
      * @memberof CreateIssueDto
      */
-    'end_date': Date;
+    'end_date'?: Date;
 }
 
 /**

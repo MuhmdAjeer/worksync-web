@@ -45,13 +45,13 @@ const ProjectCard: FC<IProps> = ({ project }) => {
             title={
               <div className="flex flex-col items-center gap-1">
                 <h1>Members</h1>
-                <p>{`${project.members.length} members`}</p>
+                {/* <p>{`${project.members.length} members`}</p> */}
               </div>
             }
           >
-            {project.members.map((user) => (
+            {/* {project.members.map((user) => (
               <UserAvatar user={user} key={user.id} />
-            ))}
+            ))} */}
           </Tooltip>
         </div>
       </div>

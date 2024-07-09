@@ -90,7 +90,7 @@ const CreateProjectModal = observer((props: TProps) => {
   return (
     <Dialog onOpenChange={() => onClose()} modal={true} open={open}>
       <DialogContent className="min-w-[40%]">
-        <form className="flex gap-4 flex-col">
+        <form onSubmit={handleSubmit(submit)} className="flex gap-4 flex-col">
           <div className="group relative h-44 w-full rounded-lg">
             {watch("cover_image") && (
               <Image
@@ -175,25 +175,19 @@ const CreateProjectModal = observer((props: TProps) => {
               />
             )}
           />
+          <DialogFooter>
+            <Controller
+              control={control}
+              name="lead_id"
+              render={({ field }) => (
+                <MemberDropdown onChange={(value) => field.onChange(value)} />
+              )}
+            />
+            <Button type="submit" disabled={isButtonDisabled} size="sm">
+              {isButtonDisabled ? "Creating..." : "Create project"}
+            </Button>
+          </DialogFooter>
         </form>
-        <DialogFooter>
-          <Controller
-            control={control}
-            name="lead_id"
-            render={({ field }) => (
-              <MemberDropdown onChange={(value) => field.onChange(value)} />
-            )}
-          />
-          <Button
-            onClick={() => {
-              void handleSubmit(submit)();
-            }}
-            disabled={isButtonDisabled}
-            size="sm"
-          >
-            {isButtonDisabled ? "Creating..." : "Create project"}
-          </Button>
-        </DialogFooter>
       </DialogContent>
     </Dialog>
   );

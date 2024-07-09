@@ -1,21 +1,5 @@
-"use client";
-import { onboardingSchema } from "@/lib/schema/Workspace";
-import { OnboardingWorkspace } from "@/lib/types/Workspace";
-import { zodResolver } from "@hookform/resolvers/zod";
 import React, { useEffect, useState } from "react";
-import { Controller, SubmitHandler, useForm } from "react-hook-form";
-import { Input } from "../ui/input";
-import { Button } from "../ui/button";
-import Typography from "../ui/Typography";
-import FileInput from "../ui/FileInput";
-import { cn } from "@/lib/utils";
-import InviteMemberInput, { Field } from "../InviteMemberInput";
-import { OnboardDto } from "@/generated/dto/onboard-dto";
-import { UseOnboardUser } from "@/hooks/Onboard";
-import ApiClient from "@/lib/apiClient";
-import { TypeEnum } from "@/generated/dto/file-upload-request-dto";
-import { useWorkspaceStore } from "@/hooks/store/workspace";
-import { toast } from "sonner";
+
 import { useRouter } from "next/navigation";
 import { observer } from "mobx-react";
 import { useInvitations } from "@/hooks/invitations";
@@ -26,6 +10,7 @@ import CreateOrJoinWorkspace from "./CreateOrJoinWorkspace";
 import InviteMembers from "./InviteMembers";
 import { useWorkspaces } from "@/hooks/workspaces";
 import { AnimatePresence, motion } from "framer-motion";
+import { toast } from "sonner";
 
 export enum EOnboardingSteps {
   PROFILE_SETUP = "PROFILE_SETUP",
@@ -102,7 +87,7 @@ const OnboardingForm = observer(() => {
     };
 
     handleStepChange();
-  }, [user?.onboarding]);
+  }, [user?.onboarding, user]);
 
   return (
     <div className="flex gap-4 flex-col">

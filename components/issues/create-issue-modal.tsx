@@ -21,6 +21,8 @@ import { Button } from "../ui/button";
 import { Separator } from "../ui/separator";
 import { useCreateIssue } from "@/hooks/issue";
 import { toast } from "sonner";
+import { useQueryClient } from "@tanstack/react-query";
+import { QUERY_KEYS } from "@/lib/constants";
 interface IProps {
   open: boolean;
   onClose: () => void;
@@ -33,7 +35,7 @@ const CreateIssueModal: FC<IProps> = observer(({ onClose, open }) => {
   const [activeProjectId, setActiveProjectId] = useState<string | null>(null);
 
   const { data: currentProject } = useCurrentProject();
-  const { mutateAsync: createIssue, isPending } = useCreateIssue();
+  const { mutate: createIssue, isPending } = useCreateIssue();
   const {
     handleSubmit,
     formState: { isSubmitting },
@@ -49,14 +51,14 @@ const CreateIssueModal: FC<IProps> = observer(({ onClose, open }) => {
 
   const handleAddIssue = (data: CreateIssueDto) => {
     if (!activeProjectId) return;
-    createIssue({ ...data, projectId: activeProjectId })
-      .then((res) => {
-        toast.success("Issue added successfully");
-        form.reset();
-      })
-      .catch((err) => {
-        toast.error("Failed to add issue");
-      });
+    createIssue(
+      { ...data, projectId: activeProjectId },
+      {
+        onSuccess: () => {
+          toast.success("Issue added successfully!");
+        },
+      }
+    );
   };
 
   useEffect(() => {
@@ -66,7 +68,9 @@ const CreateIssueModal: FC<IProps> = observer(({ onClose, open }) => {
   }, [currentProject]);
 
   useEffect(() => {
-    form.reset();
+    if (!open) {
+      form.reset();
+    }
   }, [open]);
 
   if (!activeProjectId) {
@@ -157,7 +161,7 @@ const CreateIssueModal: FC<IProps> = observer(({ onClose, open }) => {
                   render={({ field: { value, onChange } }) => (
                     <ProjectMembersDropdown
                       projectId={activeProjectId}
-                      value={value}
+                      value={value ?? []}
                       label="Assignees"
                       onChange={onChange}
                     />

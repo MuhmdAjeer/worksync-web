@@ -21,6 +21,8 @@ export class ProjectService extends APIService {
   }
 
   public async fetchWorkspaceProjects(slug: string): Promise<ProjectDto[]> {
+    console.log("im called");
+
     return this.get(`workspace/${slug}/projects`).then((res) => res.data);
   }
 

@@ -13,6 +13,15 @@
  */
 
 
+// May contain unused imports in some cases
+// @ts-ignore
+import { IssueStateDto } from './issue-state-dto';
+// May contain unused imports in some cases
+// @ts-ignore
+import { ProjectDto } from './project-dto';
+// May contain unused imports in some cases
+// @ts-ignore
+import { UserDto } from './user-dto';
 
 /**
  * 
@@ -61,18 +70,60 @@ export interface IssueDto {
      * @type {string}
      * @memberof IssueDto
      */
-    'description': string;
+    'description'?: string;
+    /**
+     * 
+     * @type {ProjectDto}
+     * @memberof IssueDto
+     */
+    'Project': ProjectDto;
+    /**
+     * 
+     * @type {UserDto}
+     * @memberof IssueDto
+     */
+    'issued_by': UserDto;
+    /**
+     * 
+     * @type {string}
+     * @memberof IssueDto
+     */
+    'priority'?: PriorityEnum;
+    /**
+     * 
+     * @type {IssueStateDto}
+     * @memberof IssueDto
+     */
+    'state'?: IssueStateDto;
     /**
      * 
      * @type {Date}
      * @memberof IssueDto
      */
-    'start_date': Date;
+    'start_date'?: Date;
     /**
      * 
      * @type {Date}
      * @memberof IssueDto
      */
-    'end_date': Date;
+    'end_date'?: Date;
+    /**
+     * 
+     * @type {Array<UserDto>}
+     * @memberof IssueDto
+     */
+    'assignees': Array<UserDto>;
 }
+
+/**
+    * @export
+    * @enum {string}
+    */
+export enum PriorityEnum {
+    Urgent = 'Urgent',
+    High = 'High',
+    Medium = 'Medium',
+    Low = 'Low'
+}
+
 

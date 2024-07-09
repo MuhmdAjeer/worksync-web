@@ -16,6 +16,9 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
+import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
+import { HydrationBoundary, dehydrate } from "@tanstack/react-query";
+import { Toaster } from "sonner";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -41,23 +44,25 @@ export default function App({
         )}
       >
         <ReactQueryProvider>
-          <ThemeProvider
-            attribute="class"
-            defaultTheme="light"
-            enableSystem
-            disableTransitionOnChange
-            {...pageProps}
-          >
-            <TooltipProvider>
-              <SessionProvider session={session}>
-                <StoreProvider {...pageProps}>
-                  <AppProvider>
+          <StoreProvider {...pageProps}>
+            <AppProvider>
+              <ThemeProvider
+                attribute="class"
+                defaultTheme="light"
+                enableSystem
+                disableTransitionOnChange
+                {...pageProps}
+              >
+                <TooltipProvider>
+                  <SessionProvider session={session}>
                     {getLayout(<Component {...pageProps} />)}
-                  </AppProvider>
-                </StoreProvider>
-              </SessionProvider>
-            </TooltipProvider>
-          </ThemeProvider>
+                  </SessionProvider>
+                </TooltipProvider>
+              </ThemeProvider>
+              <ReactQueryDevtools initialIsOpen={false} />
+            </AppProvider>
+          </StoreProvider>
+          <Toaster richColors />
         </ReactQueryProvider>
       </main>
     </>

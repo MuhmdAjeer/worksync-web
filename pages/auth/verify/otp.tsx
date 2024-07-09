@@ -37,7 +37,7 @@ const Page: NextPageWithLayout = () => {
     if (!email) {
       router.push("/auth/register");
     }
-  }, [email]);
+  }, [email, router]);
 
   const handleSubmit = () => {
     if (!email) {
@@ -109,9 +109,8 @@ const Page: NextPageWithLayout = () => {
             >
               Confirm
             </Button>
-            \
             <Typography color="gray" variant="h4" affects="muted">
-              Didn't received code?{" "}
+              Didnt received code?{" "}
               <Button
                 disabled={verifyCodeMutation.isPending}
                 variant="link"
