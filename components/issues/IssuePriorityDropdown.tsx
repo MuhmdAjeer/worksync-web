@@ -29,8 +29,7 @@ type TState = {
   Icon: React.ReactNode;
 };
 
-
-const issueStates: TState[] = [
+export const priorities: TState[] = [
   {
     name: "Urgent",
     Icon: <AlertOctagonIcon className="p-1 bg-red-500 text-white rounded-sm" />,
@@ -63,7 +62,7 @@ interface IProps {
 
 const IssuePriorityDropdown: React.FC<IProps> = observer(
   ({ onOpenChange, open, onChange }) => {
-    const [value, setValue] = React.useState(issueStates.at(0));
+    const [value, setValue] = React.useState(priorities.at(0));
 
     return (
       <Popover open={open} onOpenChange={onOpenChange}>
@@ -89,25 +88,27 @@ const IssuePriorityDropdown: React.FC<IProps> = observer(
             <CommandEmpty>No option found.</CommandEmpty>
             <CommandGroup>
               <CommandList>
-                {issueStates.map((state) => (
+                {priorities.map((priority) => (
                   <CommandItem
-                    key={state.name}
-                    value={state.name}
+                    key={priority.name}
+                    value={priority.name}
                     onSelect={(currentValue) => {
-                      setValue(state);
-                      onChange?.(state);
+                      setValue(priority);
+                      onChange?.(priority);
                       onOpenChange?.(false);
                     }}
                     className="flex items-center justify-between"
                   >
                     <span className="flex items-center gap-2">
-                      {state.Icon}
-                      <p className="text-primary text-xs">{state.name}</p>
+                      {priority.Icon}
+                      <p className="text-primary text-xs">{priority.name}</p>
                     </span>
                     <Check
                       className={cn(
                         "mr-2 h-4 w-4",
-                        value?.name === state.name ? "opacity-100" : "opacity-0"
+                        value?.name === priority.name
+                          ? "opacity-100"
+                          : "opacity-0"
                       )}
                     />
                   </CommandItem>

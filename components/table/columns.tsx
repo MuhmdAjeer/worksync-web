@@ -1,17 +1,13 @@
 import { ColumnDef } from "@tanstack/react-table";
-import { ArrowUpDown, MoreHorizontal } from "lucide-react";
-
-import { Button } from "@/components/ui/button";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+import { format } from "date-fns";
 import { Checkbox } from "../ui/checkbox";
 import { IssueDto } from "@/generated/dto/issue-dto";
+import IssueStateIcon from "../icons/IssueStateIcon";
+import { RStack } from "../common/Stack";
+import { priorities } from "../issues/IssuePriorityDropdown";
+import { Calendar } from "../ui/calendar";
+import DatePicker from "../ui/datePicker";
+import { Button } from "../ui/button";
 
 export type Payment = {
   id: string;
@@ -21,48 +17,131 @@ export type Payment = {
 };
 
 export const columns: ColumnDef<IssueDto>[] = [
-  {
-    id: "select",
-    header: ({ table }) => (
-      <Checkbox
-        checked={
-          table.getIsAllPageRowsSelected() ||
-          (table.getIsSomePageRowsSelected() && "indeterminate")
-        }
-        onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
-        aria-label="Select all"
-      />
-    ),
-    cell: ({ row }) => (
-      <Checkbox
-        checked={row.getIsSelected()}
-        onCheckedChange={(value) => row.toggleSelected(!!value)}
-        aria-label="Select row"
-      />
-    ),
-  },
+  // {
+  //   id: "select",
+  //   header: ({ table }) => (
+  //     <Checkbox
+  //       checked={
+  //         table.getIsAllPageRowsSelected() ||
+  //         (table.getIsSomePageRowsSelected() && "indeterminate")
+  //       }
+  //       onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
+  //       aria-label="Select all"
+  //     />
+  //   ),
+  //   cell: ({ row }) => null,
+  // },
   {
     accessorKey: "title",
-    header: ({ column }) => {
+    header: ({ table }) => (
+      <div className="flex items-center gap-6">
+        <Checkbox
+          checked={
+            table.getIsAllPageRowsSelected() ||
+            (table.getIsSomePageRowsSelected() && "indeterminate")
+          }
+          onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
+          aria-label="Select all"
+        />
+        <h1>Issues</h1>
+      </div>
+    ),
+    cell({ row }) {
       return (
-        <Button
-          variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        >
-          Title
-          <ArrowUpDown className="ml-2 h-4 w-4" />
-        </Button>
+        <div className="flex items-center gap-6 group">
+          <Checkbox
+            className={`${
+              row.getIsSelected() ? "visible" : "invisible"
+            } group-hover:visible`}
+            checked={row.getIsSelected()}
+            onCheckedChange={(value) => row.toggleSelected(!!value)}
+            aria-label="Select row"
+          />
+          <h1>{row.original.Project.custom_id}</h1>
+          <h1>{row.original.title}</h1>
+        </div>
       );
     },
   },
   {
     accessorKey: "state",
-    header: "Status",
-    accessorFn: (row) => row.state?.name,
+    header: "State",
+    cell: ({ row }) => {
+      const state = row.original.state;
+      return (
+        <RStack>
+          {state && (
+            <IssueStateIcon height="18px" width="18px" group={state.group} />
+          )}
+          <h1>{state?.name}</h1>
+        </RStack>
+      );
+    },
   },
   {
     accessorKey: "priority",
     header: "Priority",
+    cell: ({ row }) => {
+      const priority = row.original.priority?.toString();
+      if (!priority) return;
+      const Priority = priorities.find((p) => p.name === priority);
+      return (
+        <RStack>
+          {Priority?.Icon}
+          <h1>{priority}</h1>
+        </RStack>
+      );
+    },
+  },
+  {
+    accessorKey: "start_date",
+    header: "Start Date",
+    cell: ({ row: { original } }) => {
+      if (!original.start_date) return;
+      return (
+        <DatePicker
+          variant="ghost"
+          label={format(original.start_date, "PPP")}
+          onChange={() => {}}
+        />
+      );
+    },
+  },
+  {
+    accessorKey: "end_date",
+    header: "End Date",
+    cell: ({ row: { original } }) => {
+      if (!original.end_date) return;
+      return (
+        <div>
+          <h1>{format(original.end_date, "PPP")}</h1>
+        </div>
+      );
+    },
+  },
+  {
+    accessorKey: "created_at",
+    header: "Issued on",
+    cell: ({ row: { original } }) => {
+      if (!original.created_at) return;
+      return (
+        <div>
+          <h1>{format(original.created_at, "PPP")}</h1>
+        </div>
+      );
+    },
+  },
+  {
+    accessorKey: "updated_at",
+    header: "Updated on",
+    cell: ({ row: { original } }) => {
+      if (!original.updated_at) return;
+      return (
+        <div>
+          <h1>{format(original.updated_at, "PPP")}</h1>
+        </div>
+      );
+    },
   },
 
   // {

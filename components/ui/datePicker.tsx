@@ -5,7 +5,7 @@ import { CalendarIcon } from "@radix-ui/react-icons";
 import { format } from "date-fns";
 
 import { cn } from "@/lib/utils";
-import { Button } from "@/components/ui/button";
+import { Button, buttonVariants } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
 import {
   Popover,
@@ -13,8 +13,9 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { DateAfter, DateBefore, DateInterval, Matcher } from "react-day-picker";
+import { VariantProps } from "class-variance-authority";
 
-interface IDatePicker {
+interface IDatePicker extends VariantProps<typeof buttonVariants> {
   label: string;
   value?: Date;
   onChange: (value: Date | undefined) => void;
@@ -22,7 +23,10 @@ interface IDatePicker {
   maxDate?: Date;
 }
 
-const DatePicker: React.FC<IDatePicker> = (props) => {
+const DatePicker: React.FC<IDatePicker> = ({
+  variant = "outline",
+  ...props
+}) => {
   const { label, onChange, value, minDate, maxDate } = props;
   const [date, setDate] = React.useState<Date | undefined>(value);
   const [disabled, setDisabled] = React.useState<Matcher>();
@@ -52,7 +56,7 @@ const DatePicker: React.FC<IDatePicker> = (props) => {
     <Popover>
       <PopoverTrigger asChild>
         <Button
-          variant={"outline"}
+          variant={variant}
           size="sm"
           className={" justify-start text-left font-normal"}
         >
