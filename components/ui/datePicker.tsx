@@ -58,7 +58,7 @@ const DatePicker: React.FC<IDatePicker> = ({
         <Button
           variant={variant}
           size="sm"
-          className={" justify-start text-left font-normal"}
+          className={"w-full justify-start text-left font-normal"}
         >
           <CalendarIcon className="mr-2 h-4 w-4" />
           {date ? format(date, "PPP") : <span>{label}</span>}

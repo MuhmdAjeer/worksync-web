@@ -3,7 +3,8 @@ import { AppLayout } from "@/components/layouts/app/AppLayout";
 import { IssueTable } from "@/components/table/IssuesTable";
 import { Payment, columns } from "@/components/table/columns";
 import { DataTable } from "@/components/table/data-table";
-import { useProjectIssues } from "@/hooks/issue";
+import { UpdateIssueDto } from "@/generated/dto/update-issue-dto";
+import { IUpdateIssue, useProjectIssues, useUpdateIssue } from "@/hooks/issue";
 import { useAppRouter } from "@/hooks/router";
 import { NextPageWithLayout } from "@/pages/_app";
 import { observer } from "mobx-react";
@@ -13,12 +14,18 @@ import React, { ReactElement } from "react";
 const Page: NextPageWithLayout = observer(() => {
   const { projectId } = useAppRouter();
   const { data } = useProjectIssues(projectId!);
+  const { mutate: updateIssue } = useUpdateIssue();
+
+  const updateHandler = (data: Omit<IUpdateIssue, "projectId">) => {
+    if (!projectId) return;
+    updateIssue({ projectId, ...data });
+  };
 
   if (!data) return <></>;
 
   return (
     <div>
-      <IssueTable columns={columns} data={data} />
+      <IssueTable columns={columns({ onUpdate: updateHandler })} data={data} />
     </div>
   );
 });

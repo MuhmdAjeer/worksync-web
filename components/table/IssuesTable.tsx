@@ -92,7 +92,7 @@ export function IssueTable<TData, TValue>({
                 data-state={row.getIsSelected() && "selected"}
               >
                 {row.getVisibleCells().map((cell) => (
-                  <TableCell className="h-14" key={cell.id}>
+                  <TableCell className="h-12 text-primary/70 border border-secondary/80 hover:bg-secondary cursor-pointer" key={cell.id}>
                     {flexRender(cell.column.columnDef.cell, cell.getContext())}
                   </TableCell>
                 ))}
