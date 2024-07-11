@@ -9,12 +9,14 @@ import {
   DisclosurePanel,
 } from "@headlessui/react";
 import {
+  CameraIcon,
   ContrastIcon,
   Dice1Icon,
   FileText,
   Inbox,
   LayersIcon,
   Settings,
+  VideotapeIcon,
 } from "lucide-react";
 import { useRouter } from "next/router";
 import { ProjectDto } from "@/generated/dto/project-dto";
@@ -25,6 +27,11 @@ interface IProps {
 
 const projectLinks = (workspaceSlug: string, projectId: string) => {
   return [
+    {
+      name: "Call",
+      href: `/${workspaceSlug}/projects/${projectId}/video-call`,
+      Icon: CameraIcon,
+    },
     {
       name: "Issues",
       href: `/${workspaceSlug}/projects/${projectId}/issues`,
