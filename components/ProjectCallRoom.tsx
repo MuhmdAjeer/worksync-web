@@ -29,7 +29,7 @@ const Video = (props: IVideo) => {
 
   return (
     <video
-      className="h-[40%] w-[50%] rounded-lg"
+      className="rounded-lg"
       playsInline
       autoPlay
       ref={ref}
@@ -193,9 +193,9 @@ const ProjectCallRoom = ({ projectId }: { projectId: string }) => {
   }
 
   return (
-    <div className="p-5 flex h-screen w-[90%] m-auto flex-wrap">
+    <div className="p-5 h-screen w-[90%] grid grid-cols-2 gap-2">
       <video
-        className="h-[40%] w-[50%] rounded-lg"
+        className=" rounded-lg"
         muted
         ref={userVideo}
         autoPlay
