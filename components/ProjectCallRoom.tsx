@@ -2,9 +2,10 @@ import React, { useEffect, useRef, useState } from "react";
 import io, { Socket } from "socket.io-client";
 import Peer, { SimplePeer } from "simple-peer";
 import { useSession } from "next-auth/react";
+import { Button } from "./ui/button";
 
 interface IVideo {
-  peer: Peer.Instance;
+  user: IUser;
 }
 
 interface IPeerRef {
@@ -12,37 +13,51 @@ interface IPeerRef {
   peer: Peer.Instance;
 }
 
-const Video = (props: IVideo) => {
+interface IUser {
+  peer: Peer.Instance;
+  userId: string;
+  isVideoPlaying: boolean;
+}
+
+const Video = ({ user }: IVideo) => {
   const ref = useRef<HTMLVideoElement>(null);
 
   useEffect(() => {
-    props.peer.on("stream", (stream) => {
+    user.peer.on("stream", (stream) => {
       if (ref.current) {
         ref.current.srcObject = stream;
       }
     });
-
     return () => {
-      props.peer.destroy();
+      user.peer.destroy();
     };
-  }, [props.peer]);
+  }, [user.peer]);
+
+  // useEffect(() => {
+  //   if (user.isVideoPlaying && ref.current?.srcObject) {
+  //     const stream = ref.current.srcObject as MediaStream;
+  //     user.peer.addStream(stream);
+  //   }
+  // }, [user.isVideoPlaying, user.peer]);
 
   return (
-    <video
-      className="rounded-lg"
-      playsInline
-      autoPlay
-      ref={ref}
-    />
+    <div>
+      {user.isVideoPlaying ? (
+        <video className="rounded-lg" playsInline autoPlay ref={ref} />
+      ) : (
+        <h1>no video</h1>
+      )}
+    </div>
   );
 };
 
 const ProjectCallRoom = ({ projectId }: { projectId: string }) => {
-  const [peers, setPeers] = useState<Peer.Instance[]>([]);
+  const [users, setUsers] = useState<IUser[]>([]);
   const socketRef = useRef<Socket>();
   const userVideo = useRef<HTMLVideoElement>(null);
   const peersRef = useRef<IPeerRef[]>([]);
   const session = useSession();
+  const localStreamRef = useRef<MediaStream>();
 
   useEffect(() => {
     socketRef.current = io("http://localhost:5000", {
@@ -54,7 +69,7 @@ const ProjectCallRoom = ({ projectId }: { projectId: string }) => {
       .then((stream) => {
         console.log("in media device");
         // socketRef.current?.emit("connection");
-
+        localStreamRef.current = stream;
         if (!userVideo.current || !socketRef.current) return;
         console.log("in media device not reutrned");
         userVideo.current.srcObject = stream;
@@ -64,11 +79,11 @@ const ProjectCallRoom = ({ projectId }: { projectId: string }) => {
         } catch (error) {
           console.log({ error });
         }
-        socketRef.current.on("all users", (users) => {
+        socketRef.current.on("all users", (joinedUsers) => {
           console.log("all users");
 
-          const peers: Peer.Instance[] = [];
-          users.forEach((userID: string) => {
+          const users: IUser[] = [];
+          joinedUsers.forEach((userID: string) => {
             if (!socketRef.current?.id) return;
             const peer = createPeer(userID, socketRef.current?.id, stream);
             peer.on("close", () => {
@@ -81,15 +96,15 @@ const ProjectCallRoom = ({ projectId }: { projectId: string }) => {
               peersRef.current = peersRef.current.filter(
                 (x, i) => i !== peerIndex
               );
-              setPeers((peers) => peers.filter((x, i) => i !== peerIndex));
+              setUsers((peers) => peers.filter((x, i) => i !== peerIndex));
             });
             peersRef.current.push({
               peerID: userID,
               peer,
             });
-            peers.push(peer);
+            users.push({ peer, isVideoPlaying: true, userId: userID });
           });
-          setPeers(peers);
+          setUsers(users);
         });
 
         socketRef.current?.on("user:leave", (userId) => {
@@ -105,7 +120,15 @@ const ProjectCallRoom = ({ projectId }: { projectId: string }) => {
             );
             console.log({ peersRef });
 
-            setPeers([...peersRef.current.map((p) => p.peer)]);
+            // setUsers([...peersRef.current.map((p) => p.peer)]);
+            const x = peersRef.current.map((x) => {
+              return {
+                peer: x.peer,
+                isVideoPlaying: true,
+                userId: x.peerID,
+              };
+            });
+            setUsers(x);
           }
         });
 
@@ -118,12 +141,31 @@ const ProjectCallRoom = ({ projectId }: { projectId: string }) => {
             peer,
           });
 
-          setPeers((users) => [...users, peer]);
+          setUsers((prev) => [
+            ...prev,
+            { isVideoPlaying: true, peer, userId: payload.callerID },
+          ]);
         });
 
         socketRef.current.on("receiving returned signal", (payload) => {
           const item = peersRef.current.find((p) => p.peerID === payload.id);
           item?.peer.signal(payload.signal);
+        });
+
+        socketRef.current.on("user:video:toggle", (userId) => {
+          // setUsers((prev) => {
+          //   return prev.map((x) => {
+          //     if (x.userId === userId) {
+          //       // Toggle the enabled state of the video track
+          //       const videoTrack = x.peer.streams[0].getVideoTracks()[0];
+          //       videoTrack.enabled = !videoTrack.enabled;
+          //       return { ...x, isVideoPlaying: !x.isVideoPlaying };
+          //     }
+          //     return x;
+          //   });
+          // });
+          const peer = peersRef.current.find((x) => x.peerID === userId);
+          console.log({ foundedpeer: peer });
         });
 
         window.onbeforeunload = (ev) => {
@@ -138,7 +180,7 @@ const ProjectCallRoom = ({ projectId }: { projectId: string }) => {
           // });
           console.log("im leaging");
           peersRef.current = [];
-          setPeers([]);
+          setUsers([]);
         });
       })
       .catch((err) => console.log(err));
@@ -147,10 +189,6 @@ const ProjectCallRoom = ({ projectId }: { projectId: string }) => {
       socketRef.current?.emit("room:leave");
     };
   }, [projectId]);
-
-  useEffect(() => {
-    console.log({ peers: peers.length, ref: peersRef.current.length });
-  }, [peers]);
 
   function createPeer(
     userToSignal: string,
@@ -192,6 +230,18 @@ const ProjectCallRoom = ({ projectId }: { projectId: string }) => {
     return peer;
   }
 
+  const toggleVideo = () => {
+    // if (localStreamRef.current) {
+    //   localStreamRef.current.getVideoTracks().forEach((track) => {
+    //     track.enabled = !track.enabled;
+    //   });
+    // }
+    socketRef.current?.emit("video:toggle", {
+      userId: socketRef.current.id,
+      room: projectId,
+    });
+  };
+
   return (
     <div className="p-5 h-screen w-[90%] grid grid-cols-2 gap-2">
       <video
@@ -201,9 +251,11 @@ const ProjectCallRoom = ({ projectId }: { projectId: string }) => {
         autoPlay
         playsInline
       />
-      {peers.map((peer, index) => {
-        return <Video key={index} peer={peer} />;
+
+      {users.map((user, index) => {
+        return <Video key={index} user={user} />;
       })}
+      <Button onClick={toggleVideo}>disable</Button>
     </div>
   );
 };
