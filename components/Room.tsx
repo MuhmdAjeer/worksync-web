@@ -3,7 +3,7 @@ import io, { Socket } from "socket.io-client";
 import Peer, { SimplePeer } from "simple-peer";
 
 interface IVideo {
-  peer: Peer.Instance;
+  user: IUser;
 }
 
 interface IPeerRef {
@@ -11,11 +11,16 @@ interface IPeerRef {
   peer: Peer.Instance;
 }
 
-const Video = (props: IVideo) => {
+interface IUser {
+  peer: Peer.Instance;
+  isVideoPlaying: boolean;
+}
+
+const Video = ({ user }: IVideo) => {
   const ref = useRef<HTMLVideoElement>(null);
 
   useEffect(() => {
-    props.peer.on("stream", (stream) => {
+    user.peer.on("stream", (stream) => {
       console.log({ ref });
       if (ref.current) {
         ref.current.srcObject = stream;
@@ -23,7 +28,17 @@ const Video = (props: IVideo) => {
     });
   }, []);
 
-  return <video className="h-[40%] w-[50%] rounded-lg" playsInline autoPlay ref={ref} />;
+  return (
+    <div>
+      <video
+        className="h-[40%] w-[50%] rounded-lg"
+        playsInline
+        autoPlay
+        ref={ref}
+      />
+      {user.isVideoPlaying}
+    </div>
+  );
 };
 
 // const videoConstraints = {
@@ -31,8 +46,8 @@ const Video = (props: IVideo) => {
 //   width: window.innerWidth / 2,
 // };
 
-const Room = () => {
-  const [peers, setPeers] = useState<Peer.Instance[]>([]);
+const Room = ({ projectId }: { projectId: string }) => {
+  const [users, setUsers] = useState<IUser[]>([]);
   const socketRef = useRef<Socket>();
   const userVideo = useRef<HTMLVideoElement>(null);
   const peersRef = useRef<IPeerRef[]>([]);
@@ -55,20 +70,20 @@ const Room = () => {
         } catch (error) {
           console.log({ error });
         }
-        socketRef.current.on("all users", (users) => {
+        socketRef.current.on("all users", (joinedUsers) => {
           console.log("all users");
 
-          const peers: Peer.Instance[] = [];
-          users.forEach((userID: string) => {
+          const users: IUser[] = [];
+          joinedUsers.forEach((userID: string) => {
             if (!socketRef.current?.id) return;
             const peer = createPeer(userID, socketRef.current?.id, stream);
             peersRef.current.push({
               peerID: userID,
               peer,
             });
-            peers.push(peer);
+            users.push({ isVideoPlaying: true, peer });
           });
-          setPeers(peers);
+          setUsers(users);
         });
 
         socketRef.current.on("user joined", (payload) => {
@@ -80,13 +95,19 @@ const Room = () => {
             peer,
           });
 
-          setPeers((users) => [...users, peer]);
+          setUsers((prev) => [...prev, { isVideoPlaying: true, peer }]);
         });
 
         socketRef.current.on("receiving returned signal", (payload) => {
           const item = peersRef.current.find((p) => p.peerID === payload.id);
           item?.peer.signal(payload.signal);
         });
+
+        window.onbeforeunload = () => handleLeave();
+
+        return () => {
+          handleLeave();
+        };
       })
       .catch((err) => console.log(err));
   }, []);
@@ -131,6 +152,10 @@ const Room = () => {
     return peer;
   }
 
+  const handleLeave = () => {
+    socketRef.current?.emit("room:leave");
+  };
+
   return (
     <div className="p-5 flex h-screen w-[90%] m-auto flex-wrap">
       <video
@@ -140,8 +165,8 @@ const Room = () => {
         autoPlay
         playsInline
       />
-      {peers.map((peer, index) => {
-        return <Video key={index} peer={peer} />;
+      {users.map((user, index) => {
+        return <Video key={index} user={user} />;
       })}
     </div>
   );
