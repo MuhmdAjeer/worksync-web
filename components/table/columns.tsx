@@ -10,6 +10,7 @@ import DatePicker from "../ui/datePicker";
 import { Button } from "../ui/button";
 import { UpdateIssueDto } from "@/generated/dto/update-issue-dto";
 import { IUpdateIssue } from "@/hooks/issue";
+import { cn } from "@/lib/utils";
 
 export type Payment = {
   id: string;
@@ -39,33 +40,49 @@ export const columns = (options?: TArgs): ColumnDef<IssueDto>[] => {
     //   cell: ({ row }) => null,
     // },
     {
-      accessorKey: "title",
+      accessorKey: "id",
       header: ({ table }) => (
-        <div className="flex items-center gap-6">
+        <div className="flex items-center gap-6 w-max p-0">
           <Checkbox
             checked={
               table.getIsAllPageRowsSelected() ||
               (table.getIsSomePageRowsSelected() && "indeterminate")
             }
+            className="data-[state=checked]:bg-custom-primary data-[state=checked]:text-white border-custom-primary"
+            // className="bg-amber-300"
             onCheckedChange={(value) =>
               table.toggleAllPageRowsSelected(!!value)
             }
             aria-label="Select all"
           />
-          <h1>Issues</h1>
         </div>
       ),
       cell({ row }) {
         return (
           <div className="flex items-center gap-6 group">
             <Checkbox
-              className={`${
-                row.getIsSelected() ? "visible" : "invisible"
-              } group-hover:visible`}
+              className={cn(
+                row.getIsSelected() ? "visible" : "invisible",
+                "group-hover:visible data-[state=checked]:bg-custom-primary data-[state=checked]:text-white border-custom-primary"
+              )}
               checked={row.getIsSelected()}
               onCheckedChange={(value) => row.toggleSelected(!!value)}
               aria-label="Select row"
             />
+          </div>
+        );
+      },
+    },
+    {
+      accessorKey: "title",
+      header: ({ table }) => (
+        <div className="flex items-center gap-6">
+          <h1>Issues</h1>
+        </div>
+      ),
+      cell({ row }) {
+        return (
+          <div className="flex items-center gap-6 group">
             <h1>{row.original.Project.custom_id}</h1>
             <h1>{row.original.title}</h1>
           </div>
@@ -95,7 +112,7 @@ export const columns = (options?: TArgs): ColumnDef<IssueDto>[] => {
         if (!priority) return;
         const Priority = priorities.find((p) => p.name === priority);
         return (
-          <RStack>
+          <RStack className="w-full min-h-full">
             {Priority?.Icon}
             <h1>{priority}</h1>
           </RStack>
@@ -108,22 +125,23 @@ export const columns = (options?: TArgs): ColumnDef<IssueDto>[] => {
       cell: ({ row: { original } }) => {
         // if (!original.start_date) return;
         return (
-          <div className="w-full" >
-            <DatePicker
-              variant="ghost"
-              value={original.start_date && new Date(original.start_date)}
-              label={
-                original.start_date
-                  ? format(original.start_date, "PPP")
-                  : "Start Date"
+          // <div className="w-full" >
+          <DatePicker
+            variant="ghost"
+            className="hover:bg-0"
+            value={original.start_date && new Date(original.start_date)}
+            label={
+              original.start_date
+                ? format(original.start_date, "PPP")
+                : "Start Date"
+            }
+            onChange={(value) => {
+              if (options?.onUpdate) {
+                options.onUpdate({ issueId: original.id, start_date: value });
               }
-              onChange={(value) => {
-                if (options?.onUpdate) {
-                  options.onUpdate({ issueId: original.id, start_date: value });
-                }
-              }}
-            />
-          </div>
+            }}
+          />
+          // </div>
         );
       },
     },

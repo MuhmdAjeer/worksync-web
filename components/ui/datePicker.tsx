@@ -21,6 +21,7 @@ interface IDatePicker extends VariantProps<typeof buttonVariants> {
   onChange: (value: Date | undefined) => void;
   minDate?: Date;
   maxDate?: Date;
+  className?: string;
 }
 
 const DatePicker: React.FC<IDatePicker> = ({
@@ -58,7 +59,10 @@ const DatePicker: React.FC<IDatePicker> = ({
         <Button
           variant={variant}
           size="sm"
-          className={"w-full justify-start text-left font-normal"}
+          className={cn(
+            "w-full justify-start text-left font-normal",
+            props.className
+          )}
         >
           <CalendarIcon className="mr-2 h-4 w-4" />
           {date ? format(date, "PPP") : <span>{label}</span>}
