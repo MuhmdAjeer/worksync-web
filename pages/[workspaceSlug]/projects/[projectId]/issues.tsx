@@ -24,7 +24,7 @@ const Page: NextPageWithLayout = observer(() => {
   if (!data) return <></>;
 
   return (
-    <div>
+    <div className="p-4">
       <IssueTable columns={columns({ onUpdate: updateHandler })} data={data} />
     </div>
   );

@@ -29,6 +29,7 @@ import {
   DropdownMenuContent,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { cn } from "@/lib/utils";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -64,7 +65,7 @@ export function IssueTable<TData, TValue>({
   });
 
   return (
-    <div>
+    <div className="bg-card rounded-lg border border-secondary">
       <Table>
         <TableHeader>
           {table.getHeaderGroups().map((headerGroup) => (
@@ -86,14 +87,27 @@ export function IssueTable<TData, TValue>({
         </TableHeader>
         <TableBody>
           {table.getRowModel().rows?.length ? (
-            table.getRowModel().rows.map((row) => (
+            table.getRowModel().rows.map((row, index) => (
               <TableRow
                 key={row.id}
-                data-state={row.getIsSelected() && "selected"}
+                // data-state={row.getIsSelected() && "selected"}
+                className={"hover:bg-0 last:border-b-0"}
               >
                 {row.getVisibleCells().map((cell) => (
-                  <TableCell className="h-12 text-primary/70 border border-secondary/80 hover:bg-secondary cursor-pointer" key={cell.id}>
-                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                  <TableCell
+                    className={cn(
+                      "text-primary/70 border-r first:border-r-0 last:border-r-0 border-b border-secondary  cursor-pointer p-0",
+                      table.getRowModel().rows?.length - 1 === index &&
+                        "!border-b-0"
+                    )}
+                    key={cell.id}
+                  >
+                    <div className="min-h-full h-8 flex items-center px-2  border border-transparent hover:border hover:border-primary/50 hover:rounded">
+                      {flexRender(
+                        cell.column.columnDef.cell,
+                        cell.getContext()
+                      )}
+                    </div>
                   </TableCell>
                 ))}
               </TableRow>
