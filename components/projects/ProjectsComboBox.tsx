@@ -20,6 +20,7 @@ import { observer } from "mobx-react";
 import ProjectLogo from "./ProjectLogo";
 import { useProject, useProjects } from "@/hooks/projects";
 import { useRouter } from "next/router";
+import { ScrollArea } from "../ui/scroll-area";
 
 interface IProps {
   open: boolean;
@@ -36,7 +37,7 @@ const ProjectsComboBox: React.FC<IProps> = observer(
     const { data: selectedProject } = useProject(value);
 
     return (
-      <Popover open={open} onOpenChange={onOpenChange}>
+      <Popover modal open={open} onOpenChange={onOpenChange}>
         <PopoverTrigger asChild>
           <Button
             variant="outline"
@@ -59,30 +60,32 @@ const ProjectsComboBox: React.FC<IProps> = observer(
             <CommandEmpty>No project found.</CommandEmpty>
             <CommandGroup>
               <CommandList>
-                {workspaceProjects?.map((project) => (
-                  <CommandItem
-                    key={project.id}
-                    value={project.id}
-                    onSelect={(currentValue) => {
-                      onChange(project.id);
-                      onOpenChange(false);
-                    }}
-                    className="flex justify-between"
-                  >
-                    <span className="flex gap-2">
-                      <ProjectLogo value={project.logo} />
-                      {project.name}
-                    </span>
-                    <Check
-                      className={cn(
-                        "mr-2 h-4 w-4",
-                        selectedProject?.name === project.name
-                          ? "opacity-100"
-                          : "opacity-0"
-                      )}
-                    />
-                  </CommandItem>
-                ))}
+                <ScrollArea className="h-80 overflow-x-hidden" >
+                  {workspaceProjects?.map((project) => (
+                    <CommandItem
+                      key={project.id}
+                      value={project.id}
+                      onSelect={(currentValue) => {
+                        onChange(project.id);
+                        onOpenChange(false);
+                      }}
+                      className="flex justify-between"
+                    >
+                      <span className="flex gap-2">
+                        <ProjectLogo value={project.logo} />
+                        {project.name}
+                      </span>
+                      <Check
+                        className={cn(
+                          "mr-2 h-4 w-4",
+                          selectedProject?.name === project.name
+                            ? "opacity-100"
+                            : "opacity-0"
+                        )}
+                      />
+                    </CommandItem>
+                  ))}
+                </ScrollArea>
               </CommandList>
             </CommandGroup>
           </Command>
