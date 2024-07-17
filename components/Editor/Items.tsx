@@ -1,11 +1,20 @@
-// @ts-nocheck
-import { Editor } from "@tiptap/react";
+import { Editor, Range } from "@tiptap/react";
 
-const getSuggestionItems = (query) => {
+interface Items {
+  title: string;
+  command: (props: Command) => void;
+}
+
+interface Command {
+  editor: Editor;
+  range: Range;
+}
+
+const getSuggestionItems = (query: string): Items[] => {
   return [
     {
       title: "H1",
-      command: ({ editor, range }) => {
+      command: ({ editor, range }: Command) => {
         editor
           .chain()
           .focus()
@@ -16,53 +25,51 @@ const getSuggestionItems = (query) => {
     },
     {
       title: "H2",
-      command: ({ editor, range }) => {
+      command: ({ editor, range }: Command) => {
         editor
           .chain()
           .focus()
           .deleteRange(range)
-          .setNode("heading", { level: 6 })
+          .setNode("heading", { level: 2 })
           .run();
       },
     },
     {
-      title: "code",
-      command: ({ editor, range }: { editor: Editor }) => {
-        if (range)
-          editor
-            .chain()
-            .focus()
-            .deleteRange(range)
-            .clearNodes()
-            .insertTable({ rows: 3, cols: 3 })
-            .run();
-        else
-          editor
-            .chain()
-            .focus()
-            .clearNodes()
-            .insertTable({ rows: 3, cols: 3 })
-            .run();
+      title: "bold",
+      command: ({ editor, range }: Command) => {
+        editor.chain().focus().deleteRange(range).setMark("bold").run();
       },
     },
     {
       title: "italic",
-      command: ({ editor, range }) => {
+      command: ({ editor, range }: Command) => {
         editor.chain().focus().deleteRange(range).setMark("italic").run();
       },
     },
     {
+      title: "Quote",
+      command: ({ editor, range }: Command) => {
+        editor.chain().focus().deleteRange(range).setBlockquote().run();
+      },
+    },
+    {
+      title: "table",
+      command: ({ editor, range }: Command) => {
+        editor
+          .chain()
+          .focus()
+          .insertTable({ rows: 3, cols: 3, withHeaderRow: true })
+          .run();
+      },
+    },
+    {
       title: "image",
-      command: ({ editor, range }) => {
+      command: ({ editor, range }: Command) => {
         console.log("call some function from parent");
         editor.chain().focus().deleteRange(range).setNode("paragraph").run();
       },
     },
-  ]
-    .filter((item) =>
-      item.title.toLowerCase().startsWith(query.query.toLowerCase())
-    )
-    .slice(0, 10);
+  ].slice(0, 10);
 };
 
 export default getSuggestionItems;

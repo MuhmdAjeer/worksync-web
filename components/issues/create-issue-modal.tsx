@@ -18,11 +18,9 @@ import { Controller, useForm } from "react-hook-form";
 import { CreateIssueDto } from "@/generated/dto/create-issue-dto";
 import DatePicker from "../ui/datePicker";
 import { Button } from "../ui/button";
-import { Separator } from "../ui/separator";
 import { useCreateIssue } from "@/hooks/issue";
 import { toast } from "sonner";
-import { useQueryClient } from "@tanstack/react-query";
-import { QUERY_KEYS } from "@/lib/constants";
+import Tiptap from "../Editor";
 interface IProps {
   open: boolean;
   onClose: () => void;
@@ -117,12 +115,13 @@ const CreateIssueModal: FC<IProps> = observer(({ onClose, open }) => {
                 control={form.control}
                 name="description"
                 render={({ field }) => (
-                  <Textarea
-                    {...field}
-                    rows={10}
-                    name="Description"
-                    placeholder="Description"
-                  />
+                  // <Textarea
+                  //   {...field}
+                  //   rows={10}
+                  //   name="Description"
+                  //   placeholder="Description"
+                  // />
+                  <Tiptap onChange={field.onChange} />
                 )}
               />
             </div>
