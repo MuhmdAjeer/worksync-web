@@ -1,12 +1,5 @@
-// src/Tiptap.tsx
-import {
-  useEditor,
-  EditorContent,
-  FloatingMenu,
-  BubbleMenu,
-} from "@tiptap/react";
+import { useEditor, EditorContent } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
-import { Button } from "../ui/button";
 import Commands from "./Commands";
 import getSuggestionItems from "./Items";
 import renderItems from "./RenderItems";
@@ -14,14 +7,19 @@ import Table from "@tiptap/extension-table";
 import TableCell from "@tiptap/extension-table-cell";
 import TableHeader from "@tiptap/extension-table-header";
 import TableRow from "@tiptap/extension-table-row";
+import BlockQuote from "@tiptap/extension-blockquote";
+import React from "react";
+import { cn } from "@/lib/utils";
 
-// define your extension array
-const extensions = [StarterKit];
+interface ITiptap {
+  onChange: (content: string) => void;
+}
 
-const content = "<p>Hello World!</p>";
-
-const Tiptap = () => {
+const Tiptap: React.FC<ITiptap> = ({ onChange }) => {
   const editor = useEditor({
+    onUpdate({ editor }) {
+      onChange(editor.getHTML());
+    },
     extensions: [
       Table.configure({
         resizable: true,
@@ -30,6 +28,7 @@ const Tiptap = () => {
       TableHeader,
       TableCell,
       StarterKit,
+      BlockQuote,
       Commands.configure({
         suggestion: {
           // @ts-ignore
@@ -42,14 +41,13 @@ const Tiptap = () => {
   });
 
   return (
-    <div>
-      <Button
-        onClick={() => editor?.chain().focus().toggleBold().run()}
-        size="sm"
-      >
-        Code
-      </Button>
-      <EditorContent editor={editor} />
+    <div className="editor-box">
+      <EditorContent
+        className={cn(
+          "flex text-primary prose-h1:text-4xl prose-h1:font-bold prose-h2:font-bold prose-h2:text-3xl min-h-[60px] min-w-full rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-sm placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
+        )}
+        editor={editor}
+      />
     </div>
   );
 };

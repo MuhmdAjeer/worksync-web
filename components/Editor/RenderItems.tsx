@@ -14,9 +14,11 @@ const renderItems = () => {
         editor: props.editor,
       });
 
+      const editorElement = document.querySelector(".editor-box");
+
       popup = tippy("body", {
         getReferenceClientRect: props.clientRect,
-        appendTo: () => document.body,
+        appendTo: () => editorElement,
         content: component.element,
         showOnCreate: true,
         interactive: true,
@@ -26,6 +28,8 @@ const renderItems = () => {
     },
 
     onUpdate(props) {
+      console.log({ props });
+
       component.updateProps(props);
 
       popup[0].setProps({
