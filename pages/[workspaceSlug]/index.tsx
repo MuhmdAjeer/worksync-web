@@ -1,14 +1,9 @@
 import { ReactElement } from "react";
 import { NextPageWithLayout } from "../_app";
 import { AppLayout } from "@/components/layouts/app/AppLayout";
-import Room from "@/components/Room";
 
 export const Page: NextPageWithLayout = () => {
-  return (
-    <div>
-      {/* <Room /> */}
-    </div>
-  );
+  return <div></div>;
 };
 
 Page.getLayout = function getLayout(page: ReactElement) {
