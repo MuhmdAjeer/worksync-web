@@ -27,11 +27,11 @@ interface IProps {
 
 const projectLinks = (workspaceSlug: string, projectId: string) => {
   return [
-    {
-      name: "Call",
-      href: `/${workspaceSlug}/projects/${projectId}/video-call`,
-      Icon: CameraIcon,
-    },
+    // {
+    //   name: "Call",
+    //   href: `/${workspaceSlug}/projects/${projectId}/video-call`,
+    //   Icon: CameraIcon,
+    // },
     {
       name: "Issues",
       href: `/${workspaceSlug}/projects/${projectId}/issues`,
@@ -95,9 +95,9 @@ const ProjectSidebarItem = observer(({ project }: IProps) => {
             <Link key={menu.name} href={menu.href}>
               <span className="block w-full">
                 <div
-                  className={`group flex items-center gap-2.5 rounded-md px-2 py-1.5 text-xs font-medium outline-none ${
+                  className={`group flex items-center gap-2.5 rounded-md px-2 py-1.5 mt-0.5 text-xs font-medium outline-none ${
                     router.asPath.includes(menu.href)
-                      ? ""
+                      ? "bg-secondary"
                       : " hover:bg-secondary focus:bg-primary/5"
                   }`}
                 >
