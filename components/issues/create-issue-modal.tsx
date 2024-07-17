@@ -69,6 +69,7 @@ const CreateIssueModal: FC<IProps> = observer(({ onClose, open }) => {
     if (!open) {
       form.reset();
     }
+    // @ts-nocheck
   }, [open]);
 
   if (!activeProjectId) {
