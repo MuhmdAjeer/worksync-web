@@ -114,15 +114,7 @@ const CreateIssueModal: FC<IProps> = observer(({ onClose, open }) => {
               <Controller
                 control={form.control}
                 name="description"
-                render={({ field }) => (
-                  // <Textarea
-                  //   {...field}
-                  //   rows={10}
-                  //   name="Description"
-                  //   placeholder="Description"
-                  // />
-                  <Tiptap onChange={field.onChange} />
-                )}
+                render={({ field }) => <Tiptap onChange={field.onChange} />}
               />
             </div>
             <div className="flex items-center gap-2 justify-between">

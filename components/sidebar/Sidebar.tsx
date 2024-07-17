@@ -34,7 +34,7 @@ export const SIDEBAR_MENU_ITEMS: {
     label: "Projects",
     href: `/projects`,
     highlight: (pathname: string, baseUrl: string) =>
-      pathname.includes(`${baseUrl}/projects`),
+      pathname === `${baseUrl}/projects`,
     Icon: Briefcase,
   },
   {
