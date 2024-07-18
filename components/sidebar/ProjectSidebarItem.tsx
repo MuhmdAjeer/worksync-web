@@ -71,13 +71,13 @@ const ProjectSidebarItem = observer(({ project }: IProps) => {
   return (
     // <Link key={project.id} href="hi">
     <Disclosure as="div" className="w-full">
-      <DisclosureButton className="w-full">
+      <DisclosureButton  className="w-full outline-none">
         <span className="my-1 block w-full">
           <div
-            className={`group flex w-full items-center gap-2.5 rounded-md px-3 py-1 text-sm font-medium outline-none ${"text-foreground hover:bg-foreground/5 focus:bg-foreground/50"}  `}
+            className={`group flex w-full items-center gap-2.5 rounded-md px-3 py-0.5 text-xs font-medium outline-none ${"text-foreground hover:bg-foreground/5 focus:bg-foreground/50"}  `}
           >
             <ProjectLogo value={project.logo} />
-            <p className="leading-5 text-sm">{project.name}</p>
+            <p className="leading-5">{project.name}</p>
           </div>
         </span>
       </DisclosureButton>
@@ -91,22 +91,24 @@ const ProjectSidebarItem = observer(({ project }: IProps) => {
         leaveTo="transform scale-95 opacity-0"
       >
         <DisclosurePanel>
-          {projectLinks(workspaceSlug as string, project.id).map((menu) => (
-            <Link key={menu.name} href={menu.href}>
-              <span className="block w-full">
-                <div
-                  className={`group flex items-center gap-2.5 rounded-md px-2 py-1.5 mt-0.5 text-xs font-medium outline-none ${
-                    router.asPath.includes(menu.href)
-                      ? "bg-secondary"
-                      : " hover:bg-secondary focus:bg-primary/5"
-                  }`}
-                >
-                  <menu.Icon className="h-4 w-4 stroke-[1.5]" />
-                  {menu.name}
-                </div>
-              </span>
-            </Link>
-          ))}
+          <div className="border p-2 rounded-lg shadow-sm">
+            {projectLinks(workspaceSlug as string, project.id).map((menu) => (
+              <Link key={menu.name} href={menu.href}>
+                <span className="block w-full">
+                  <div
+                    className={`group flex items-center gap-2.5 rounded-md px-2 py-1.5 mt-0.5 text-xs font-medium outline-none ${
+                      router.asPath.includes(menu.href)
+                        ? "bg-secondary"
+                        : " hover:bg-secondary focus:bg-primary/5"
+                    }`}
+                  >
+                    <menu.Icon className="h-4 w-4 stroke-[1.5]" />
+                    {menu.name}
+                  </div>
+                </span>
+              </Link>
+            ))}
+          </div>
         </DisclosurePanel>
       </Transition>
     </Disclosure>

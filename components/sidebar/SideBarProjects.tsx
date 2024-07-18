@@ -24,7 +24,7 @@ const SideBarProjects = observer(() => {
     <div className="w-full cursor-pointer space-y-2 p-4">
       <div
         onClick={() => setCollapsed((v) => !v)}
-        className="flex gap-2  justify-between items-center text-center hover:bg-secondary rounded-md space-y-4 px-4 py-2 "
+        className="flex gap-2  justify-between items-center text-center hover:bg-secondary rounded-md space-y-4 px-4 py-1 "
       >
         <Typography variant="p" className="font-semibold" affects="muted">
           Your projects
