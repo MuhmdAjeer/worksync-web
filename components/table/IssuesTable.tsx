@@ -65,7 +65,7 @@ export function IssueTable<TData, TValue>({
   });
 
   return (
-    <div className="bg-card rounded-lg border border-secondary">
+    <div className="bg-card rounded-lg border border-primary/10">
       <Table>
         <TableHeader>
           {table.getHeaderGroups().map((headerGroup) => (
