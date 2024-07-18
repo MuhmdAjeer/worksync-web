@@ -61,16 +61,16 @@ const Sidebar = observer(() => {
   return (
     <div className="w-full cursor-pointer space-y-2 p-4">
       {SIDEBAR_MENU_ITEMS.map((link) => (
-        <Link key={link.key} href={`/${workspaceSlug}${link.href}`}>
+        <Link  key={link.key} href={`/${workspaceSlug}${link.href}`}>
           <span className="my-1 block w-full">
             <div
-              className={`group flex w-full items-center gap-2.5 rounded-md px-3 py-2 text-sm font-medium outline-none ${
+              className={`group flex w-full items-center gap-2.5 rounded-md px-3 py-1 text-xs font-medium outline-none ${
                 link.highlight(router.asPath, `/${workspaceSlug}`)
                   ? "bg-custom-primary-dark/10 text-custom-primary-dark"
                   : "text-foreground hover:bg-foreground/5 focus:bg-foreground/50"
               }  `}
             >
-              {<link.Icon className="h-4 w-4" />}
+              {<link.Icon className="h-4 w-4 text-primary/70 group-hover:text-primary" />}
               <p className="leading-5">{link.label}</p>
             </div>
           </span>

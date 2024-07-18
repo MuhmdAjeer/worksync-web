@@ -25,7 +25,7 @@ export const AppLayout: FC<IProps> = observer(({ header, children }) => {
 
           <main className="relative flex h-full w-full flex-col overflow-hidden ">
             <div className="z-[15]">
-              <div className="z-10 flex w-full items-center border-b">
+              <div className="z-10 flex w-full items-center">
                 <div className="block bg-custom-sidebar-background-100  py-4 pl-5 md:hidden">
                   {/* <SidebarHamburgerToggle /> */}
                 </div>
@@ -33,7 +33,7 @@ export const AppLayout: FC<IProps> = observer(({ header, children }) => {
               </div>
               {/* {mobileHeader && mobileHeader} */}
             </div>
-            <div className="h-full w-full overflow-hidden">
+            <div className="h-full  w-[calc(100%-0.75rem)] border  rounded-lg mb-3 mr-3 overflow-hidden">
               <div className="relative h-full w-full overflow-x-hidden overflow-y-scroll">
                 {children}
               </div>
