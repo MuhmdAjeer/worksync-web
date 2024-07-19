@@ -5,7 +5,7 @@ import {
   SignalLowIcon,
   SignalHighIcon,
   SignalMediumIcon,
-  CircleX
+  CircleX,
 } from "lucide-react";
 
 import { cn } from "@/lib/utils";
@@ -57,9 +57,7 @@ export const priorities: TState[] = [
   },
   {
     name: "None",
-    Icon: (
-      <CircleX className="p-1 border rounded-sm" />
-    ),
+    Icon: <CircleX className="p-1 border rounded-sm" />,
   },
 ];
 
@@ -68,12 +66,13 @@ interface IProps extends VariantProps<typeof buttonVariants> {
   onOpenChange?: (value: boolean) => void;
   onChange?: (value: TState) => void;
   className?: string;
-  priority?: TState;
+  defaultValue?: PriorityEnum;
 }
 
 const IssuePriorityDropdown: React.FC<IProps> = observer(
-  ({ onOpenChange, open, onChange, variant, className, priority }) => {
-    const [value, setValue] = React.useState(priority ?? priorities.at(0));
+  ({ onOpenChange, open, onChange, variant, className, defaultValue }) => {
+    const defaultPriority = priorities.find((x) => x.name == defaultValue)
+    const [value, setValue] = React.useState(defaultPriority ?? priorities.at(0));
 
     return (
       <Popover open={open} onOpenChange={onOpenChange}>

@@ -13,9 +13,10 @@ import { cn } from "@/lib/utils";
 
 interface ITiptap {
   onChange: (content: string) => void;
+  value?: string;
 }
 
-const Tiptap: React.FC<ITiptap> = ({ onChange }) => {
+const Tiptap: React.FC<ITiptap> = ({ onChange, value }) => {
   const editor = useEditor({
     onUpdate({ editor }) {
       onChange(editor.getHTML());
@@ -37,7 +38,7 @@ const Tiptap: React.FC<ITiptap> = ({ onChange }) => {
         },
       }),
     ],
-    content: "<p>Use / command to see different options</p> ",
+    content: value ?? "<p>Use / command to see different options</p> ",
   });
 
   return (

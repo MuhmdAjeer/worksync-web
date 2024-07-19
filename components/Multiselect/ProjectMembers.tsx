@@ -19,7 +19,7 @@ const ProjectMembersDropdown: React.FC<IProps> = (props) => {
   if (!members) return null;
 
   const options: OptionType[] = members.map((x) => {
-    return { label: x.user.username ?? "", value: x.id };
+    return { label: x.user.username ?? "", value: x.user.id };
   });
 
   return (
