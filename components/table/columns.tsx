@@ -55,7 +55,7 @@ export const columns = (options?: TArgs): ColumnDef<IssueDto>[] => {
               table.getIsAllPageRowsSelected() ||
               (table.getIsSomePageRowsSelected() && "indeterminate")
             }
-            className="data-[state=checked]:bg-custom-primary data-[state=checked]:text-white border-custom-primary"
+            className="data-[state=checked]:bg-custom-primary data-[state=checked]:text-white data-[state=checked]:border-custom-primary"
             // className="bg-amber-300"
             onCheckedChange={(value) =>
               table.toggleAllPageRowsSelected(!!value)
@@ -69,8 +69,8 @@ export const columns = (options?: TArgs): ColumnDef<IssueDto>[] => {
           <div className="flex items-center gap-6 group">
             <Checkbox
               className={cn(
-                row.getIsSelected() ? "visible" : "invisible",
-                "group-hover:visible data-[state=checked]:bg-custom-primary data-[state=checked]:text-white border-custom-primary"
+                // row.getIsSelected() ? "visible" : "invisible",
+                "group-hover:visible data-[state=checked]:bg-custom-primary data-[state=checked]:text-white data-[state=checked]:border-custom-primary"
               )}
               checked={row.getIsSelected()}
               onCheckedChange={(value) => row.toggleSelected(!!value)}
