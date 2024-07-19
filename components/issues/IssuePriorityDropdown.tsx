@@ -5,10 +5,11 @@ import {
   SignalLowIcon,
   SignalHighIcon,
   SignalMediumIcon,
+  CircleX
 } from "lucide-react";
 
 import { cn } from "@/lib/utils";
-import { Button } from "@/components/ui/button";
+import { Button, buttonVariants } from "@/components/ui/button";
 import {
   Command,
   CommandEmpty,
@@ -23,6 +24,8 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { observer } from "mobx-react";
+import { VariantProps } from "class-variance-authority";
+import { PriorityEnum } from "@/generated/dto/create-issue-dto";
 
 type TState = {
   name: string;
@@ -52,27 +55,38 @@ export const priorities: TState[] = [
       <SignalLowIcon className="p-1 bg-blue-50 text-blue-300 border-blue-300 border rounded-sm" />
     ),
   },
+  {
+    name: "None",
+    Icon: (
+      <CircleX className="p-1 border rounded-sm" />
+    ),
+  },
 ];
 
-interface IProps {
-  open: boolean;
+interface IProps extends VariantProps<typeof buttonVariants> {
+  open?: boolean;
   onOpenChange?: (value: boolean) => void;
   onChange?: (value: TState) => void;
+  className?: string;
+  priority?: TState;
 }
 
 const IssuePriorityDropdown: React.FC<IProps> = observer(
-  ({ onOpenChange, open, onChange }) => {
-    const [value, setValue] = React.useState(priorities.at(0));
+  ({ onOpenChange, open, onChange, variant, className, priority }) => {
+    const [value, setValue] = React.useState(priority ?? priorities.at(0));
 
     return (
       <Popover open={open} onOpenChange={onOpenChange}>
         <PopoverTrigger asChild>
           <Button
-            variant="outline"
+            variant={variant ?? "outline"}
             role="combobox"
             size="sm"
             aria-expanded={open}
-            className="justify-between flex items-center gap-3"
+            className={cn(
+              "justify-between w-full flex items-center gap-3",
+              className
+            )}
           >
             {value && (
               <>

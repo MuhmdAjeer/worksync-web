@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useCallback, useEffect } from "react";
 import {
   Check,
   ChevronsUpDown,
@@ -10,7 +10,7 @@ import {
 } from "lucide-react";
 
 import { cn } from "@/lib/utils";
-import { Button } from "@/components/ui/button";
+import { Button, buttonVariants } from "@/components/ui/button";
 import {
   Command,
   CommandEmpty,
@@ -30,29 +30,43 @@ import { useAppRouter } from "@/hooks/router";
 import { IssueStateDto } from "@/generated/dto/issue-state-dto";
 import IssueStateIcon from "../icons/IssueStateIcon";
 import { useRouter } from "next/router";
+import { VariantProps } from "class-variance-authority";
 
 type TState = {
   name: string;
   Icon: React.ReactNode;
 };
 
-interface IProps {
-  open: boolean;
+interface IProps extends VariantProps<typeof buttonVariants> {
+  open?: boolean;
   onOpenChange?: (value: boolean) => void;
   onChange: (value: IssueStateDto) => void;
   projectId: string;
+  className?: string;
+  defaultValue?: IssueStateDto;
 }
 
 const IssueStatesDropdown: React.FC<IProps> = observer(
-  ({ onOpenChange, open, onChange, projectId }) => {
+  ({
+    onOpenChange,
+    open,
+    onChange,
+    projectId,
+    className,
+    variant = "outline",
+    defaultValue,
+  }) => {
     // const router = useRouter();
     // const projectId = router.query.projectId?.toString();
     // const { projectId } = useAppRouter();
     const { data: issueStates } = useProjectStates(projectId);
-    const [value, setValue] = React.useState(issueStates?.at(0));
+
+    const [value, setValue] = React.useState(
+      defaultValue ?? issueStates?.at(0)
+    );
 
     useEffect(() => {
-      if (issueStates) {
+      if (issueStates && !defaultValue) {
         setValue(issueStates.at(0));
       }
     }, [issueStates]);
@@ -61,11 +75,11 @@ const IssueStatesDropdown: React.FC<IProps> = observer(
       <Popover open={open} onOpenChange={onOpenChange}>
         <PopoverTrigger asChild>
           <Button
-            variant="outline"
+            variant={variant}
             role="combobox"
             size="sm"
             aria-expanded={open}
-            className="justify-between flex items-center gap-3"
+            className={cn("justify-between flex items-center gap-3", className)}
           >
             {value && (
               <>

@@ -123,7 +123,8 @@ export enum PriorityEnum {
     Urgent = 'Urgent',
     High = 'High',
     Medium = 'Medium',
-    Low = 'Low'
+    Low = 'Low',
+    None = 'None'
 }
 
 
