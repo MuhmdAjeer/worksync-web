@@ -32,7 +32,7 @@ export const AppLayout: FC<IProps> = observer(({ header, children }) => {
                 <div className="block bg-custom-sidebar-background-100  py-4 pl-5 md:hidden">
                   {/* <SidebarHamburgerToggle /> */}
                 </div>
-                <div className="w-full ">{header}</div>
+                <div className="w-full border-b ">{header}</div>
               </div>
               {/* {mobileHeader && mobileHeader} */}
             </div>

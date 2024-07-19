@@ -4,7 +4,9 @@ import { Checkbox } from "../ui/checkbox";
 import { IssueDto } from "@/generated/dto/issue-dto";
 import IssueStateIcon from "../icons/IssueStateIcon";
 import { RStack } from "../common/Stack";
-import { priorities } from "../issues/IssuePriorityDropdown";
+import IssuePriorityDropdown, {
+  priorities,
+} from "../issues/IssuePriorityDropdown";
 import { Calendar } from "../ui/calendar";
 import DatePicker from "../ui/datePicker";
 import { Button } from "../ui/button";
@@ -112,10 +114,16 @@ export const columns = (options?: TArgs): ColumnDef<IssueDto>[] => {
         if (!priority) return;
         const Priority = priorities.find((p) => p.name === priority);
         return (
-          <RStack className="w-full min-h-full">
-            {Priority?.Icon}
-            <h1>{priority}</h1>
-          </RStack>
+          // <RStack className="w-full min-h-full">
+          //   {Priority?.Icon}
+          //   <h1>{priority}</h1>
+          // </RStack>
+
+          <IssuePriorityDropdown
+            onChange={() => {}}
+            onOpenChange={() => {}}
+            open={false}
+          />
         );
       },
     },
@@ -123,9 +131,7 @@ export const columns = (options?: TArgs): ColumnDef<IssueDto>[] => {
       accessorKey: "start_date",
       header: "Start Date",
       cell: ({ row: { original } }) => {
-        // if (!original.start_date) return;
         return (
-          // <div className="w-full" >
           <DatePicker
             variant="ghost"
             className="hover:bg-0"
@@ -141,7 +147,6 @@ export const columns = (options?: TArgs): ColumnDef<IssueDto>[] => {
               }
             }}
           />
-          // </div>
         );
       },
     },
@@ -149,11 +154,20 @@ export const columns = (options?: TArgs): ColumnDef<IssueDto>[] => {
       accessorKey: "end_date",
       header: "End Date",
       cell: ({ row: { original } }) => {
-        if (!original.end_date) return;
         return (
-          <div>
-            <h1>{format(original.end_date, "PPP")}</h1>
-          </div>
+          <DatePicker
+            variant="ghost"
+            className="hover:bg-0"
+            value={original.end_date && new Date(original.end_date)}
+            label={
+              original.end_date ? format(original.end_date, "PPP") : "End Date"
+            }
+            onChange={(value) => {
+              if (options?.onUpdate) {
+                options.onUpdate({ issueId: original.id, end_date: value });
+              }
+            }}
+          />
         );
       },
     },
