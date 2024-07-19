@@ -73,10 +73,6 @@ const IssueStatesDropdown: React.FC<IProps> = observer(
       }
     }, [issueStates]);
 
-    // useEffect(() => {}, [defaultValue]);
-
-    console.log({ value });
-
     return (
       <Popover open={open} onOpenChange={onOpenChange}>
         <PopoverTrigger asChild>
