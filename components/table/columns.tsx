@@ -13,6 +13,10 @@ import { Button } from "../ui/button";
 import { UpdateIssueDto } from "@/generated/dto/update-issue-dto";
 import { IUpdateIssue } from "@/hooks/issue";
 import { cn } from "@/lib/utils";
+import { PriorityEnum } from "@/generated/dto/create-issue-dto";
+import IssueStatesDropdown from "../issues/IssueStateDropdown";
+import CreateIssueModal from "../issues/create-issue-modal";
+import { useState } from "react";
 
 export type Payment = {
   id: string;
@@ -23,6 +27,7 @@ export type Payment = {
 
 type TArgs = {
   onUpdate?: (data: Omit<IUpdateIssue, "projectId">) => void;
+  handleOpenIssue?: (issueId: string) => void;
 };
 
 export const columns = (options?: TArgs): ColumnDef<IssueDto>[] => {
@@ -84,7 +89,14 @@ export const columns = (options?: TArgs): ColumnDef<IssueDto>[] => {
       ),
       cell({ row }) {
         return (
-          <div className="flex items-center gap-6 group">
+          <div
+            onClick={() => {
+              if (options?.handleOpenIssue) {
+                options.handleOpenIssue(row.original.id);
+              }
+            }}
+            className="flex items-center w-full gap-6 group"
+          >
             <h1>{row.original.Project.custom_id}</h1>
             <h1>{row.original.title}</h1>
           </div>
@@ -97,12 +109,20 @@ export const columns = (options?: TArgs): ColumnDef<IssueDto>[] => {
       cell: ({ row }) => {
         const state = row.original.state;
         return (
-          <RStack>
-            {state && (
-              <IssueStateIcon height="18px" width="18px" group={state.group} />
-            )}
-            <h1>{state?.name}</h1>
-          </RStack>
+          <IssueStatesDropdown
+            variant="ghost"
+            className="hover:bg-transparent w-full"
+            projectId={row.original.Project.id}
+            defaultValue={state}
+            onChange={(value) => {
+              if (options?.onUpdate) {
+                options.onUpdate({
+                  issueId: row.original.id,
+                  state: value.id,
+                });
+              }
+            }}
+          />
         );
       },
     },
@@ -110,19 +130,22 @@ export const columns = (options?: TArgs): ColumnDef<IssueDto>[] => {
       accessorKey: "priority",
       header: "Priority",
       cell: ({ row }) => {
-        const priority = row.original.priority?.toString();
-        if (!priority) return;
-        const Priority = priorities.find((p) => p.name === priority);
+        const priority = priorities.find(
+          (p) => p.name === row.original.priority?.toString()
+        );
         return (
-          // <RStack className="w-full min-h-full">
-          //   {Priority?.Icon}
-          //   <h1>{priority}</h1>
-          // </RStack>
-
           <IssuePriorityDropdown
-            onChange={() => {}}
-            onOpenChange={() => {}}
-            open={false}
+            className="hover:bg-transparent justify-between w-full"
+            variant="ghost"
+            priority={priority}
+            onChange={(value) => {
+              if (options?.onUpdate) {
+                options.onUpdate({
+                  issueId: row.original.id,
+                  priority: value.name as PriorityEnum,
+                });
+              }
+            }}
           />
         );
       },

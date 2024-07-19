@@ -43,7 +43,7 @@ export interface UpdateIssueDto {
      * @type {string}
      * @memberof UpdateIssueDto
      */
-    'state'?: StateEnum;
+    'state'?: string;
     /**
      * 
      * @type {Array<string>}
@@ -72,18 +72,8 @@ export enum PriorityEnum {
     Urgent = 'Urgent',
     High = 'High',
     Medium = 'Medium',
-    Low = 'Low'
-}
-/**
-    * @export
-    * @enum {string}
-    */
-export enum StateEnum {
-    Backlog = 'Backlog',
-    Todo = 'Todo',
-    InProgress = 'In progress',
-    Done = 'Done',
-    Cancelled = 'Cancelled'
+    Low = 'Low',
+    None = 'None'
 }
 
 
