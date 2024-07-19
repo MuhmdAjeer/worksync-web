@@ -8,12 +8,14 @@ import { CreateIssueDto } from "@/generated/dto/create-issue-dto";
 import { useCreateIssue } from "@/hooks/issue";
 import { toast } from "sonner";
 import IssueForm from "./IssueForm";
+import { IssueDto } from "@/generated/dto/issue-dto";
 interface IProps {
   open: boolean;
   onClose: () => void;
+  issue: IssueDto;
 }
 
-const CreateIssueModal: FC<IProps> = observer(({ onClose, open }) => {
+const UpdateIssueModal: FC<IProps> = observer(({ onClose, open, issue }) => {
   const [openProjectsComboBox, setProjectsComboBox] = useState(false);
   const [activeProjectId, setActiveProjectId] = useState<string | null>(null);
 
@@ -21,8 +23,9 @@ const CreateIssueModal: FC<IProps> = observer(({ onClose, open }) => {
   const { mutate: createIssue, isPending } = useCreateIssue();
   const form = useForm<CreateIssueDto>({
     defaultValues: {
-      assignees_id: [],
-      title: "",
+      ...issue,
+      assignees_id: issue.assignees?.map((x) => x.id),
+      state: issue.state?.id,
     },
   });
 
@@ -74,6 +77,7 @@ const CreateIssueModal: FC<IProps> = observer(({ onClose, open }) => {
           form={form}
           handleFormSubmit={handleAddIssue}
           isPending={isPending}
+          issue={issue}
           key={activeProjectId}
         />
       </DialogContent>
@@ -81,4 +85,4 @@ const CreateIssueModal: FC<IProps> = observer(({ onClose, open }) => {
   );
 });
 
-export default CreateIssueModal;
+export default UpdateIssueModal;

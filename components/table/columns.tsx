@@ -27,7 +27,7 @@ export type Payment = {
 
 type TArgs = {
   onUpdate?: (data: Omit<IUpdateIssue, "projectId">) => void;
-  handleOpenIssue?: (issueId: string) => void;
+  handleOpenIssue?: (issue: IssueDto) => void;
 };
 
 export const columns = (options?: TArgs): ColumnDef<IssueDto>[] => {
@@ -92,7 +92,7 @@ export const columns = (options?: TArgs): ColumnDef<IssueDto>[] => {
           <div
             onClick={() => {
               if (options?.handleOpenIssue) {
-                options.handleOpenIssue(row.original.id);
+                options.handleOpenIssue(row.original);
               }
             }}
             className="flex items-center w-full gap-6 group"
@@ -113,7 +113,7 @@ export const columns = (options?: TArgs): ColumnDef<IssueDto>[] => {
             variant="ghost"
             className="hover:bg-transparent w-full"
             projectId={row.original.Project.id}
-            defaultValue={state}
+            defaultValue={state?.id}
             onChange={(value) => {
               if (options?.onUpdate) {
                 options.onUpdate({
@@ -130,14 +130,11 @@ export const columns = (options?: TArgs): ColumnDef<IssueDto>[] => {
       accessorKey: "priority",
       header: "Priority",
       cell: ({ row }) => {
-        const priority = priorities.find(
-          (p) => p.name === row.original.priority?.toString()
-        );
         return (
           <IssuePriorityDropdown
             className="hover:bg-transparent justify-between w-full"
             variant="ghost"
-            priority={priority}
+            defaultValue={row.original.priority}
             onChange={(value) => {
               if (options?.onUpdate) {
                 options.onUpdate({

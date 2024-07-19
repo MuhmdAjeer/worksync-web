@@ -43,7 +43,7 @@ interface IProps extends VariantProps<typeof buttonVariants> {
   onChange: (value: IssueStateDto) => void;
   projectId: string;
   className?: string;
-  defaultValue?: IssueStateDto;
+  defaultValue?: string;
 }
 
 const IssueStatesDropdown: React.FC<IProps> = observer(
@@ -56,20 +56,26 @@ const IssueStatesDropdown: React.FC<IProps> = observer(
     variant = "outline",
     defaultValue,
   }) => {
-    // const router = useRouter();
-    // const projectId = router.query.projectId?.toString();
-    // const { projectId } = useAppRouter();
     const { data: issueStates } = useProjectStates(projectId);
 
-    const [value, setValue] = React.useState(
-      defaultValue ?? issueStates?.at(0)
-    );
+    const [value, setValue] = React.useState(issueStates?.at(0));
 
     useEffect(() => {
-      if (issueStates && !defaultValue) {
+      if (defaultValue) {
+        const state = issueStates?.find((x) => x.id === defaultValue);
+        if (state) {
+          setValue(state);
+        }
+        return;
+      }
+      if (issueStates) {
         setValue(issueStates.at(0));
       }
     }, [issueStates]);
+
+    // useEffect(() => {}, [defaultValue]);
+
+    console.log({ value });
 
     return (
       <Popover open={open} onOpenChange={onOpenChange}>
