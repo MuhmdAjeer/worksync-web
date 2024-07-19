@@ -10,7 +10,7 @@ export const AppSideBar = observer(() => {
   const sidebarCollapsed = true;
   return (
     <div
-      className={` h-full inset-y-0 z-20 flex  flex-shrink-0 flex-grow-0 flex-col
+      className={` h-full inset-y-0 z-20 flex mt-3 flex-shrink-0 flex-grow-0 flex-col
         duration-300 md:relative w-[280px]
         ${sidebarCollapsed ? "-ml-[280px]" : ""}
         sm:${sidebarCollapsed ? "-ml-[280px]" : ""}
@@ -24,11 +24,6 @@ export const AppSideBar = observer(() => {
         <SidebarQuickAction />
         <Sidebar />
         <SideBarProjects />
-        {/* <WorkspaceSidebarDropdown />
-        <WorkspaceSidebarQuickAction />
-        <WorkspaceSidebarMenu />
-        <ProjectSidebarList />
-        <WorkspaceHelpSection /> */}
       </div>
     </div>
   );
