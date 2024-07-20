@@ -87,6 +87,7 @@ export const columns = (options?: TArgs): ColumnDef<IssueDto>[] => {
           <h1>Issues</h1>
         </div>
       ),
+
       cell({ row }) {
         return (
           <div
@@ -111,7 +112,7 @@ export const columns = (options?: TArgs): ColumnDef<IssueDto>[] => {
         return (
           <IssueStatesDropdown
             variant="ghost"
-            className="hover:bg-transparent w-full"
+            className="hover:bg-transparent w-16"
             projectId={row.original.Project.id}
             defaultValue={state?.id}
             onChange={(value) => {

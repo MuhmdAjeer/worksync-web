@@ -3,7 +3,6 @@ import {
   flexRender,
   getCoreRowModel,
   useReactTable,
-  getPaginationRowModel,
   getSortedRowModel,
   SortingState,
   ColumnFiltersState,
@@ -21,18 +20,23 @@ import {
 } from "@/components/ui/table";
 import React, { useState } from "react";
 import { cn } from "@/lib/utils";
-import { Button } from "../ui/button";
+import { useVirtualizer } from "@tanstack/react-virtual";
+import { ScrollArea } from "../ui/scroll-area";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
+  fetch: (element: HTMLDivElement) => void;
 }
 
 export function IssueTable<TData, TValue>({
   columns,
   data,
+  fetch,
 }: DataTableProps<TData, TValue>) {
   const [sorting, setSorting] = useState<SortingState>([]);
+  const tableContainerRef = React.useRef<HTMLDivElement>(null);
+
   const [columnVisibility, setColumnVisibility] =
     React.useState<VisibilityState>({});
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
@@ -41,7 +45,6 @@ export function IssueTable<TData, TValue>({
     data,
     columns,
     getCoreRowModel: getCoreRowModel(),
-    getPaginationRowModel: getPaginationRowModel(),
     getSortedRowModel: getSortedRowModel(),
     onColumnFiltersChange: setColumnFilters,
     getFilteredRowModel: getFilteredRowModel(),
@@ -56,14 +59,40 @@ export function IssueTable<TData, TValue>({
     },
   });
 
+  const { rows } = table.getRowModel();
+
+  const rowVirtualizer = useVirtualizer({
+    count: rows.length,
+    estimateSize: () => 35, // Adjust this value based on the expected row height
+    getScrollElement: () => tableContainerRef.current,
+    overscan: 5,
+  });
+
+  const virtualRows = rowVirtualizer.getVirtualItems();
+  const totalSize = rowVirtualizer.getTotalSize();
+  const paddingTop = virtualRows.length > 0 ? virtualRows[0].start : 0;
+  const paddingBottom =
+    virtualRows.length > 0
+      ? totalSize - virtualRows[virtualRows.length - 1].end
+      : 0;
+
   return (
-    <div className="bg-card rounded-lg border border-primary/10">
-      <Table>
-        <TableHeader>
-          {table.getHeaderGroups().map((headerGroup) => (
-            <TableRow key={headerGroup.id}>
-              {headerGroup.headers.map((header) => {
-                return (
+    <ScrollArea>
+      <div
+        onScrollCapture={(e) => fetch(e.target as HTMLDivElement)}
+        style={{
+          overflow: "auto",
+          position: "relative",
+          height: "500px", // Set a fixed height for the scrollable container
+        }}
+        ref={tableContainerRef}
+        className="bg-card h-full rounded-lg border border-primary/10"
+      >
+        <Table>
+          <TableHeader>
+            {table.getHeaderGroups().map((headerGroup) => (
+              <TableRow key={headerGroup.id}>
+                {headerGroup.headers.map((header) => (
                   <TableHead key={header.id}>
                     {header.isPlaceholder
                       ? null
@@ -72,47 +101,42 @@ export function IssueTable<TData, TValue>({
                           header.getContext()
                         )}
                   </TableHead>
-                );
-              })}
-            </TableRow>
-          ))}
-        </TableHeader>
-        <TableBody>
-          {table.getRowModel().rows?.length ? (
-            table.getRowModel().rows.map((row, index) => (
-              <TableRow
-                key={row.id}
-                // data-state={row.getIsSelected() && "selected"}
-                className={"hover:bg-0 last:border-b-0"}
-              >
-                {row.getVisibleCells().map((cell) => (
-                  <TableCell
-                    className={cn(
-                      "text-primary/70 border-r first:border-r-0 last:border-r-0 border-b border-secondary  cursor-pointer p-0",
-                      table.getRowModel().rows?.length - 1 === index &&
-                        "!border-b-0"
-                    )}
-                    key={cell.id}
-                  >
-                    <div className="min-h-full h-8 flex items-center px-2  border border-transparent hover:border hover:border-primary/50 hover:rounded">
-                      {flexRender(
-                        cell.column.columnDef.cell,
-                        cell.getContext()
-                      )}
-                    </div>
-                  </TableCell>
                 ))}
               </TableRow>
-            ))
-          ) : (
-            <TableRow>
-              <TableCell colSpan={columns.length} className="h-24 text-center">
-                No results.
-              </TableCell>
-            </TableRow>
-          )}
-        </TableBody>
-      </Table>
-    </div>
+            ))}
+          </TableHeader>
+          <TableBody>
+            {paddingTop > 0 && (
+              <TableRow style={{ height: `${paddingTop}px` }}></TableRow>
+            )}
+            {virtualRows.map((virtualRow) => {
+              const row = rows[virtualRow.index];
+              return (
+                <TableRow key={row.id}>
+                  {row.getVisibleCells().map((cell) => (
+                    <TableCell
+                      key={cell.id}
+                      className={cn(
+                        "text-primary/70 border-r first:border-r-0 last:border-r-0 border-b border-secondary cursor-pointer p-0"
+                      )}
+                    >
+                      <div className="min-h-full h-8 flex items-center px-2 border border-transparent hover:border hover:border-primary/50 hover:rounded">
+                        {flexRender(
+                          cell.column.columnDef.cell,
+                          cell.getContext()
+                        )}
+                      </div>
+                    </TableCell>
+                  ))}
+                </TableRow>
+              );
+            })}
+            {paddingBottom > 0 && (
+              <TableRow style={{ height: `${paddingBottom}px` }}></TableRow>
+            )}
+          </TableBody>
+        </Table>
+      </div>
+    </ScrollArea>
   );
 }
