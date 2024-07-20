@@ -7,28 +7,54 @@ import { Payment, columns } from "@/components/table/columns";
 import { DataTable } from "@/components/table/data-table";
 import { IssueDto } from "@/generated/dto/issue-dto";
 import { UpdateIssueDto } from "@/generated/dto/update-issue-dto";
-import { IUpdateIssue, useProjectIssues, useUpdateIssue } from "@/hooks/issue";
+import {
+  IUpdateIssue,
+  useInfiniteProjectIssues,
+  useProjectIssues,
+  useUpdateIssue,
+} from "@/hooks/issue";
 import { useAppRouter } from "@/hooks/router";
 import { NextPageWithLayout } from "@/pages/_app";
 import { observer } from "mobx-react";
-import { useRouter } from "next/router";
 import React, { ReactElement, useState } from "react";
 
 const Page: NextPageWithLayout = observer(() => {
   const { projectId } = useAppRouter();
-  const { data } = useProjectIssues(projectId!);
-  const { mutate: updateIssue } = useUpdateIssue();
+  const { data, isFetching, fetchNextPage } = useInfiniteProjectIssues(
+    projectId!,
+    25
+  );
   const [issue, setIssue] = useState<IssueDto | null>(null);
+  const { mutate: updateIssue } = useUpdateIssue();
 
   const updateHandler = (data: Omit<IUpdateIssue, "projectId">) => {
     if (!projectId) return;
     updateIssue({ projectId, ...data });
   };
+  const issues = React.useMemo(
+    // @ts-ignore
+    () => data?.pages?.flatMap((page) => page.data) ?? [],
+    [data]
+  );
+
+  const fetchMoreOnBottomReached = React.useCallback(
+    (containerRefElement?: HTMLDivElement | null) => {
+      if (containerRefElement) {
+        const { scrollHeight, scrollTop, clientHeight } = containerRefElement;
+        console.log({ scrollHeight, scrollTop, clientHeight });
+
+        if (scrollHeight - scrollTop - clientHeight < 600 && !isFetching) {
+          fetchNextPage();
+        }
+      }
+    },
+    [fetchNextPage, isFetching]
+  );
 
   if (!data) return <></>;
 
   return (
-    <div className="p-4">
+    <div className="p-2 h-full">
       <IssueTable
         columns={columns({
           onUpdate: updateHandler,
@@ -36,7 +62,8 @@ const Page: NextPageWithLayout = observer(() => {
             setIssue(issue);
           },
         })}
-        data={data}
+        fetch={fetchMoreOnBottomReached}
+        data={issues}
       />
       {issue && (
         <UpdateIssueModal

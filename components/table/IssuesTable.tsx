@@ -83,7 +83,7 @@ export function IssueTable<TData, TValue>({
         style={{
           overflow: "auto",
           position: "relative",
-          height: "500px", // Set a fixed height for the scrollable container
+          height: "850px", // Set a fixed height for the scrollable container
         }}
         ref={tableContainerRef}
         className="bg-card h-full rounded-lg border border-primary/10"

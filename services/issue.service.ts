@@ -14,8 +14,15 @@ export class IssueService extends APIService {
     );
   }
 
-  public async fetchProjectIssues(projectId: string): Promise<IssueDto[]> {
-    return this.get(`project/${projectId}/issues`).then((res) => res.data);
+  public async fetchProjectIssues(
+    projectId: string,
+    start?: number,
+    fetchSize?: number
+  ): Promise<IssueDto[]> {
+    return this.get(`project/${projectId}/issues`, {
+      page: start,
+      pageSize: fetchSize,
+    }).then((res) => res.data);
   }
 
   public async updateIssue(data: IUpdateIssue): Promise<IssueDto[]> {
