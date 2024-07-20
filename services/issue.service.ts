@@ -3,6 +3,7 @@ import { APIService } from "./api.service";
 import { IssueDto } from "@/generated/dto/issue-dto";
 import { UpdateIssueDto } from "@/generated/dto/update-issue-dto";
 import { IUpdateIssue } from "@/hooks/issue";
+import { IssueFilterQuery } from "@/generated/dto/issue-filter-query";
 
 export class IssueService extends APIService {
   public async createIssue(
@@ -16,13 +17,11 @@ export class IssueService extends APIService {
 
   public async fetchProjectIssues(
     projectId: string,
-    start?: number,
-    fetchSize?: number
+    params: IssueFilterQuery
   ): Promise<IssueDto[]> {
-    return this.get(`project/${projectId}/issues`, {
-      page: start,
-      pageSize: fetchSize,
-    }).then((res) => res.data);
+    return this.get(`project/${projectId}/issues`, params).then(
+      (res) => res.data
+    );
   }
 
   public async updateIssue(data: IUpdateIssue): Promise<IssueDto[]> {

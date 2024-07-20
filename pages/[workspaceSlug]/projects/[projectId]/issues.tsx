@@ -22,7 +22,9 @@ const Page: NextPageWithLayout = observer(() => {
   const { projectId } = useAppRouter();
   const { data, isFetching, fetchNextPage } = useInfiniteProjectIssues(
     projectId!,
-    25
+    {
+      pageSize: 25,
+    }
   );
   const [issue, setIssue] = useState<IssueDto | null>(null);
   const { mutate: updateIssue } = useUpdateIssue();

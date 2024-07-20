@@ -1,5 +1,6 @@
 import { CreateIssueDto } from "@/generated/dto/create-issue-dto";
 import { IssueDto } from "@/generated/dto/issue-dto";
+import { IssueFilterQuery } from "@/generated/dto/issue-filter-query";
 import { UpdateIssueDto } from "@/generated/dto/update-issue-dto";
 import { QUERY_KEYS } from "@/lib/constants";
 import { IssueService } from "@/services/issue.service";
@@ -22,10 +23,10 @@ export interface IUpdateIssue extends UpdateIssueDto {
   issueId: string;
 }
 
-export const useProjectIssues = (id: string) => {
+export const useProjectIssues = (id: string, params: IssueFilterQuery) => {
   return useQuery({
-    queryKey: [QUERY_KEYS.GET_PROJECT_ISSUES, id],
-    queryFn: async () => await issueService.fetchProjectIssues(id),
+    queryKey: [QUERY_KEYS.GET_PROJECT_ISSUES, id, params],
+    queryFn: async () => await issueService.fetchProjectIssues(id, params),
     enabled: !!id,
   });
 };
@@ -35,16 +36,18 @@ export type PersonApiResponse = {
   nextPage: number;
 };
 
-export const useInfiniteProjectIssues = (id: string, fetchSize: number) => {
+export const useInfiniteProjectIssues = (
+  id: string,
+  params: IssueFilterQuery
+) => {
   return useInfiniteQuery<PersonApiResponse>({
-    queryKey: [QUERY_KEYS.GET_PROJECT_ISSUES, id],
+    queryKey: [QUERY_KEYS.GET_PROJECT_ISSUES, id, params],
     // @ts-ignore
     queryFn: async ({ pageParam = 0 }) => {
-      const fetchedData = await issueService.fetchProjectIssues(
-        id,
-        pageParam as number,
-        fetchSize
-      );
+      const fetchedData = await issueService.fetchProjectIssues(id, {
+        ...params,
+        page: pageParam as number,
+      });
       return fetchedData;
     },
     initialPageParam: 0,
