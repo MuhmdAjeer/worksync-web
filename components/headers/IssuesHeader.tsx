@@ -15,6 +15,7 @@ import { useAppRouter } from "@/hooks/router";
 import ProjectLogo from "../projects/ProjectLogo";
 import { CardStackIcon } from "@radix-ui/react-icons";
 import { Layers3Icon, LayersIcon } from "lucide-react";
+import IssueFilterDropdown from "../IssueFilterDropdown";
 
 const IssuesHeader = () => {
   const [openModal, setOpenModal] = useState(false);
@@ -42,7 +43,7 @@ const IssuesHeader = () => {
             </BreadcrumbItem>
             <BreadcrumbSeparator />
             <BreadcrumbItem>
-              <BreadcrumbPage className="flex gap-2 items-center" >
+              <BreadcrumbPage className="flex gap-2 items-center">
                 <LayersIcon className="h-4 w-4 stroke-[1.5]" />
                 Issues
               </BreadcrumbPage>
@@ -51,6 +52,7 @@ const IssuesHeader = () => {
         </Breadcrumb>
       </div>
       <div className="flex items-center gap-4">
+        <IssueFilterDropdown label="Filter" onChange={() => {}} />
         <Button
           onClick={() => {
             setOpenModal(true);
