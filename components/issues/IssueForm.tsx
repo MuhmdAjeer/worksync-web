@@ -16,6 +16,7 @@ interface IForm {
   activeProjectId: string;
   isPending?: boolean;
   issue?: IssueDto;
+  isEditing?: boolean;
 }
 
 const IssueForm: React.FC<IForm> = ({
@@ -23,6 +24,7 @@ const IssueForm: React.FC<IForm> = ({
   handleFormSubmit,
   activeProjectId,
   isPending,
+  isEditing,
   issue,
 }) => {
   const [stateDropdown, setStateDropdown] = useState(false);
@@ -32,7 +34,7 @@ const IssueForm: React.FC<IForm> = ({
   const maxDate = form.watch("end_date");
 
   const isSubmitting = form.formState.isSubmitting;
-
+  const buttonTitle = isEditing ? "Update Issue" : "Add Issue";
   return (
     <form onSubmit={form.handleSubmit(handleFormSubmit)}>
       <div className="flex flex-col gap-4">
@@ -135,7 +137,7 @@ const IssueForm: React.FC<IForm> = ({
             />
           </div>
           <Button disabled={isPending || isSubmitting} type="submit" size="sm">
-            {isPending || isSubmitting ? "Adding..." : "Add Issue"}
+            {isPending || isSubmitting ? "Submitting..." : buttonTitle}
           </Button>
         </div>
       </div>

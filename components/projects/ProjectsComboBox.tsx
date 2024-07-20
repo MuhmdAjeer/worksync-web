@@ -27,10 +27,11 @@ interface IProps {
   onOpenChange: (value: boolean) => void;
   onChange: (value: string) => void;
   value?: string;
+  disabled?: boolean;
 }
 
 const ProjectsComboBox: React.FC<IProps> = observer(
-  ({ onOpenChange, open, onChange, value }) => {
+  ({ onOpenChange, open, onChange, value, disabled }) => {
     const router = useRouter();
     const workspaceSlug = router.query.workspaceSlug?.toString();
     const { data: workspaceProjects } = useProjects(workspaceSlug!);
@@ -43,6 +44,7 @@ const ProjectsComboBox: React.FC<IProps> = observer(
             variant="outline"
             role="combobox"
             size="sm"
+            disabled={disabled}
             aria-expanded={open}
             className="justify-between flex items-center gap-3"
           >
@@ -60,7 +62,7 @@ const ProjectsComboBox: React.FC<IProps> = observer(
             <CommandEmpty>No project found.</CommandEmpty>
             <CommandGroup>
               <CommandList>
-                <ScrollArea className="h-80 overflow-x-hidden" >
+                <ScrollArea className="h-80 overflow-x-hidden">
                   {workspaceProjects?.map((project) => (
                     <CommandItem
                       key={project.id}

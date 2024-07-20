@@ -5,7 +5,7 @@ import { useCurrentProject } from "@/hooks/projects";
 import { observer } from "mobx-react";
 import { useForm } from "react-hook-form";
 import { CreateIssueDto } from "@/generated/dto/create-issue-dto";
-import { useCreateIssue } from "@/hooks/issue";
+import { useCreateIssue, useUpdateIssue } from "@/hooks/issue";
 import { toast } from "sonner";
 import IssueForm from "./IssueForm";
 import { IssueDto } from "@/generated/dto/issue-dto";
@@ -20,7 +20,7 @@ const UpdateIssueModal: FC<IProps> = observer(({ onClose, open, issue }) => {
   const [activeProjectId, setActiveProjectId] = useState<string | null>(null);
 
   const { data: currentProject } = useCurrentProject();
-  const { mutate: createIssue, isPending } = useCreateIssue();
+  const { mutate: updateIssue, isPending } = useUpdateIssue();
   const form = useForm<CreateIssueDto>({
     defaultValues: {
       ...issue,
@@ -31,10 +31,11 @@ const UpdateIssueModal: FC<IProps> = observer(({ onClose, open, issue }) => {
 
   const handleAddIssue = (data: CreateIssueDto) => {
     if (!activeProjectId) return;
-    createIssue(
-      { ...data, projectId: activeProjectId },
+    updateIssue(
+      { ...data, projectId: activeProjectId, issueId: issue.id },
       {
         onSuccess: () => {
+          onClose();
           toast.success("Issue added successfully!");
         },
       }
@@ -67,16 +68,18 @@ const UpdateIssueModal: FC<IProps> = observer(({ onClose, open, issue }) => {
             onOpenChange={(value) => {
               setProjectsComboBox(value);
             }}
+            disabled={true}
             value={activeProjectId ?? undefined}
             onChange={(value) => setActiveProjectId(value)}
           />
-          <DialogTitle className="!m-0">Create Issue</DialogTitle>
+          <DialogTitle className="!m-0">Issue</DialogTitle>
         </DialogHeader>
         <IssueForm
           activeProjectId={activeProjectId}
           form={form}
           handleFormSubmit={handleAddIssue}
           isPending={isPending}
+          isEditing
           issue={issue}
           key={activeProjectId}
         />
