@@ -197,11 +197,7 @@ export const columns = (options?: TArgs): ColumnDef<IssueDto>[] => {
       header: "Issued on",
       cell: ({ row: { original } }) => {
         if (!original.created_at) return;
-        return (
-          <div>
-            <h1>{format(original.created_at, "PPP")}</h1>
-          </div>
-        );
+        return <p className="text-xs">{format(original.created_at, "PPP")}</p>;
       },
     },
     {
@@ -209,11 +205,7 @@ export const columns = (options?: TArgs): ColumnDef<IssueDto>[] => {
       header: "Updated on",
       cell: ({ row: { original } }) => {
         if (!original.updated_at) return;
-        return (
-          <div>
-            <h1>{format(original.updated_at, "PPP")}</h1>
-          </div>
-        );
+        return <p className="text-xs">{format(original.updated_at, "PPP")}</p>;
       },
     },
 
