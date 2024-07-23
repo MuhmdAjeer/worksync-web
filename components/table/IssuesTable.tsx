@@ -79,14 +79,14 @@ export function IssueTable<TData, TValue>({
   return (
     <ScrollArea>
       <div
-        onScrollCapture={(e) => fetch(e.target as HTMLDivElement)}
+        onScroll={(e) => fetch(e.target as HTMLDivElement)}
         style={{
-          overflow: "auto",
+          overflow: "scroll",
           position: "relative",
-          height: "850px", // Set a fixed height for the scrollable container
+          height: "860px", // Set a fixed height for the scrollable container
         }}
         ref={tableContainerRef}
-        className="bg-card h-full rounded-lg border border-primary/10"
+        className="bg-card rounded-lg"
       >
         <Table>
           <TableHeader>
