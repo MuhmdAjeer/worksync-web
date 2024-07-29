@@ -7,7 +7,7 @@ export abstract class APIService {
   private axiosInstance: AxiosInstance;
 
   constructor(
-    baseURL: string = process.env.BASE_URL || "http://localhost:5000"
+    baseURL: string = process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:5000"
   ) {
     this.baseURL = baseURL;
     this.axiosInstance = axios.create({
