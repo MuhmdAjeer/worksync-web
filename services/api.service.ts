@@ -7,7 +7,7 @@ export abstract class APIService {
   private axiosInstance: AxiosInstance;
 
   constructor(
-    baseURL: string = process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:5000"
+    baseURL: string = "http://k8s-worksync-ingress2-f2405776ad-1802220903.us-east-1.elb.amazonaws.com/api"
   ) {
     this.baseURL = baseURL;
     this.axiosInstance = axios.create({
