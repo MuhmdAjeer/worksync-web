@@ -1,4 +1,4 @@
-import { Extension, Node } from "@tiptap/core";
+import { Node } from "@tiptap/core";
 import Suggestion from "@tiptap/suggestion";
 
 const Commands = Node.create({
