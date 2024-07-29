@@ -48,7 +48,7 @@ const CreateIssueModal: FC<IProps> = observer(({ onClose, open }) => {
     if (!open) {
       form.reset();
     }
-    // @ts-nocheck
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [open]);
 
   if (!activeProjectId) {

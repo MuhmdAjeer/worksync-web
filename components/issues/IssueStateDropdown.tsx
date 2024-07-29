@@ -71,7 +71,7 @@ const IssueStatesDropdown: React.FC<IProps> = observer(
       if (issueStates) {
         setValue(issueStates.at(0));
       }
-    }, [issueStates]);
+    }, [issueStates, defaultValue]);
 
     return (
       <Popover open={open} onOpenChange={onOpenChange}>

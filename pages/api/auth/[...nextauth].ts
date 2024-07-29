@@ -4,4 +4,4 @@ import NextAuth from "next-auth";
 export default NextAuth(authOptions);
 
 
-export const runtime = 'edge'
+// export const runtime = 'edge'

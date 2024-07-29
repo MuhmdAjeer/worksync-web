@@ -49,6 +49,7 @@ const getSuggestionItems = (query: string): Items[] => {
     {
       title: "Quote",
       command: ({ editor, range }: Command) => {
+        // @ts-ignore
         editor.chain().focus().deleteRange(range).setBlockquote().run();
       },
     },
