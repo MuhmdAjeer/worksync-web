@@ -4,6 +4,9 @@ import { InvitationDto } from "@/generated/dto/invitation-dto";
 import { AcceptInvitationsDto } from "@/generated/dto/accept-invitations-dto";
 
 export class UserService extends APIService {
+  constructor() {
+    super();
+  }
   public async getCurrentUser(): Promise<UserDto> {
     return this.get("/user/me").then((res) => res.data);
   }
