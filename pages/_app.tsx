@@ -19,6 +19,7 @@ import {
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { HydrationBoundary, dehydrate } from "@tanstack/react-query";
 import { Toaster } from "sonner";
+import { useTheme } from "next-themes";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -58,11 +59,11 @@ export default function App({
                     {getLayout(<Component {...pageProps} />)}
                   </SessionProvider>
                 </TooltipProvider>
+                <Toaster theme={"dark"} richColors />
               </ThemeProvider>
               <ReactQueryDevtools initialIsOpen={false} />
             </AppProvider>
           </StoreProvider>
-          <Toaster richColors />
         </ReactQueryProvider>
       </main>
     </>

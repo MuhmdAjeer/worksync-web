@@ -1,3 +1,4 @@
+import { PriorityEnum } from "@/generated/dto/create-issue-dto";
 import { GroupEnum } from "@/generated/dto/issue-state-dto";
 
 export const PROJECT_UNSPLASH_COVERS = [
@@ -41,4 +42,14 @@ export const STATE_GROUP_COLORS: {
   unstarted: "#f59e0b",
   completed: "#16a34a",
   cancelled: "#dc2626",
+};
+
+export const PRIORITY_GROUP_COLORS: {
+  [key in PriorityEnum]: string;
+} = {
+  High: " text-orange-300",
+  Urgent: "text-destructive",
+  Low: " text-blue-300 ",
+  Medium: "text-yellow-500 ",
+  None: "text-primary/50",
 };

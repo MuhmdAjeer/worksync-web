@@ -22,6 +22,7 @@ import React, { useState } from "react";
 import { cn } from "@/lib/utils";
 import { useVirtualizer } from "@tanstack/react-virtual";
 import { ScrollArea } from "../ui/scroll-area";
+import { toast } from "sonner";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -50,7 +51,6 @@ export function IssueTable<TData, TValue>({
     getFilteredRowModel: getFilteredRowModel(),
     onColumnVisibilityChange: setColumnVisibility,
     onRowSelectionChange: setRowSelection,
-
     state: {
       sorting,
       columnFilters,
