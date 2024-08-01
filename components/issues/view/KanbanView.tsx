@@ -114,7 +114,7 @@ const IssueCard: React.FC<IssueCardProps> = ({ issue }) => {
       <Card
         ref={ref}
         style={dragging ? { display: "none" } : {}}
-        className="my-2 bg-secondary/10 border-secondary/80"
+        className="my-2 bg-secondary/50"
       >
         <CardHeader>
           <CardTitle>{issue.title}</CardTitle>
@@ -152,7 +152,7 @@ const IssueBoard: React.FC<IssueBoardProps> = ({ issues, state }) => {
   return (
     <motion.div
       layout
-      className="w-[350px] h-full p-4"
+      className="w-[350px] bg-secondary/20 h-full p-2 mx-2 rounded-lg"
       ref={ref}
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
