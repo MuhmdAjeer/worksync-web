@@ -1,7 +1,9 @@
 import IssuesHeader from "@/components/headers/IssuesHeader";
 import CreateIssueModal from "@/components/issues/create-issue-modal";
 import UpdateIssueModal from "@/components/issues/update-issue-modal";
+import IssueDisplay from "@/components/issues/view/IssueDisplay";
 import IssueFilter from "@/components/issues/view/IssueFilter";
+import KanbanView from "@/components/issues/view/KanbanView";
 import { AppLayout } from "@/components/layouts/app/AppLayout";
 import { IssueTable } from "@/components/table/IssuesTable";
 import { Payment, columns } from "@/components/table/columns";
@@ -30,6 +32,7 @@ const Page: NextPageWithLayout = observer(() => {
     }
   );
   const [issue, setIssue] = useState<IssueDto | null>(null);
+  const [currentView, setCurrentView] = useState("Board");
   const { mutate: updateIssue } = useUpdateIssue();
 
   const updateHandler = (data: Omit<IUpdateIssue, "projectId">) => {
@@ -60,28 +63,39 @@ const Page: NextPageWithLayout = observer(() => {
 
   return (
     <div className="p-2 h-full">
-      <div className="flex gap-4 items-center my-2">
+      <div className="flex gap-2 items-center my-2">
         <IssueFilter>
           <Button className="flex gap-2 group" variant="secondary" size="xs">
             <ListFilter className="h-4 w-4 text-primary/50 group-hover:text-primary" />
             <span>Filter</span>
           </Button>
         </IssueFilter>
-        <Button className="flex gap-2 group" variant="secondary" size="xs">
-          <SlidersHorizontal className="h-4 w-4 text-primary/50 group-hover:text-primary" />
-          <span>Display</span>
-        </Button>
+        <IssueDisplay
+          currentView={currentView}
+          handleCurrentView={(view) => {
+            setCurrentView(view);
+          }}
+        >
+          <Button className="flex gap-2 group" variant="secondary" size="xs">
+            <SlidersHorizontal className="h-4 w-4 text-primary/50 group-hover:text-primary" />
+            <span>Display</span>
+          </Button>
+        </IssueDisplay>
       </div>
-      <IssueTable
-        columns={columns({
-          onUpdate: updateHandler,
-          handleOpenIssue: (issue) => {
-            setIssue(issue);
-          },
-        })}
-        fetch={fetchMoreOnBottomReached}
-        data={issues}
-      />
+      {currentView === "List" ? (
+        <IssueTable
+          columns={columns({
+            onUpdate: updateHandler,
+            handleOpenIssue: (issue) => {
+              setIssue(issue);
+            },
+          })}
+          fetch={fetchMoreOnBottomReached}
+          data={issues}
+        />
+      ) : (
+        <KanbanView />
+      )}
       {issue && (
         <UpdateIssueModal
           onClose={() => setIssue(null)}

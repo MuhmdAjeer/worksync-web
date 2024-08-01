@@ -18,7 +18,7 @@ export class IssueService extends APIService {
   public async fetchProjectIssues(
     projectId: string,
     params: IssueFilterQuery
-  ): Promise<IssueDto[]> {
+  ): Promise<{ data: IssueDto[] }> {
     return this.get(`project/${projectId}/issues`, params).then(
       (res) => res.data
     );

@@ -1,4 +1,4 @@
-import React, { ReactNode, useState } from "react";
+import React, { ReactNode, useEffect, useState } from "react";
 
 import {
   Popover,
@@ -17,12 +17,14 @@ interface IProps {
 
 const IssueFilter: React.FC<IProps> = ({ children }) => {
   const [searchQuery, setSearchQuery] = useState("");
+
   return (
     <Popover modal>
       <PopoverTrigger asChild>{children}</PopoverTrigger>
       <PopoverContent className="w-[15.75rem] p-2">
         <Input
           placeholder="Filter..."
+          value={searchQuery}
           onChange={(e) => {
             setSearchQuery(e.target.value);
           }}
