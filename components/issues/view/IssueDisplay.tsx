@@ -9,35 +9,55 @@ import PriorityFilter from "../Filter/Priority";
 import AssigneesFilter from "../Filter/assignees";
 import StateFilter from "../Filter/state";
 import { Input } from "@/components/ui/input";
-import { SelectSeparator } from "@/components/ui/select";
+import {
+  SelectGroup,
+  SelectLabel,
+  SelectSeparator,
+} from "@/components/ui/select";
 import { StackIcon } from "@radix-ui/react-icons";
 import {
   AlignJustifyIcon,
+  Columns3,
   Grid,
   GridIcon,
   LayoutDashboard,
   ListIcon,
+  Rows3,
   SquareKanban,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import { EIssueGroupBy } from "@/pages/[workspaceSlug]/projects/[projectId]/issues";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { IssueStateDto } from "@/generated/dto/issue-state-dto";
+import IssueStateIcon from "@/components/icons/IssueStateIcon";
 
 interface IProps {
   children: ReactNode;
   currentView: string;
   handleCurrentView: (view: string) => void;
+  groupBy: EIssueGroupBy;
+  handleGroupByChange: (val: EIssueGroupBy) => void;
 }
 
 const IssueDisplay: React.FC<IProps> = ({
   children,
   currentView,
   handleCurrentView,
+  handleGroupByChange,
+  groupBy,
 }) => {
   return (
     <Popover modal>
       <PopoverTrigger asChild>{children}</PopoverTrigger>
-      <PopoverContent className="w-[15.75rem] p-4">
-        <div className="flex gap-2 w-full">
+      <PopoverContent className="w-[18.75rem] p-4 flex flex-col gap-4 ">
+        <div className="grid grid-cols-2 gap-2 w-full">
           {["List", "Board"].map((view) => (
             <IssueView
               isSelected={currentView === view}
@@ -51,6 +71,33 @@ const IssueDisplay: React.FC<IProps> = ({
               }
               handleChange={() => handleCurrentView(view)}
             />
+          ))}
+        </div>
+        <div className="flex flex-col gap-2">
+          {[1, 2, 3, 4].map(() => (
+            <SelectGroup className="grid grid-cols-2 text-primary/70 gap-2 items-center text-xs">
+              <SelectLabel className="text-xs flex gap-1 items-center">
+                <Columns3 className="h-4 w-4" />
+                Columns
+              </SelectLabel>
+              <Select
+                onValueChange={(v: EIssueGroupBy) => {
+                  handleGroupByChange(v);
+                }}
+                value={groupBy}
+              >
+                <SelectTrigger className="h-7 text-xs">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent className="text-xs">
+                  {Object.values(EIssueGroupBy).map((v) => (
+                    <SelectItem size="sm" value={v}>
+                      {v}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </SelectGroup>
           ))}
         </div>
       </PopoverContent>

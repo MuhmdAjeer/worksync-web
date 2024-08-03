@@ -1,4 +1,5 @@
 import IssuesHeader from "@/components/headers/IssuesHeader";
+import IssueStateIcon from "@/components/icons/IssueStateIcon";
 import CreateIssueModal from "@/components/issues/create-issue-modal";
 import UpdateIssueModal from "@/components/issues/update-issue-modal";
 import IssueDisplay from "@/components/issues/view/IssueDisplay";
@@ -10,6 +11,7 @@ import { Payment, columns } from "@/components/table/columns";
 import { DataTable } from "@/components/table/data-table";
 import { Button } from "@/components/ui/button";
 import { IssueDto } from "@/generated/dto/issue-dto";
+import { IssueStateDto } from "@/generated/dto/issue-state-dto";
 import { UpdateIssueDto } from "@/generated/dto/update-issue-dto";
 import {
   IUpdateIssue,
@@ -21,10 +23,16 @@ import { useAppRouter } from "@/hooks/router";
 import { NextPageWithLayout } from "@/pages/_app";
 import { ListFilter, SlidersHorizontal } from "lucide-react";
 import { observer } from "mobx-react";
-import React, { ReactElement, useState } from "react";
+import React, { ReactElement, ReactNode, useState } from "react";
+
+export enum EIssueGroupBy {
+  STATE = "STATE",
+  PRIORITY = "PRIORITY",
+}
 
 const Page: NextPageWithLayout = observer(() => {
   const { projectId } = useAppRouter();
+  const { mutate: updateIssue } = useUpdateIssue();
   const { data, isFetching, fetchNextPage } = useInfiniteProjectIssues(
     projectId!,
     {
@@ -33,7 +41,11 @@ const Page: NextPageWithLayout = observer(() => {
   );
   const [issue, setIssue] = useState<IssueDto | null>(null);
   const [currentView, setCurrentView] = useState("Board");
-  const { mutate: updateIssue } = useUpdateIssue();
+  const [groupBy, setGroupBy] = useState(EIssueGroupBy.STATE);
+
+  const handleGroupBy = (val: EIssueGroupBy) => {
+    setGroupBy(val);
+  };
 
   const updateHandler = (data: Omit<IUpdateIssue, "projectId">) => {
     if (!projectId) return;
@@ -75,6 +87,8 @@ const Page: NextPageWithLayout = observer(() => {
           handleCurrentView={(view) => {
             setCurrentView(view);
           }}
+          handleGroupByChange={handleGroupBy}
+          groupBy={groupBy}
         >
           <Button className="flex gap-2 group" variant="secondary" size="xs">
             <SlidersHorizontal className="h-4 w-4 text-primary/50 group-hover:text-primary" />
@@ -94,7 +108,7 @@ const Page: NextPageWithLayout = observer(() => {
           data={issues}
         />
       ) : (
-        <KanbanView />
+        <KanbanView groupBy={groupBy} />
       )}
       {issue && (
         <UpdateIssueModal

@@ -41,7 +41,7 @@ export const useInfiniteProjectIssues = (
   params: IssueFilterQuery
 ) => {
   return useInfiniteQuery<PersonApiResponse>({
-    queryKey: [QUERY_KEYS.GET_PROJECT_ISSUES_INFINITE, id, params],
+    queryKey: [QUERY_KEYS.GET_PROJECT_ISSUES, id, params],
     // @ts-ignore
     queryFn: async ({ pageParam = 0 }) => {
       const fetchedData = await issueService.fetchProjectIssues(id, {

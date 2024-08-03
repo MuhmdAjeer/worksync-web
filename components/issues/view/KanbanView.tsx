@@ -1,7 +1,7 @@
 import { motion } from "framer-motion";
 import IssuePriorityIcon from "@/components/icons/IssuePriorityIcon";
 import { Button } from "@/components/ui/button";
-import { PriorityEnum } from "@/generated/dto/create-issue-dto";
+import { CreateIssueDto, PriorityEnum } from "@/generated/dto/create-issue-dto";
 import { MoreHorizontal, PlusIcon } from "lucide-react";
 import {
   Card,
@@ -16,69 +16,129 @@ import {
   dropTargetForElements,
   monitorForElements,
 } from "@atlaskit/pragmatic-drag-and-drop/element/adapter";
+import get from "lodash/get";
 
-import React, { useEffect, useRef, useState } from "react";
+import React, { ReactNode, useEffect, useRef, useState } from "react";
 import { useProjectIssues, useUpdateIssue } from "@/hooks/issue";
 import { useAppRouter } from "@/hooks/router";
 import { IssueDto } from "@/generated/dto/issue-dto";
 import { useProjectStates } from "@/hooks/projects";
 import { IssueStateDto } from "@/generated/dto/issue-state-dto";
 import IssueStateIcon from "@/components/icons/IssueStateIcon";
-import {
-  BaseEventPayload,
-  DragLocationHistory,
-} from "@atlaskit/pragmatic-drag-and-drop/dist/types/internal-types";
+import { EIssueGroupBy } from "@/pages/[workspaceSlug]/projects/[projectId]/issues";
 
-const KanbanView = () => {
+export const ISSUE_GROUP_BY_KEYS: Record<TIssueGroupByOptions, string> = {
+  assignees: "assignees",
+  created_by: "issued_by",
+  priority: "priority",
+  state: "state.id",
+};
+interface I {
+  key: keyof typeof ISSUE_GROUP_BY_KEYS;
+  id: string;
+  title: string;
+  icon?: ReactNode;
+  payload: Partial<CreateIssueDto>;
+}
+
+export type TIssueGroupByOptions =
+  | "state"
+  | "priority"
+  | "created_by"
+  | "assignees";
+
+export type x = Exclude<keyof IssueDto, "state">;
+
+const getGroupColumns = (
+  groupBy: EIssueGroupBy,
+  states?: IssueStateDto[]
+): I[] | undefined => {
+  if (groupBy === EIssueGroupBy.STATE) {
+    if (!states) return;
+    return states.map((x) => ({
+      key: "state",
+      id: x.id,
+      title: x.name,
+      icon: <IssueStateIcon group={x.group} />,
+      payload: { state: x.id },
+    }));
+  }
+
+  if (groupBy === EIssueGroupBy.PRIORITY) {
+    return Object.values(PriorityEnum).map((v) => ({
+      id: v,
+      key: "priority",
+      title: v,
+      icon: <IssuePriorityIcon group={v} />,
+      payload: { priority: v },
+    }));
+  }
+};
+
+interface IKanbanView {
+  groupBy: EIssueGroupBy;
+}
+
+const KanbanView: React.FC<IKanbanView> = ({ groupBy }) => {
   const { projectId } = useAppRouter();
   const { data: issues } = useProjectIssues(projectId!, {});
   const { data: states } = useProjectStates(projectId!);
   const { mutateAsync } = useUpdateIssue();
   const [myIssues, setMyIssues] = useState(issues?.data);
 
+  const lists = getGroupColumns(groupBy, states);
+
   useEffect(() => {
     setMyIssues(issues?.data);
-  }, [issues]);
+  }, [issues?.data]);
 
   useEffect(() => {
     return monitorForElements({
       onDrop({ source, location }) {
-        const destination = location.current.dropTargets[0];
+        const destination = location.current.dropTargets[0].data;
+        console.log({ destination });
+
         if (!destination) {
           return;
         }
         const issue = source.data.issue as IssueDto;
+
         if (issue?.id === undefined) return;
+
+        console.log({ myIssues });
 
         setMyIssues((prev) =>
           prev?.map((x) => {
             return x.id === issue.id
               ? {
                   ...x,
-                  state: location.current.dropTargets[0].data
-                    .state as IssueStateDto,
+                  title: "hi",
                 }
               : x;
           })
         );
 
+        // setMyIssues([])
+
         try {
           mutateAsync({
             issueId: issue.id,
             projectId: projectId!,
-            state: location.current.dropTargets[0].data?.state?.id as string,
+            ...location.current.dropTargets[0].data,
           }).then(() => {});
         } catch (error) {}
       },
     });
-  }, [issues]);
+  }, [myIssues]);
 
-  if (!states || !issues || !myIssues) return null;
+  if (!states || !issues?.data || !myIssues) return null;
   return (
     <div className="flex h-full">
-      {states.map((state) => (
+      {/* {states.map((state) => (
         <IssueBoard key={state.id} state={state} issues={myIssues} />
-      ))}
+      ))} */}
+      {lists &&
+        lists.map((list) => <IssueBoard issues={myIssues} list={list} />)}
     </div>
   );
 };
@@ -127,14 +187,19 @@ const IssueCard: React.FC<IssueCardProps> = ({ issue }) => {
 
 interface IssueBoardProps {
   issues: IssueDto[];
-  state: IssueStateDto;
+  // state: IssueStateDto;
+  list: I;
 }
 
-const IssueBoard: React.FC<IssueBoardProps> = ({ issues, state }) => {
+const IssueBoard: React.FC<IssueBoardProps> = ({ issues, list }) => {
   const ref = useRef<HTMLDivElement>(null);
   const [isDraggedOver, setIsDraggedOver] = useState(false);
 
-  const stateIssues = issues?.filter((issue) => issue.state?.id === state.id);
+  console.log({ issues });
+
+  const stateIssues = issues?.filter(
+    (issue) => get(issue, ISSUE_GROUP_BY_KEYS[list.key]) === list.id
+  );
 
   useEffect(() => {
     const el = ref.current;
@@ -145,10 +210,10 @@ const IssueBoard: React.FC<IssueBoardProps> = ({ issues, state }) => {
       onDragEnter: () => setIsDraggedOver(true),
       onDragLeave: () => setIsDraggedOver(false),
       onDrop: () => setIsDraggedOver(false),
-      getData: () => ({ state: state }),
+      getData: () => ({ ...list.payload }),
       getIsSticky: () => true,
     });
-  }, []);
+  }, [list]);
   return (
     <motion.div
       layout
@@ -160,8 +225,9 @@ const IssueBoard: React.FC<IssueBoardProps> = ({ issues, state }) => {
     >
       <div className="flex justify-between items-center">
         <div className="flex  items-center gap-2">
-          <IssueStateIcon className="h-5 w-5" group={state.group} />
-          <h1 className="font-black text-xs ">{state.name}</h1>
+          {/* <IssueStateIcon className="h-5 w-5" group={state.group} /> */}
+          {list.icon}
+          <h1 className="font-black text-xs ">{list.title}</h1>
           <h6 className="text-secondary text-xs">2</h6>
         </div>
         <div className="flex gap-1">
