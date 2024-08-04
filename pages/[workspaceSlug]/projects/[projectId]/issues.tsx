@@ -1,31 +1,24 @@
 import IssuesHeader from "@/components/headers/IssuesHeader";
-import IssueStateIcon from "@/components/icons/IssueStateIcon";
-import CreateIssueModal from "@/components/issues/create-issue-modal";
 import UpdateIssueModal from "@/components/issues/update-issue-modal";
 import IssueDisplay from "@/components/issues/view/IssueDisplay";
 import IssueFilter from "@/components/issues/view/IssueFilter";
-import KanbanView, {
-  TIssueGroupByOptions,
-} from "@/components/issues/view/KanbanView";
+import KanbanView from "@/components/issues/view/KanbanView";
 import { AppLayout } from "@/components/layouts/app/AppLayout";
 import { IssueTable } from "@/components/table/IssuesTable";
-import { Payment, columns } from "@/components/table/columns";
-import { DataTable } from "@/components/table/data-table";
+import { columns } from "@/components/table/columns";
 import { Button } from "@/components/ui/button";
 import { IssueDto } from "@/generated/dto/issue-dto";
-import { IssueStateDto } from "@/generated/dto/issue-state-dto";
-import { UpdateIssueDto } from "@/generated/dto/update-issue-dto";
 import {
   IUpdateIssue,
   useInfiniteProjectIssues,
-  useProjectIssues,
   useUpdateIssue,
 } from "@/hooks/issue";
 import { useAppRouter } from "@/hooks/router";
+import { TIssueGroupByOptions } from "@/lib/types/issue";
 import { NextPageWithLayout } from "@/pages/_app";
 import { ListFilter, SlidersHorizontal } from "lucide-react";
 import { observer } from "mobx-react";
-import React, { ReactElement, ReactNode, useState } from "react";
+import React, { ReactElement, useState } from "react";
 
 export enum EIssueGroupBy {
   STATE = "STATE",

@@ -35,9 +35,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { IssueStateDto } from "@/generated/dto/issue-state-dto";
-import IssueStateIcon from "@/components/icons/IssueStateIcon";
-import { ISSUE_GROUP_BY_KEYS, TIssueGroupByOptions } from "./KanbanView";
+import { TIssueGroupByOptions } from "@/lib/types/issue";
+import { ISSUE_GROUP_BY_KEYS } from "@/lib/kanban-utils";
 
 interface IProps {
   children: ReactNode;
