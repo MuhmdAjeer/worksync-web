@@ -1,8 +1,17 @@
+import React, { ReactNode, useEffect, useRef, useState } from "react";
 import { motion } from "framer-motion";
+import get from "lodash/get";
+import {
+  draggable,
+  dropTargetForElements,
+  monitorForElements,
+} from "@atlaskit/pragmatic-drag-and-drop/element/adapter";
+import { useProjectIssues, useUpdateIssue } from "@/hooks/issue";
+import { useAppRouter } from "@/hooks/router";
+import { useProjectStates } from "@/hooks/projects";
 import IssuePriorityIcon from "@/components/icons/IssuePriorityIcon";
+import IssueStateIcon from "@/components/icons/IssueStateIcon";
 import { Button } from "@/components/ui/button";
-import { CreateIssueDto, PriorityEnum } from "@/generated/dto/create-issue-dto";
-import { MoreHorizontal, PlusIcon } from "lucide-react";
 import {
   Card,
   CardContent,
@@ -11,22 +20,16 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import {
-  draggable,
-  dropTargetForElements,
-  monitorForElements,
-} from "@atlaskit/pragmatic-drag-and-drop/element/adapter";
-import get from "lodash/get";
-
-import React, { ReactNode, useEffect, useRef, useState } from "react";
-import { useProjectIssues, useUpdateIssue } from "@/hooks/issue";
-import { useAppRouter } from "@/hooks/router";
+import { MoreHorizontal, PlusIcon } from "lucide-react";
+import { CreateIssueDto, PriorityEnum } from "@/generated/dto/create-issue-dto";
 import { IssueDto } from "@/generated/dto/issue-dto";
-import { useProjectStates } from "@/hooks/projects";
 import { IssueStateDto } from "@/generated/dto/issue-state-dto";
-import IssueStateIcon from "@/components/icons/IssueStateIcon";
 import { EIssueGroupBy } from "@/pages/[workspaceSlug]/projects/[projectId]/issues";
-import { object } from "zod";
+import {
+  BaseEventPayload,
+  ElementDragType,
+} from "@atlaskit/pragmatic-drag-and-drop/dist/types/internal-types";
+import { toast } from "sonner";
 
 export const ISSUE_GROUP_BY_KEYS: Record<TIssueGroupByOptions, string> = {
   assignees: "assignees",
@@ -34,6 +37,7 @@ export const ISSUE_GROUP_BY_KEYS: Record<TIssueGroupByOptions, string> = {
   priority: "priority",
   state: "state.id",
 };
+
 interface I {
   key: keyof typeof ISSUE_GROUP_BY_KEYS;
   id: string;
@@ -48,135 +52,152 @@ export type TIssueGroupByOptions =
   | "created_by"
   | "assignees";
 
-export type x = Exclude<keyof IssueDto, "state">;
-
 const getGroupColumns = (
-  groupBy: EIssueGroupBy,
+  groupBy: TIssueGroupByOptions,
   states?: IssueStateDto[]
 ): I[] | undefined => {
-  if (groupBy === EIssueGroupBy.STATE) {
-    if (!states) return;
-    return states.map((x) => ({
+  if (groupBy === "state" && states) {
+    return states.map((state) => ({
       key: "state",
-      id: x.id,
-      title: x.name,
-      icon: <IssueStateIcon group={x.group} />,
-      payload: { state: x.id },
+      id: state.id,
+      title: state.name,
+      icon: <IssueStateIcon group={state.group} />,
+      payload: { state: state.id },
     }));
   }
 
-  if (groupBy === EIssueGroupBy.PRIORITY) {
-    return Object.values(PriorityEnum).map((v) => ({
-      id: v,
+  if (groupBy === "priority") {
+    return Object.values(PriorityEnum).map((priority) => ({
+      id: priority,
       key: "priority",
-      title: v,
-      icon: <IssuePriorityIcon group={v} />,
-      payload: { priority: v },
+      title: priority,
+      icon: <IssuePriorityIcon group={priority} />,
+      payload: { priority },
     }));
   }
 };
 
 interface IKanbanView {
-  groupBy: EIssueGroupBy;
+  groupBy: TIssueGroupByOptions;
 }
 
-export type TGroupedIssues = {
-  [group_id: string]: IssueDto[];
-};
+export type TGroupedIssues = Record<string, IssueDto[]>;
 
 const getGroupByKeys = (
-  groupBy: EIssueGroupBy,
+  groupBy: TIssueGroupByOptions,
   states?: IssueStateDto[]
 ): string[] => {
-  if (groupBy === EIssueGroupBy.PRIORITY) {
-    return Object.values(PriorityEnum).map((x) => x);
+  if (groupBy === "priority") {
+    return Object.values(PriorityEnum);
   }
-  if (groupBy === EIssueGroupBy.STATE) {
-    if (!states) return [];
-    return states.map((x) => x.id);
+  if (groupBy === "state" && states) {
+    return states.map((state) => state.id);
   }
   return [];
 };
 
 const getGroupedIssues = (
-  groupBy: EIssueGroupBy,
+  groupBy: TIssueGroupByOptions,
   issues?: IssueDto[],
   states?: IssueStateDto[]
 ): TGroupedIssues => {
   const groupedIssues: TGroupedIssues = {};
+
   if (!issues) return groupedIssues;
-  getGroupByKeys(groupBy, states).forEach((group) => {
+
+  const groupKeys = getGroupByKeys(groupBy, states);
+  console.log({ groupKeys, groupBy });
+
+  groupKeys.forEach((group) => {
     groupedIssues[group] = [];
   });
 
   for (const issue of issues) {
-    const x = get(issue, ISSUE_GROUP_BY_KEYS[groupBy.toLocaleLowerCase()]);
-    if (x && groupedIssues[x]) groupedIssues[x].push(issue);
-    else if (x) groupedIssues[x] = [issue];
+    const issueKey = get(issue, ISSUE_GROUP_BY_KEYS[groupBy]);
+    if (issueKey) {
+      if (!groupedIssues[issueKey]) {
+        groupedIssues[issueKey] = [];
+      }
+      groupedIssues[issueKey].push(issue);
+    }
   }
-  console.log({ groupedIssues });
 
+  console.log({ groupedIssues });
   return groupedIssues;
 };
 
 const KanbanView: React.FC<IKanbanView> = ({ groupBy }) => {
   const { projectId } = useAppRouter();
-  const { data: issues } = useProjectIssues(projectId!, {});
+  const { data: issuesData } = useProjectIssues(projectId!, {});
   const { data: states } = useProjectStates(projectId!);
   const { mutateAsync } = useUpdateIssue();
-  const [myIssues, setMyIssues] = useState(issues?.data);
+
+  const [groupedIssues, setGroupedIssues] = useState<TGroupedIssues>({});
+
+  useEffect(() => {
+    if (issuesData?.data) {
+      const initialGroupedIssues = getGroupedIssues(
+        groupBy,
+        issuesData.data,
+        states
+      );
+      setGroupedIssues(initialGroupedIssues);
+    }
+  }, [issuesData?.data, groupBy, states]);
+
+  useEffect(() => {
+    const handleDrop = ({
+      location,
+      source,
+    }: BaseEventPayload<ElementDragType>) => {
+      const destination = location.current.dropTargets[0]?.data;
+      if (!destination) return;
+
+      const issue = source.data.issue as IssueDto;
+      if (!issue?.id) return;
+
+      const sourceKey = get(issue, ISSUE_GROUP_BY_KEYS[groupBy]);
+      const destinationKey = destination[groupBy] as string;
+
+      // console.log({ sourceKey, destination: destination[groupBy] });
+
+      setGroupedIssues((prevIssues) => {
+        if (!sourceKey || !destinationKey) return prevIssues;
+
+        const newSourceGroup =
+          prevIssues[sourceKey]?.filter((i) => i.id !== issue.id) || [];
+
+        const newDestinationGroup = [...prevIssues[destinationKey], issue];
+
+        return {
+          ...prevIssues,
+          [sourceKey]: newSourceGroup,
+          [destinationKey]: newDestinationGroup,
+        };
+      });
+
+      mutateAsync({
+        issueId: issue.id,
+        projectId: projectId!,
+        ...destination,
+      }).catch((error) => {
+        toast.error("Failed to update issue");
+      });
+    };
+
+    return monitorForElements({ onDrop: handleDrop });
+  }, [groupBy, mutateAsync, projectId]);
 
   const lists = getGroupColumns(groupBy, states);
-  const groupedIssues = getGroupedIssues(groupBy, issues?.data);
 
-  useEffect(() => {
-    setMyIssues(issues?.data);
-  }, [issues?.data]);
+  if (!states || !issuesData?.data || !groupedIssues) return null;
 
-  useEffect(() => {
-    return monitorForElements({
-      onDrop({ source, location }) {
-        const destination = location.current.dropTargets[0].data;
-
-        if (!destination) {
-          return;
-        }
-        const issue = source.data.issue as IssueDto;
-
-        if (issue?.id === undefined) return;
-
-        setMyIssues((prev) =>
-          prev?.map((x) => {
-            return x.id === issue.id
-              ? {
-                  ...x,
-                  title: "hi",
-                }
-              : x;
-          })
-        );
-
-        // setMyIssues([])
-
-        try {
-          mutateAsync({
-            issueId: issue.id,
-            projectId: projectId!,
-            ...location.current.dropTargets[0].data,
-          }).then(() => {});
-        } catch (error) {}
-      },
-    });
-  }, [myIssues]);
-
-  if (!states || !issues?.data || !myIssues) return null;
   return (
     <div className="flex h-full">
-      {/* {states.map((state) => (
-        <IssueBoard key={state.id} state={state} issues={myIssues} />
-      ))} */}
       {lists &&
-        lists.map((list) => <IssueBoard issues={myIssues} list={list} />)}
+        lists.map((list) => (
+          <IssueBoard key={list.id} issues={groupedIssues} list={list} />
+        ))}
     </div>
   );
 };
@@ -199,7 +220,7 @@ const IssueCard: React.FC<IssueCardProps> = ({ issue }) => {
       onDrop: () => setDragging(false),
       getInitialData: () => ({ issue: issue }),
     });
-  }, []);
+  }, [issue]);
 
   return (
     <motion.div
@@ -224,8 +245,7 @@ const IssueCard: React.FC<IssueCardProps> = ({ issue }) => {
 };
 
 interface IssueBoardProps {
-  issues: IssueDto[];
-  // state: IssueStateDto;
+  issues: TGroupedIssues;
   list: I;
 }
 
@@ -233,9 +253,7 @@ const IssueBoard: React.FC<IssueBoardProps> = ({ issues, list }) => {
   const ref = useRef<HTMLDivElement>(null);
   const [isDraggedOver, setIsDraggedOver] = useState(false);
 
-  const stateIssues = issues?.filter(
-    (issue) => get(issue, ISSUE_GROUP_BY_KEYS[list.key]) === list.id
-  );
+  const stateIssues = issues[list.id] || [];
 
   useEffect(() => {
     const el = ref.current;
@@ -250,21 +268,23 @@ const IssueBoard: React.FC<IssueBoardProps> = ({ issues, list }) => {
       getIsSticky: () => true,
     });
   }, [list]);
+
   return (
     <motion.div
       layout
-      className="w-[350px] bg-secondary/20 h-full p-2 mx-2 rounded-lg"
+      className={`w-[350px] bg-secondary/20 h-full p-2 mx-2 rounded-lg ${
+        isDraggedOver ? "border-dashed border-2 border-primary" : ""
+      }`}
       ref={ref}
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 0.3 }}
     >
       <div className="flex justify-between items-center">
-        <div className="flex  items-center gap-2">
-          {/* <IssueStateIcon className="h-5 w-5" group={state.group} /> */}
+        <div className="flex items-center gap-2">
           {list.icon}
-          <h1 className="font-black text-xs ">{list.title}</h1>
-          <h6 className="text-secondary text-xs">2</h6>
+          <h1 className="font-black text-xs">{list.title}</h1>
+          <h6 className="text-secondary text-xs">{stateIssues.length}</h6>
         </div>
         <div className="flex gap-1">
           <Button variant="ghost" size="xs">
@@ -276,23 +296,9 @@ const IssueBoard: React.FC<IssueBoardProps> = ({ issues, list }) => {
         </div>
       </div>
 
-      {stateIssues.map((x) => (
-        <IssueCard key={x.id} issue={x} />
+      {stateIssues.map((issue) => (
+        <IssueCard key={issue.id} issue={issue} />
       ))}
-      {isDraggedOver && (
-        <motion.div
-          initial={{ opacity: 0.5 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 0.2 }}
-        >
-          <Card className="my-2 bg-secondary/5 h-24 ">
-            <CardHeader>
-              <CardTitle></CardTitle>
-              <CardDescription></CardDescription>
-            </CardHeader>
-          </Card>
-        </motion.div>
-      )}
     </motion.div>
   );
 };

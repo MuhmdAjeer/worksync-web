@@ -37,13 +37,14 @@ import {
 } from "@/components/ui/select";
 import { IssueStateDto } from "@/generated/dto/issue-state-dto";
 import IssueStateIcon from "@/components/icons/IssueStateIcon";
+import { ISSUE_GROUP_BY_KEYS, TIssueGroupByOptions } from "./KanbanView";
 
 interface IProps {
   children: ReactNode;
   currentView: string;
   handleCurrentView: (view: string) => void;
-  groupBy: EIssueGroupBy;
-  handleGroupByChange: (val: EIssueGroupBy) => void;
+  groupBy: TIssueGroupByOptions;
+  handleGroupByChange: (val: TIssueGroupByOptions) => void;
 }
 
 const IssueDisplay: React.FC<IProps> = ({
@@ -81,7 +82,7 @@ const IssueDisplay: React.FC<IProps> = ({
                 Columns
               </SelectLabel>
               <Select
-                onValueChange={(v: EIssueGroupBy) => {
+                onValueChange={(v: TIssueGroupByOptions) => {
                   handleGroupByChange(v);
                 }}
                 value={groupBy}
@@ -90,7 +91,7 @@ const IssueDisplay: React.FC<IProps> = ({
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent className="text-xs">
-                  {Object.values(EIssueGroupBy).map((v) => (
+                  {Object.keys(ISSUE_GROUP_BY_KEYS).map((v) => (
                     <SelectItem size="sm" value={v}>
                       {v}
                     </SelectItem>
