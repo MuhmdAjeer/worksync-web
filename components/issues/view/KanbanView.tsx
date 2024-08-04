@@ -26,6 +26,7 @@ import { useProjectStates } from "@/hooks/projects";
 import { IssueStateDto } from "@/generated/dto/issue-state-dto";
 import IssueStateIcon from "@/components/icons/IssueStateIcon";
 import { EIssueGroupBy } from "@/pages/[workspaceSlug]/projects/[projectId]/issues";
+import { object } from "zod";
 
 export const ISSUE_GROUP_BY_KEYS: Record<TIssueGroupByOptions, string> = {
   assignees: "assignees",
@@ -79,6 +80,45 @@ interface IKanbanView {
   groupBy: EIssueGroupBy;
 }
 
+export type TGroupedIssues = {
+  [group_id: string]: IssueDto[];
+};
+
+const getGroupByKeys = (
+  groupBy: EIssueGroupBy,
+  states?: IssueStateDto[]
+): string[] => {
+  if (groupBy === EIssueGroupBy.PRIORITY) {
+    return Object.values(PriorityEnum).map((x) => x);
+  }
+  if (groupBy === EIssueGroupBy.STATE) {
+    if (!states) return [];
+    return states.map((x) => x.id);
+  }
+  return [];
+};
+
+const getGroupedIssues = (
+  groupBy: EIssueGroupBy,
+  issues?: IssueDto[],
+  states?: IssueStateDto[]
+): TGroupedIssues => {
+  const groupedIssues: TGroupedIssues = {};
+  if (!issues) return groupedIssues;
+  getGroupByKeys(groupBy, states).forEach((group) => {
+    groupedIssues[group] = [];
+  });
+
+  for (const issue of issues) {
+    const x = get(issue, ISSUE_GROUP_BY_KEYS[groupBy.toLocaleLowerCase()]);
+    if (x && groupedIssues[x]) groupedIssues[x].push(issue);
+    else if (x) groupedIssues[x] = [issue];
+  }
+  console.log({ groupedIssues });
+
+  return groupedIssues;
+};
+
 const KanbanView: React.FC<IKanbanView> = ({ groupBy }) => {
   const { projectId } = useAppRouter();
   const { data: issues } = useProjectIssues(projectId!, {});
@@ -87,6 +127,7 @@ const KanbanView: React.FC<IKanbanView> = ({ groupBy }) => {
   const [myIssues, setMyIssues] = useState(issues?.data);
 
   const lists = getGroupColumns(groupBy, states);
+  const groupedIssues = getGroupedIssues(groupBy, issues?.data);
 
   useEffect(() => {
     setMyIssues(issues?.data);
@@ -96,7 +137,6 @@ const KanbanView: React.FC<IKanbanView> = ({ groupBy }) => {
     return monitorForElements({
       onDrop({ source, location }) {
         const destination = location.current.dropTargets[0].data;
-        console.log({ destination });
 
         if (!destination) {
           return;
@@ -104,8 +144,6 @@ const KanbanView: React.FC<IKanbanView> = ({ groupBy }) => {
         const issue = source.data.issue as IssueDto;
 
         if (issue?.id === undefined) return;
-
-        console.log({ myIssues });
 
         setMyIssues((prev) =>
           prev?.map((x) => {
@@ -194,8 +232,6 @@ interface IssueBoardProps {
 const IssueBoard: React.FC<IssueBoardProps> = ({ issues, list }) => {
   const ref = useRef<HTMLDivElement>(null);
   const [isDraggedOver, setIsDraggedOver] = useState(false);
-
-  console.log({ issues });
 
   const stateIssues = issues?.filter(
     (issue) => get(issue, ISSUE_GROUP_BY_KEYS[list.key]) === list.id
