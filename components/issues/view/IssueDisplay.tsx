@@ -60,6 +60,7 @@ const IssueDisplay: React.FC<IProps> = ({
         <div className="grid grid-cols-2 gap-2 w-full">
           {["List", "Board"].map((view) => (
             <IssueView
+							key={view}
               isSelected={currentView === view}
               title={view}
               icon={
@@ -74,8 +75,8 @@ const IssueDisplay: React.FC<IProps> = ({
           ))}
         </div>
         <div className="flex flex-col gap-2">
-          {[1, 2, 3, 4].map(() => (
-            <SelectGroup className="grid grid-cols-2 text-primary/70 gap-2 items-center text-xs">
+          {[1, 2, 3, 4].map((val) => (
+            <SelectGroup key={val} className="grid grid-cols-2 text-primary/70 gap-2 items-center text-xs">
               <SelectLabel className="text-xs flex gap-1 items-center">
                 <Columns3 className="h-4 w-4" />
                 Columns
@@ -91,7 +92,7 @@ const IssueDisplay: React.FC<IProps> = ({
                 </SelectTrigger>
                 <SelectContent className="text-xs">
                   {Object.keys(ISSUE_GROUP_BY_KEYS).map((v) => (
-                    <SelectItem size="sm" value={v}>
+                    <SelectItem key={v} size="sm" value={v}>
                       {v}
                     </SelectItem>
                   ))}
