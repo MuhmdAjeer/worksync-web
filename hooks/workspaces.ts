@@ -7,6 +7,7 @@ import { CreateWorkspaceDto } from "@/generated/dto/create-workspace-dto";
 import { InviteMembersDto } from "@/generated/dto/invite-members-dto";
 import { is4xxError } from "@/lib/utils";
 import { toast } from "sonner";
+import { MembersFilterQuery } from "@/generated/dto/members-filter-query";
 
 const workspaceService = new WorkspaceService();
 
@@ -43,7 +44,9 @@ export const useInviteMembers = () => {
     mutationFn: async (params: { slug: string; data: InviteMembersDto }) =>
       await workspaceService.inviteMembers(params.slug, params.data),
     onSuccess: () => {
-      client.invalidateQueries({ queryKey: [QUERY_KEYS.GET_WORKSPACE] });
+      client.invalidateQueries({
+        queryKey: [QUERY_KEYS.GET_ALL_INVITATIONS],
+      });
     },
     onError(error) {
       if (is4xxError(error, 409)) {
@@ -53,10 +56,13 @@ export const useInviteMembers = () => {
   });
 };
 
-export const useWorkspaceMembers = (slug: string) => {
+export const useWorkspaceMembers = (
+  slug: string,
+  query?: MembersFilterQuery,
+) => {
   return useQuery({
-    queryKey: [QUERY_KEYS.GET_WORKSPACE_MEMBERS, slug],
-    queryFn: async () => await workspaceService.getMembers(slug),
+    queryKey: [QUERY_KEYS.GET_WORKSPACE_MEMBERS, slug, query],
+    queryFn: async () => await workspaceService.getMembers(slug, query),
     enabled: !!slug,
   });
 };

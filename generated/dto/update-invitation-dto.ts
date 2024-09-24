@@ -17,14 +17,31 @@
 /**
  * 
  * @export
- * @interface InvitationQuery
+ * @interface UpdateInvitationDto
  */
-export interface InvitationQuery {
+export interface UpdateInvitationDto {
     /**
      * 
-     * @type {boolean}
-     * @memberof InvitationQuery
+     * @type {string}
+     * @memberof UpdateInvitationDto
      */
-    'is_accepted'?: boolean | null;
+    'role'?: RoleEnum;
+    /**
+     * 
+     * @type {string}
+     * @memberof UpdateInvitationDto
+     */
+    'email'?: string;
 }
+
+/**
+    * @export
+    * @enum {string}
+    */
+export enum RoleEnum {
+    Admin = 'ADMIN',
+    Member = 'MEMBER',
+    Guest = 'GUEST'
+}
+
 

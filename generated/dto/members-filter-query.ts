@@ -17,14 +17,14 @@
 /**
  * 
  * @export
- * @interface InvitationQuery
+ * @interface MembersFilterQuery
  */
-export interface InvitationQuery {
+export interface MembersFilterQuery {
     /**
      * 
-     * @type {boolean}
-     * @memberof InvitationQuery
+     * @type {string}
+     * @memberof MembersFilterQuery
      */
-    'is_accepted'?: boolean | null;
+    'username'?: string;
 }
 

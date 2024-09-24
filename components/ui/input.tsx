@@ -12,8 +12,11 @@ export interface InputProps
 const Input = React.forwardRef<HTMLInputElement, InputProps>(
   ({ className, type, ...props }, ref) => {
     return (
-      <div className="flex flex-col gap-2">
-        {props.label && <Label htmlFor={props.name}>{props.label}</Label>}
+      // <div className="flex flex-col w-full gap-2">
+      //   {props.label && <Label htmlFor={props.name}>{props.label}</Label>}
+      
+      // NOTE:Removing the label may break some inputs
+      <>
         <input
           type={type}
           className={cn(
@@ -28,7 +31,8 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
             {props.message}
           </Typography>
         )}
-      </div>
+      </>
+      // </div>
     );
   }
 );
