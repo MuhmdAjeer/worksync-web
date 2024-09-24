@@ -1,5 +1,5 @@
 import SettingsHeader from "@/components/headers/SettingsHeader";
-import { SettingsLayout } from "@/components/layouts/app/SettingsLayout";
+import { SettingsLayout } from "@/components/layouts/app/WorkspaceSettingsLayout";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import React, { ReactElement, useCallback, useMemo, useState } from "react";
