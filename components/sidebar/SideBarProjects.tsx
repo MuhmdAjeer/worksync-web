@@ -4,9 +4,8 @@ import { observer } from "mobx-react";
 import ProjectSidebarItem from "./ProjectSidebarItem";
 import { ChevronDown, ChevronRight } from "lucide-react";
 import { motion } from "framer-motion";
-import { useProjects } from "@/hooks/projects";
+import { useMyProjects, useProjects } from "@/hooks/projects";
 import { useAppRouter } from "@/hooks/router";
-import { useRouter } from "next/router";
 import { useWorkspaceStore } from "@/hooks/store/workspace";
 
 const SideBarProjects = observer(() => {
@@ -14,9 +13,7 @@ const SideBarProjects = observer(() => {
   const { workspaceSlug } = useAppRouter();
   const { currentWorkspace } = useWorkspaceStore();
 
-  const { data: workspaceProjects, isLoading } = useProjects(
-    currentWorkspace?.name!
-  );
+  const { data: workspaceProjects, isLoading } = useMyProjects();
 
   if (!workspaceProjects || isLoading || !workspaceSlug) return <></>;
 

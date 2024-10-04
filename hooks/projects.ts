@@ -17,6 +17,12 @@ export const useProjects = (workspaceSlug: string) => {
     enabled: !!workspaceSlug,
   });
 };
+export const useMyProjects = () => {
+  return useQuery({
+    queryKey: [QUERY_KEYS.GET_MY_PROJECTS],
+    queryFn: async () => await projectService.fetchUserProjects(),
+  });
+};
 
 export const useProject = (id?: string) => {
   return useQuery({
