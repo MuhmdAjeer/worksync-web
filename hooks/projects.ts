@@ -1,4 +1,6 @@
+import { AddMemberDto } from "@/generated/dto/add-member-dto";
 import { CreateProjectDto } from "@/generated/dto/create-project-dto";
+import { MembersFilterQuery } from "@/generated/dto/members-filter-query";
 import { QUERY_KEYS } from "@/lib/constants";
 import { ProjectService } from "@/services/project.service";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
@@ -63,10 +65,21 @@ export const useProjectStates = (id: string) => {
   });
 };
 
-export const useProjectMembers = (id: string) => {
+export const useProjectMembers = (id: string, params?: MembersFilterQuery) => {
   return useQuery({
-    queryKey: [QUERY_KEYS.GET_PROJECT_MEMBERS, id],
-    queryFn: async () => await projectService.fetchMembers(id),
+    queryKey: [QUERY_KEYS.GET_PROJECT_MEMBERS, id, params],
+    queryFn: async () => await projectService.fetchMembers(id, params),
     enabled: !!id,
+  });
+};
+
+export const useAddProjectMembers = () => {
+  const client = useQueryClient();
+  return useMutation({
+    mutationFn: async ({ id, data }: { id: string; data: AddMemberDto }) =>
+      await projectService.addMembers(id, data),
+    onSuccess: () => {
+      client.invalidateQueries({ queryKey: [QUERY_KEYS.GET_PROJECT_MEMBERS] });
+    },
   });
 };
