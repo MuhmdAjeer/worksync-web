@@ -7,6 +7,7 @@ import { IssueStateDto } from "@/generated/dto/issue-state-dto";
 import { ProjectMemberDto } from "@/generated/dto/project-member-dto";
 import { MembersFilterQuery } from "@/generated/dto/members-filter-query";
 import { AddMemberDto } from "@/generated/dto/add-member-dto";
+import { UpdateProjectDto } from "@/generated/dto/update-project-dto";
 
 export class ProjectService extends APIService {
   constructor() {
@@ -36,6 +37,10 @@ export class ProjectService extends APIService {
     return this.get(`project/${projectId}`).then((res) => res.data);
   }
 
+  public async updateProject(projectId: string, body: UpdateProjectDto) {
+    return this.patch(`project/${projectId}`, body).then((res) => res.data);
+  }
+
   public async fetchStates(projectId: string): Promise<IssueStateDto[]> {
     return this.get(`project/${projectId}/states`).then((res) => res.data);
   }
@@ -44,6 +49,10 @@ export class ProjectService extends APIService {
     return this.post(`project/${projectId}/members`, body).then(
       (res) => res.data,
     );
+  }
+
+  public async deleteProject(projectId: string) {
+    return this.delete(`project/${projectId}/`).then((res) => res.data);
   }
 
   public async fetchMembers(

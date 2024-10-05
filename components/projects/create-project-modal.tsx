@@ -32,7 +32,7 @@ type TProps = {
   open?: boolean;
   onClose: () => void;
 };
-const createProjectSchema: ZodType<CreateProjectDto> = z.object({
+export const createProjectSchema: ZodType<CreateProjectDto> = z.object({
   name: z.string(),
   description: z.string(),
   custom_id: z.string(),

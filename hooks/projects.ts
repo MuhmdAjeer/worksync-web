@@ -1,6 +1,7 @@
 import { AddMemberDto } from "@/generated/dto/add-member-dto";
 import { CreateProjectDto } from "@/generated/dto/create-project-dto";
 import { MembersFilterQuery } from "@/generated/dto/members-filter-query";
+import { UpdateProjectDto } from "@/generated/dto/update-project-dto";
 import { QUERY_KEYS } from "@/lib/constants";
 import { ProjectService } from "@/services/project.service";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
@@ -29,6 +30,25 @@ export const useProject = (id?: string) => {
     queryKey: [QUERY_KEYS.GET_PROJECT, id],
     queryFn: async () => await projectService.fetchProject(id!),
     enabled: !!id,
+  });
+};
+
+export const useUpdateProject = () => {
+  const client = useQueryClient();
+  return useMutation({
+    mutationFn: async ({ id, body }: { id: string; body: UpdateProjectDto }) =>
+      await projectService.updateProject(id, body),
+    onSuccess: () => {
+      void client.invalidateQueries({
+        queryKey: [QUERY_KEYS.GET_WORKSPACE_PROJECTS],
+      });
+      void client.invalidateQueries({
+        queryKey: [QUERY_KEYS.GET_PROJECT],
+      });
+    },
+    onError: () => {
+      toast.error("Failed to update project");
+    },
   });
 };
 
@@ -86,6 +106,18 @@ export const useAddProjectMembers = () => {
       await projectService.addMembers(id, data),
     onSuccess: () => {
       client.invalidateQueries({ queryKey: [QUERY_KEYS.GET_PROJECT_MEMBERS] });
+    },
+  });
+};
+
+export const useDeleteProject = () => {
+  const client = useQueryClient();
+  return useMutation({
+    mutationFn: async (id: string) => await projectService.deleteProject(id),
+    onSuccess: () => {
+      client.invalidateQueries({
+        queryKey: [QUERY_KEYS.GET_WORKSPACE_PROJECTS],
+      });
     },
   });
 };

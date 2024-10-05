@@ -36,7 +36,10 @@ const Page: NextPageWithLayout = observer(() => {
     },
   );
   const [issue, setIssue] = useState<IssueDto | null>(null);
-  const [currentView, setCurrentView] = useQueryState("display");
+  const [currentView, setCurrentView] = useQueryState("display", {
+    defaultValue: "List",
+  });
+
   const [groupBy, setGroupBy] = useState<TIssueGroupByOptions>("state");
 
   const handleGroupBy = (val: TIssueGroupByOptions) => {
