@@ -19,6 +19,7 @@ import { NextPageWithLayout } from "@/pages/_app";
 import { ListFilter, SlidersHorizontal } from "lucide-react";
 import { observer } from "mobx-react";
 import React, { ReactElement, useState } from "react";
+import { useQueryState } from "nuqs";
 
 export enum EIssueGroupBy {
   STATE = "STATE",
@@ -32,10 +33,10 @@ const Page: NextPageWithLayout = observer(() => {
     projectId!,
     {
       pageSize: 25,
-    }
+    },
   );
   const [issue, setIssue] = useState<IssueDto | null>(null);
-  const [currentView, setCurrentView] = useState("Board");
+  const [currentView, setCurrentView] = useQueryState("display");
   const [groupBy, setGroupBy] = useState<TIssueGroupByOptions>("state");
 
   const handleGroupBy = (val: TIssueGroupByOptions) => {
@@ -49,7 +50,7 @@ const Page: NextPageWithLayout = observer(() => {
   const issues = React.useMemo(
     // @ts-ignore
     () => data?.pages?.flatMap((page) => page.data) ?? [],
-    [data]
+    [data],
   );
 
   const fetchMoreOnBottomReached = React.useCallback(
@@ -63,7 +64,7 @@ const Page: NextPageWithLayout = observer(() => {
         }
       }
     },
-    [fetchNextPage, isFetching]
+    [fetchNextPage, isFetching],
   );
 
   if (!data) return <></>;

@@ -83,7 +83,8 @@ export function IssueTable<TData, TValue>({
         style={{
           overflow: "scroll",
           position: "relative",
-          height: "860px", // Set a fixed height for the scrollable container
+          scrollBehavior: "smooth",
+          height: "780px", // Set a fixed height for the scrollable container
         }}
         ref={tableContainerRef}
         className="bg-card rounded-lg"
@@ -98,7 +99,7 @@ export function IssueTable<TData, TValue>({
                       ? null
                       : flexRender(
                           header.column.columnDef.header,
-                          header.getContext()
+                          header.getContext(),
                         )}
                   </TableHead>
                 ))}
@@ -117,13 +118,13 @@ export function IssueTable<TData, TValue>({
                     <TableCell
                       key={cell.id}
                       className={cn(
-                        "text-primary/70 border-r first:border-r-0 last:border-r-0 border-b border-secondary cursor-pointer p-0"
+                        "text-primary/70 border-r first:border-r-0 last:border-r-0 border-b border-secondary cursor-pointer p-0",
                       )}
                     >
                       <div className="min-h-full h-8 flex items-center px-2 border border-transparent hover:border hover:border-primary/50 hover:rounded">
                         {flexRender(
                           cell.column.columnDef.cell,
-                          cell.getContext()
+                          cell.getContext(),
                         )}
                       </div>
                     </TableCell>
