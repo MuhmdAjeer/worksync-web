@@ -8,6 +8,10 @@ import { ProjectMemberDto } from "@/generated/dto/project-member-dto";
 import { MembersFilterQuery } from "@/generated/dto/members-filter-query";
 import { AddMemberDto } from "@/generated/dto/add-member-dto";
 import { UpdateProjectDto } from "@/generated/dto/update-project-dto";
+import { AddLabelDto } from "@/generated/dto/add-label-dto";
+import { Issue } from "@/generated/dto/issue";
+import { IssueLabel } from "@/generated/dto/issue-label";
+import { UpdateLabelDto } from "@/generated/dto/update-label-dto";
 
 export class ProjectService extends APIService {
   constructor() {
@@ -53,6 +57,34 @@ export class ProjectService extends APIService {
 
   public async deleteProject(projectId: string) {
     return this.delete(`project/${projectId}/`).then((res) => res.data);
+  }
+  public async addLabel(projectId: string, body: AddLabelDto) {
+    return this.post(`project/${projectId}/label`, body).then(
+      (res) => res.data,
+    );
+  }
+
+  public async getLabels(projectId: string): Promise<IssueLabel[]> {
+    return this.get(`project/${projectId}/label`).then((res) => res.data);
+  }
+  public async updateLabel(
+    { labelId, projectId }: { labelId: string; projectId: string },
+    body: UpdateLabelDto,
+  ) {
+    return this.patch(`project/${projectId}/label/${labelId}`, body).then(
+      (res) => res.data,
+    );
+  }
+  public async deleteLabel({
+    labelId,
+    projectId,
+  }: {
+    labelId: string;
+    projectId: string;
+  }) {
+    return this.delete(`project/${projectId}/label/${labelId}`).then(
+      (res) => res.data,
+    );
   }
 
   public async fetchMembers(

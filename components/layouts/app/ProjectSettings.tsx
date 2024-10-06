@@ -33,6 +33,12 @@ const MenuItems = [
     highlight: (pathname: string, baseUrl: string) =>
       pathname === `${baseUrl}/settings/members`,
   },
+  {
+    title: "Labels",
+    link: "/settings/labels",
+    highlight: (pathname: string, baseUrl: string) =>
+      pathname === `${baseUrl}/settings/labels`,
+  },
 ];
 
 export const ProjectSettings: FC<IProps> = observer(({ header, children }) => {
