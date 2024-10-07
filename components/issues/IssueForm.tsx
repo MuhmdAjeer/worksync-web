@@ -9,34 +9,23 @@ import { Button } from "../ui/button";
 import Tiptap from "../Editor";
 import { CreateIssueDto, PriorityEnum } from "@/generated/dto/create-issue-dto";
 import { IssueDto } from "@/generated/dto/issue-dto";
+import IssueLabelDropdown from "./IssueLabelDropdown";
 
 interface IForm {
   form: UseFormReturn<CreateIssueDto, any, undefined>;
-  handleFormSubmit: (data: CreateIssueDto) => void;
   activeProjectId: string;
-  isPending?: boolean;
   issue?: IssueDto;
-  isEditing?: boolean;
 }
 
-const IssueForm: React.FC<IForm> = ({
-  form,
-  handleFormSubmit,
-  activeProjectId,
-  isPending,
-  isEditing,
-  issue,
-}) => {
+const IssueForm: React.FC<IForm> = ({ form, activeProjectId, issue }) => {
   const [stateDropdown, setStateDropdown] = useState(false);
   const [priorityDropdown, setPriorityDropdown] = useState(false);
 
   const minDate = form.watch("start_date");
   const maxDate = form.watch("end_date");
 
-  const isSubmitting = form.formState.isSubmitting;
-  const buttonTitle = isEditing ? "Update Issue" : "Add Issue";
   return (
-    <form onSubmit={form.handleSubmit(handleFormSubmit)}>
+    <div className="w-auto">
       <div className="flex flex-col gap-4">
         <div className="flex flex-col gap-2">
           <Controller
@@ -67,8 +56,8 @@ const IssueForm: React.FC<IForm> = ({
             )}
           />
         </div>
-        <div className="flex items-center gap-2 justify-between">
-          <div className="flex gap-2 items-center">
+        <div className="flex items-center w-full gap-2 justify-between">
+          <div className="flex flex-wrap gap-2 items-center">
             <Controller
               control={form.control}
               name="state"
@@ -98,6 +87,21 @@ const IssueForm: React.FC<IForm> = ({
                 />
               )}
             />
+            <Controller
+              control={form.control}
+              name="label_ids"
+              defaultValue={
+                issue?.labels ? issue?.labels?.map((x) => x.id) : []
+              }
+              render={({ field: { onChange, value } }) => (
+                <IssueLabelDropdown
+                  value={value ?? []}
+                  projectId={activeProjectId}
+                  onChange={onChange}
+                />
+              )}
+            />
+
             <Controller
               name="assignees_id"
               control={form.control}
@@ -136,12 +140,9 @@ const IssueForm: React.FC<IForm> = ({
               )}
             />
           </div>
-          <Button disabled={isPending || isSubmitting} type="submit" size="sm">
-            {isPending || isSubmitting ? "Submitting..." : buttonTitle}
-          </Button>
         </div>
       </div>
-    </form>
+    </div>
   );
 };
 

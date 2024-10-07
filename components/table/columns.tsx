@@ -17,6 +17,7 @@ import { PriorityEnum } from "@/generated/dto/create-issue-dto";
 import IssueStatesDropdown from "../issues/IssueStateDropdown";
 import CreateIssueModal from "../issues/create-issue-modal";
 import { useState } from "react";
+import IssueLabelDropdown from "../issues/IssueLabelDropdown";
 
 export type Payment = {
   id: string;
@@ -70,7 +71,7 @@ export const columns = (options?: TArgs): ColumnDef<IssueDto>[] => {
             <Checkbox
               className={cn(
                 // row.getIsSelected() ? "visible" : "invisible",
-                "group-hover:visible data-[state=checked]:bg-custom-primary data-[state=checked]:text-white data-[state=checked]:border-custom-primary"
+                "group-hover:visible data-[state=checked]:bg-custom-primary data-[state=checked]:text-white data-[state=checked]:border-custom-primary",
               )}
               checked={row.getIsSelected()}
               onCheckedChange={(value) => row.toggleSelected(!!value)}
@@ -148,6 +149,7 @@ export const columns = (options?: TArgs): ColumnDef<IssueDto>[] => {
         );
       },
     },
+
     {
       accessorKey: "start_date",
       header: "Start Date",

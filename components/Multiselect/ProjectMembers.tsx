@@ -1,8 +1,7 @@
 import React, { useMemo, useState } from "react";
-import { MultiSelect, OptionType } from ".";
+import { MultiSelect } from ".";
 import { useProjectMembers } from "@/hooks/projects";
-import { useWorkspaceMembers } from "@/hooks/workspaces";
-import { useAppRouter } from "@/hooks/router";
+import { OptionType } from "../IssueFilterDropdown";
 
 interface IProps {
   projectId: string;
@@ -13,6 +12,7 @@ interface IProps {
 
 const ProjectMembersDropdown: React.FC<IProps> = (props) => {
   const { projectId, onChange, label, value } = props;
+  console.log({ state: value });
 
   const { data: members } = useProjectMembers(projectId);
 

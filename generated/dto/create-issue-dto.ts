@@ -52,6 +52,12 @@ export interface CreateIssueDto {
     'assignees_id'?: Array<string>;
     /**
      * 
+     * @type {Array<string>}
+     * @memberof CreateIssueDto
+     */
+    'label_ids': Array<string>;
+    /**
+     * 
      * @type {Date}
      * @memberof CreateIssueDto
      */

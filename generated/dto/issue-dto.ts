@@ -15,6 +15,9 @@
 
 // May contain unused imports in some cases
 // @ts-ignore
+import { IssueLabelDto } from './issue-label-dto';
+// May contain unused imports in some cases
+// @ts-ignore
 import { IssueStateDto } from './issue-state-dto';
 // May contain unused imports in some cases
 // @ts-ignore
@@ -95,6 +98,12 @@ export interface IssueDto {
      * @memberof IssueDto
      */
     'state'?: IssueStateDto;
+    /**
+     * 
+     * @type {Array<IssueLabelDto>}
+     * @memberof IssueDto
+     */
+    'labels'?: Array<IssueLabelDto>;
     /**
      * 
      * @type {Date}

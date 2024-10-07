@@ -60,7 +60,7 @@ const DatePicker: React.FC<IDatePicker> = ({
           variant={variant}
           size="sm"
           className={cn(
-            "w-full justify-start text-left font-normal",
+            " justify-start text-left font-normal",
             props.className
           )}
         >

@@ -23,7 +23,7 @@ import { useAppRouter } from "@/hooks/router";
 import { IssueStateDto } from "@/generated/dto/issue-state-dto";
 
 export type OptionType = {
-  label: string;
+  label: string| React.ReactNode;
   value: string;
 };
 

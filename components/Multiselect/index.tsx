@@ -17,11 +17,7 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { ScrollArea } from "../ui/scroll-area";
-
-export type OptionType = {
-  label: string;
-  value: string;
-};
+import { OptionType } from "../IssueFilterDropdown";
 
 interface MultiSelectProps {
   options: OptionType[];
@@ -63,15 +59,16 @@ function MultiSelect({
           <CommandEmpty>No item found.</CommandEmpty>
           <CommandGroup>
             <CommandList>
-              <ScrollArea className="h-44">
+              <ScrollArea className="max-h-44">
                 {options.map((option) => (
                   <CommandItem
                     key={option.value}
                     onSelect={() => {
+                      console.log({ value, option });
                       onChange(
                         value.includes(option.value)
                           ? value.filter((item) => item !== option.value)
-                          : [...value, option.value]
+                          : [...value, option.value],
                       );
                       setOpen(true);
                     }}
@@ -79,9 +76,9 @@ function MultiSelect({
                     <Check
                       className={cn(
                         "mr-2 h-4 w-4",
-                        value.includes(option.value)
+                        value?.includes(option.value)
                           ? "opacity-100"
-                          : "opacity-0"
+                          : "opacity-0",
                       )}
                     />
                     {option.label}
