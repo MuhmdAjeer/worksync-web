@@ -118,10 +118,10 @@ export function IssueTable<TData, TValue>({
                     <TableCell
                       key={cell.id}
                       className={cn(
-                        "text-primary/70 border-r first:border-r-0 last:border-r-0 border-b border-secondary cursor-pointer p-0",
+                        "text-primary/70 border-r-0 last:border-r-0 border-b border-secondary cursor-pointer p-0",
                       )}
                     >
-                      <div className="min-h-full h-8 flex items-center px-2 border border-transparent hover:border hover:border-primary/50 hover:rounded">
+                      <div className="min-h-full h-9 flex items-center px-2 border border-transparent hover:border hover:border-primary/50 hover:rounded">
                         {flexRender(
                           cell.column.columnDef.cell,
                           cell.getContext(),

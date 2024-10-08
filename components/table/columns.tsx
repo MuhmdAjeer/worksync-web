@@ -18,6 +18,7 @@ import IssueStatesDropdown from "../issues/IssueStateDropdown";
 import CreateIssueModal from "../issues/create-issue-modal";
 import { useState } from "react";
 import IssueLabelDropdown from "../issues/IssueLabelDropdown";
+import LabelCell from "../issues/label/label-cells";
 
 export type Payment = {
   id: string;
@@ -134,7 +135,7 @@ export const columns = (options?: TArgs): ColumnDef<IssueDto>[] => {
       cell: ({ row }) => {
         return (
           <IssuePriorityDropdown
-            className="hover:bg-transparent justify-between w-full"
+            className="hover:bg-transparent justify-center w-full"
             variant="ghost"
             defaultValue={row.original.priority}
             onChange={(value) => {
@@ -149,7 +150,13 @@ export const columns = (options?: TArgs): ColumnDef<IssueDto>[] => {
         );
       },
     },
-
+    {
+      accessorKey: "labels",
+      header: "Labels",
+      cell: ({ row }) => {
+        return <LabelCell labels={row.original.labels ?? []} />;
+      },
+    },
     {
       accessorKey: "start_date",
       header: "Start Date",
