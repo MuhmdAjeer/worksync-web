@@ -1,5 +1,11 @@
 import { ColumnDef } from "@tanstack/react-table";
 import { format } from "date-fns";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 import { Checkbox } from "../ui/checkbox";
 import { IssueDto } from "@/generated/dto/issue-dto";
 import IssueStateIcon from "../icons/IssueStateIcon";
@@ -19,6 +25,7 @@ import CreateIssueModal from "../issues/create-issue-modal";
 import { useState } from "react";
 import IssueLabelDropdown from "../issues/IssueLabelDropdown";
 import LabelCell from "../issues/label/label-cells";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 export type Payment = {
   id: string;
@@ -157,6 +164,35 @@ export const columns = (options?: TArgs): ColumnDef<IssueDto>[] => {
         return <LabelCell labels={row.original.labels ?? []} />;
       },
     },
+    {
+      accessorKey: "assignees",
+      header: "Assignees",
+      cell: ({ row }) => {
+        return (
+          <div className="flex -space-x-2">
+            {row.original.assignees.map((x, index) => (
+              <Tooltip delayDuration={100} key={index}>
+                <TooltipTrigger asChild>
+                  <Avatar className={cn("size-6 border-[0.1px] border-primary-foreground ")}>
+                    <AvatarImage
+                      className="border border-1 border-white"
+                      src={x.profile_picture}
+                    />
+                    <AvatarFallback>
+                      {x.username?.slice(0, 1).toUpperCase()}
+                    </AvatarFallback>
+                  </Avatar>
+                </TooltipTrigger>
+                <TooltipContent>
+                  <p>{x.username}</p>
+                </TooltipContent>
+              </Tooltip>
+            ))}
+          </div>
+        );
+      },
+    },
+
     {
       accessorKey: "start_date",
       header: "Start Date",
