@@ -142,7 +142,7 @@ export const columns = (options?: TArgs): ColumnDef<IssueDto>[] => {
       cell: ({ row }) => {
         return (
           <IssuePriorityDropdown
-            className="hover:bg-transparent justify-center w-full"
+            className="hover:bg-transparent justify-between w-full"
             variant="ghost"
             defaultValue={row.original.priority}
             onChange={(value) => {
