@@ -15,6 +15,9 @@
 
 // May contain unused imports in some cases
 // @ts-ignore
+import { IssueState } from './issue-state';
+// May contain unused imports in some cases
+// @ts-ignore
 import { Project } from './project';
 // May contain unused imports in some cases
 // @ts-ignore
@@ -37,7 +40,7 @@ export interface Issue {
      * @type {string}
      * @memberof Issue
      */
-    'description': string;
+    'description'?: string;
     /**
      * 
      * @type {Project}
@@ -58,16 +61,28 @@ export interface Issue {
     'priority'?: PriorityEnum;
     /**
      * 
-     * @type {string}
+     * @type {IssueState}
      * @memberof Issue
      */
-    'start_date': string;
+    'state'?: IssueState;
     /**
      * 
-     * @type {string}
+     * @type {object}
      * @memberof Issue
      */
-    'end_date': string;
+    'labels': object;
+    /**
+     * 
+     * @type {Date}
+     * @memberof Issue
+     */
+    'start_date'?: Date;
+    /**
+     * 
+     * @type {Date}
+     * @memberof Issue
+     */
+    'end_date'?: Date;
     /**
      * 
      * @type {object}
@@ -94,10 +109,10 @@ export interface Issue {
     'updated_at': object;
     /**
      * 
-     * @type {string}
+     * @type {Date}
      * @memberof Issue
      */
-    'deleted_at': string | null;
+    'deleted_at': Date | null;
     /**
      * 
      * @type {number}
@@ -114,7 +129,8 @@ export enum PriorityEnum {
     Urgent = 'Urgent',
     High = 'High',
     Medium = 'Medium',
-    Low = 'Low'
+    Low = 'Low',
+    None = 'None'
 }
 
 

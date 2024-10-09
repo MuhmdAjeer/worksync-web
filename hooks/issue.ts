@@ -1,3 +1,4 @@
+import { AddCommentDto } from "@/generated/dto/add-comment-dto";
 import { CreateIssueDto } from "@/generated/dto/create-issue-dto";
 import { IssueDto } from "@/generated/dto/issue-dto";
 import { IssueFilterQuery } from "@/generated/dto/issue-filter-query";
@@ -38,7 +39,7 @@ export type PersonApiResponse = {
 
 export const useInfiniteProjectIssues = (
   id: string,
-  params: IssueFilterQuery
+  params: IssueFilterQuery,
 ) => {
   return useInfiniteQuery<PersonApiResponse>({
     queryKey: [QUERY_KEYS.GET_PROJECT_ISSUES, id, params],
@@ -86,5 +87,48 @@ export const useUpdateIssue = () => {
     onError: () => {
       toast.error("Failed to update issue");
     },
+  });
+};
+
+export const useAddComment = () => {
+  const client = useQueryClient();
+  return useMutation({
+    mutationFn: async (data: { issueId: string; data: AddCommentDto }) =>
+      await issueService.addComment(data),
+    onSuccess: () => {
+      void client.invalidateQueries({
+        queryKey: [QUERY_KEYS.GET_ISSUE_COMMENTS],
+      });
+    },
+    onError: () => {
+      toast.error("Failed to add comment");
+    },
+  });
+};
+
+export const useUpdateComment = () => {
+  const client = useQueryClient();
+  return useMutation({
+    mutationFn: async (data: {
+      issueId: string;
+      data: AddCommentDto;
+      commentId: string;
+    }) => await issueService.editComment(data),
+    onSuccess: () => {
+      void client.invalidateQueries({
+        queryKey: [QUERY_KEYS.GET_ISSUE_COMMENTS],
+      });
+    },
+    onError: () => {
+      toast.error("Failed to update comment");
+    },
+  });
+};
+
+export const useComments = (issueId: string) => {
+  return useQuery({
+    queryKey: [QUERY_KEYS.GET_ISSUE_COMMENTS, issueId],
+    queryFn: async () => await issueService.getComments(issueId),
+    enabled: !!issueId,
   });
 };

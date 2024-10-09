@@ -15,9 +15,10 @@ import { cn } from "@/lib/utils";
 interface ITiptap {
   onChange: (content: string) => void;
   value?: string;
+  className?: string;
 }
 
-const Tiptap: React.FC<ITiptap> = ({ onChange, value }) => {
+const Tiptap: React.FC<ITiptap> = ({ onChange, value, className }) => {
   const editor = useEditor({
     onUpdate({ editor }) {
       onChange(editor.getHTML());
@@ -43,10 +44,11 @@ const Tiptap: React.FC<ITiptap> = ({ onChange, value }) => {
   });
 
   return (
-    <div className="editor-box">
+    <div className="editor-box w-full">
       <EditorContent
         className={cn(
-          "flex text-primary prose-h1:text-4xl prose-h1:font-bold prose-h2:font-bold prose-h2:text-3xl min-h-[60px] min-w-full rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-sm placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
+          "flex text-primary prose-h1:text-4xl prose-h1:font-bold prose-h2:font-bold prose-h2:text-3xl h-16  min-w-full rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-sm placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50",
+          className,
         )}
         editor={editor}
       />

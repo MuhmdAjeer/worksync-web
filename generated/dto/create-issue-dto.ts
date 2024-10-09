@@ -55,7 +55,7 @@ export interface CreateIssueDto {
      * @type {Array<string>}
      * @memberof CreateIssueDto
      */
-    'label_ids': Array<string>;
+    'label_ids'?: Array<string>;
     /**
      * 
      * @type {Date}

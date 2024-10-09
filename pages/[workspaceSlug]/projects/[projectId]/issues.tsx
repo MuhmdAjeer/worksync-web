@@ -20,6 +20,7 @@ import { ListFilter, SlidersHorizontal } from "lucide-react";
 import { observer } from "mobx-react";
 import React, { ReactElement, useState } from "react";
 import { useQueryState } from "nuqs";
+import IssueModal from "@/components/issues/IssueModal";
 
 export enum EIssueGroupBy {
   STATE = "STATE",
@@ -110,11 +111,10 @@ const Page: NextPageWithLayout = observer(() => {
         <KanbanView groupBy={groupBy} />
       )}
       {issue && (
-        <UpdateIssueModal
-          onClose={() => setIssue(null)}
+        <IssueModal
           issue={issue}
           open={!!issue}
-          key={issue?.id}
+          onOpenChange={() => setIssue(null)}
         />
       )}
     </div>
