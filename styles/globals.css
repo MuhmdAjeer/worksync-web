@@ -88,6 +88,25 @@
     margin-top: 0;
   }
 
+  .mention {
+    background-color: rgba(88, 5, 255, 0.05);
+    border-radius: 0.4rem;
+    box-decoration-break: clone;
+    color: #6a00f5;
+    padding: 0.1rem 0.3rem;
+  }
+
+  ul,
+  ol {
+    padding: 0 1rem;
+    margin: 1.25rem 1rem 1.25rem 0.4rem;
+
+    li p {
+      margin-top: 0.25em;
+      margin-bottom: 0.25em;
+    }
+  }
+
   /* Table-specific styling */
   table {
     border-collapse: collapse;
@@ -176,4 +195,20 @@
   -webkit-box-sizing: border-box;
   box-sizing: border-box;
   position: relative;
+}
+
+.tiptap p.is-editor-empty:first-child::before {
+  color: #adb5bd;
+  content: attr(data-placeholder);
+  float: left;
+  height: 0;
+  pointer-events: none;
+}
+
+.tiptap p.is-empty::before {
+  color: #adb5bd;
+  content: attr(data-placeholder);
+  float: left;
+  height: 0;
+  pointer-events: none;
 }

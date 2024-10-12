@@ -40,7 +40,7 @@ const CommentInput: React.FC<IProps> = ({ issueId }) => {
             <Button
               disabled={isPending || !content}
               onClick={handleAddComment}
-              size="sm"
+              size="xs"
             >
               Save
             </Button>

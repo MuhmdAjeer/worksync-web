@@ -26,6 +26,7 @@ import {
 import { observer } from "mobx-react";
 import { VariantProps } from "class-variance-authority";
 import { PriorityEnum } from "@/generated/dto/create-issue-dto";
+import { IDropdownProps } from "@/lib/types/Dropdown";
 
 type TState = {
   name: string;
@@ -61,39 +62,56 @@ export const priorities: TState[] = [
   },
 ];
 
-interface IProps extends VariantProps<typeof buttonVariants> {
+interface IProps extends IDropdownProps {
   open?: boolean;
   onOpenChange?: (value: boolean) => void;
   onChange?: (value: TState) => void;
-  className?: string;
   defaultValue?: PriorityEnum;
 }
 
 const IssuePriorityDropdown: React.FC<IProps> = observer(
-  ({ onOpenChange, open, onChange, variant, className, defaultValue }) => {
-    const defaultPriority = priorities.find((x) => x.name == defaultValue)
-    const [value, setValue] = React.useState(defaultPriority ?? priorities.at(0));
+  ({
+    onOpenChange,
+    open,
+    onChange,
+    buttonVariant = 'outline',
+    label,
+    button,
+    showIcons,
+    buttonClassName,
+    dropdownArrow,
+    buttonSize = "sm",
+    defaultValue,
+  }) => {
+    const defaultPriority = priorities.find((x) => x.name == defaultValue);
+    const [value, setValue] = React.useState(
+      defaultPriority ?? priorities.at(0),
+    );
 
     return (
       <Popover open={open} onOpenChange={onOpenChange}>
         <PopoverTrigger asChild>
-          <Button
-            variant={variant ?? "outline"}
-            role="combobox"
-            size="sm"
-            aria-expanded={open}
-            className={cn(
-              "justify-between flex items-center gap-3",
-              className
-            )}
-          >
-            {value && (
-              <>
-                {value.Icon}
-                <p className="text-xs">{value.name}</p>
-              </>
-            )}
-          </Button>
+          {button ? (
+            button
+          ) : (
+            <Button
+              variant={buttonVariant}
+              role="combobox"
+              size={buttonSize}
+              aria-expanded={open}
+              className={cn(
+                "justify-between flex items-center gap-3",
+                buttonClassName,
+              )}
+            >
+              {value && (
+                <>
+                  {value.Icon}
+                  <p className="text-xs">{value.name}</p>
+                </>
+              )}
+            </Button>
+          )}
         </PopoverTrigger>
         <PopoverContent className="w-[200px] p-0 x-1000">
           <Command>
@@ -121,7 +139,7 @@ const IssuePriorityDropdown: React.FC<IProps> = observer(
                         "mr-2 h-4 w-4",
                         value?.name === priority.name
                           ? "opacity-100"
-                          : "opacity-0"
+                          : "opacity-0",
                       )}
                     />
                   </CommandItem>
@@ -132,7 +150,7 @@ const IssuePriorityDropdown: React.FC<IProps> = observer(
         </PopoverContent>
       </Popover>
     );
-  }
+  },
 );
 
 export default IssuePriorityDropdown;

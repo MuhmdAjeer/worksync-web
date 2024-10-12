@@ -142,9 +142,10 @@ export const columns = (options?: TArgs): ColumnDef<IssueDto>[] => {
       cell: ({ row }) => {
         return (
           <IssuePriorityDropdown
-            className="hover:bg-transparent justify-between w-full"
-            variant="ghost"
+            buttonClassName="hover:bg-transparent justify-between w-full"
             defaultValue={row.original.priority}
+            label="Priority"
+            buttonVariant={"ghost"}
             onChange={(value) => {
               if (options?.onUpdate) {
                 options.onUpdate({
@@ -173,7 +174,11 @@ export const columns = (options?: TArgs): ColumnDef<IssueDto>[] => {
             {row.original.assignees.map((x, index) => (
               <Tooltip delayDuration={100} key={index}>
                 <TooltipTrigger asChild>
-                  <Avatar className={cn("size-6 border-[0.1px] border-primary-foreground ")}>
+                  <Avatar
+                    className={cn(
+                      "size-6 border-[0.1px] border-primary-foreground ",
+                    )}
+                  >
                     <AvatarImage
                       className="border border-1 border-white"
                       src={x.profile_picture}

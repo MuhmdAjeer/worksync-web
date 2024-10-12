@@ -82,10 +82,10 @@ export interface IssueDto {
     'Project': ProjectDto;
     /**
      * 
-     * @type {UserDto}
+     * @type {string}
      * @memberof IssueDto
      */
-    'issued_by': UserDto;
+    'issued_by': string;
     /**
      * 
      * @type {string}

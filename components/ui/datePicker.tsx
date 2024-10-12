@@ -14,18 +14,22 @@ import {
 } from "@/components/ui/popover";
 import { DateAfter, DateBefore, DateInterval, Matcher } from "react-day-picker";
 import { VariantProps } from "class-variance-authority";
+import { IDropdownProps } from "@/lib/types/Dropdown";
 
-interface IDatePicker extends VariantProps<typeof buttonVariants> {
+interface IDatePicker extends IDropdownProps {
   label: string;
   value?: Date;
   onChange: (value: Date | undefined) => void;
   minDate?: Date;
   maxDate?: Date;
-  className?: string;
 }
 
 const DatePicker: React.FC<IDatePicker> = ({
-  variant = "outline",
+  buttonVariant = "ghost",
+  buttonSize = "sm",
+  buttonClassName,
+  showIcons = true,
+  button,
   ...props
 }) => {
   const { label, onChange, value, minDate, maxDate } = props;
@@ -56,17 +60,21 @@ const DatePicker: React.FC<IDatePicker> = ({
   return (
     <Popover>
       <PopoverTrigger asChild>
-        <Button
-          variant={variant}
-          size="sm"
-          className={cn(
-            " justify-start text-left font-normal",
-            props.className
-          )}
-        >
-          <CalendarIcon className="mr-2 h-4 w-4" />
-          {date ? format(date, "PPP") : <span>{label}</span>}
-        </Button>
+        {button ? (
+          button
+        ) : (
+          <Button
+            variant={buttonVariant}
+            size={buttonSize}
+            className={cn(
+              " justify-start text-left font-normal",
+              buttonClassName,
+            )}
+          >
+            {showIcons && <CalendarIcon className="mr-2 h-4 w-4" />}
+            {date ? format(date, "PPP") : <span>{label}</span>}
+          </Button>
+        )}
       </PopoverTrigger>
       <PopoverContent className="w-auto p-0" align="start">
         <Calendar

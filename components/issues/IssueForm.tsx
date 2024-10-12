@@ -79,7 +79,9 @@ const IssueForm: React.FC<IForm> = ({ form, activeProjectId, issue }) => {
               render={({ field: { onChange } }) => (
                 <IssuePriorityDropdown
                   open={priorityDropdown}
+                  label="Priority"
                   defaultValue={issue?.priority}
+                  buttonVariant={"ghost"}
                   onOpenChange={(v) => setPriorityDropdown(v)}
                   onChange={(value) => {
                     onChange(value.name);
@@ -98,6 +100,9 @@ const IssueForm: React.FC<IForm> = ({ form, activeProjectId, issue }) => {
                   value={value ?? []}
                   projectId={activeProjectId}
                   onChange={onChange}
+                  label="Labels"
+                  buttonVariant="outline"
+                  showIcons={value && value?.length > 0}
                 />
               )}
             />
@@ -111,6 +116,10 @@ const IssueForm: React.FC<IForm> = ({ form, activeProjectId, issue }) => {
                   projectId={activeProjectId}
                   value={value ?? []}
                   label="Assignees"
+                  multiple
+                  showIcons
+                  dropdownArrow={false}
+                  buttonVariant="outline"
                   onChange={onChange}
                 />
               )}
@@ -124,6 +133,7 @@ const IssueForm: React.FC<IForm> = ({ form, activeProjectId, issue }) => {
                   value={value}
                   onChange={onChange}
                   maxDate={maxDate}
+                  buttonVariant={"outline"}
                 />
               )}
             />
@@ -136,6 +146,7 @@ const IssueForm: React.FC<IForm> = ({ form, activeProjectId, issue }) => {
                   value={value}
                   minDate={minDate}
                   onChange={onChange}
+                  buttonVariant={"outline"}
                 />
               )}
             />
